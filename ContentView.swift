@@ -3,29 +3,31 @@ import SwiftUI
 struct ContentView: View {
     @State private var isActive = false
     @AppStorage("hasCompletedOnboarding") private var hasCompletedOnboarding = false
-    @AppStorage("isLoggedIn") private var isLoggedIn = false
+    @AppStorage("hasSelectedLanguage") private var hasSelectedLanguage = false
     
     var body: some View {
         ZStack {
             if isActive {
-                if hasCompletedOnboarding {
-                    if isLoggedIn {
+                if hasSelectedLanguage {
+                    if hasCompletedOnboarding {
                         HomeView()
                     } else {
-                        LoginView(isLoggedIn: $isLoggedIn)
+                        OnboardingView(hasCompletedOnboarding: $hasCompletedOnboarding)
                     }
                 } else {
-                    OnboardingView(hasCompletedOnboarding: $hasCompletedOnboarding)
+                    LanguageSelectionView(hasSelectedLanguage: $hasSelectedLanguage)
                 }
             } else {
                 SplashView(isActive: $isActive)
             }
         }
         .animation(.easeInOut, value: isActive)
-        .animation(.easeInOut, value: isLoggedIn)
         .animation(.easeInOut, value: hasCompletedOnboarding)
+        .animation(.easeInOut, value: hasSelectedLanguage)
     }
 }
+
+
 
 
 

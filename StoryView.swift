@@ -16,28 +16,10 @@ struct StoryView: View {
             Color.themeBackground.ignoresSafeArea()
             
             VStack {
-                // Grandma Avatar Area
-                ZStack {
-                    Circle()
-                        .fill(Color.themeAccent.opacity(0.1))
-                        .frame(height: 280)
-                    
-                    // Try to load the sweet grandma image, fallback to system icon if needed
-                    // Since specific file checking is hard in swiftui views without assets, we'll try standard Image
-                    // For this environment, we'll assume the user will see the placeholder if the file isn't there.
-                    Image("sweet_grandma_avatar") // Ensure this asset exists or use a robust fallback
-                        .resizable()
-                        .scaledToFit()
-                        .frame(height: 250)
-                        .clipShape(Circle())
-                        .shadow(radius: 5)
-                        .overlay(
-                            Circle().stroke(Color.themeAccent, lineWidth: 2)
-                        )
-                        .scaleEffect(animateAvatar ? 1.05 : 1.0)
-                        .animation(animateAvatar ? Animation.easeInOut(duration: 0.5).repeatForever(autoreverses: true) : .default, value: animateAvatar)
-                }
-                .padding(.top, 20)
+                // Grandma 3D Avatar Area
+                GrandmaSceneView(animate: $animateAvatar)
+                    .frame(height: 280)
+                    .padding(.top, 20)
                 
                 // Story Content
                 ScrollView {
@@ -116,7 +98,7 @@ struct StoryView: View {
     }
 }
 
-// Simple SceneKit Wrapper
+// Enhanced 3D Grandma SceneKit View
 struct GrandmaSceneView: UIViewRepresentable {
     @Binding var animate: Bool
     
@@ -128,47 +110,121 @@ struct GrandmaSceneView: UIViewRepresentable {
         
         let scene = SCNScene()
         
-        // Placeholder 3D Object (a capsule usually represents a person in prototype)
-        // In a real app, load: let scene = SCNScene(named: "grandma.usdz")
-        let geometry = SCNCapsule(capRadius: 0.5, height: 2.0)
-        let material = SCNMaterial()
-        material.diffuse.contents = UIColor(Color.themeAccent)
-        geometry.materials = [material]
+        // Create a more grandma-like figure
+        // Body (rounded shape for warmth)
+        let bodyGeometry = SCNCapsule(capRadius: 0.6, height: 1.8)
+        let bodyMaterial = SCNMaterial()
+        bodyMaterial.diffuse.contents = UIColor(red: 0.95, green: 0.76, blue: 0.78, alpha: 1.0) // Warm pink dress
+        bodyGeometry.materials = [bodyMaterial]
         
-        let node = SCNNode(geometry: geometry)
-        node.name = "grandmaNode"
-        node.position = SCNVector3(0, 0, 0)
-        scene.rootNode.addChildNode(node)
+        let bodyNode = SCNNode(geometry: bodyGeometry)
+        bodyNode.name = "grandmaBody"
+        bodyNode.position = SCNVector3(0, 0, 0)
+        scene.rootNode.addChildNode(bodyNode)
         
-        // Add basic eyes to make it look like a face
-        let eyeGeo = SCNSphere(radius: 0.1)
-        eyeGeo.firstMaterial?.diffuse.contents = UIColor.black
-        let leftEye = SCNNode(geometry: eyeGeo)
-        leftEye.position = SCNVector3(-0.2, 0.5, 0.45)
-        node.addChildNode(leftEye)
+        // Head (sphere for face)
+        let headGeometry = SCNSphere(radius: 0.5)
+        let headMaterial = SCNMaterial()
+        headMaterial.diffuse.contents = UIColor(red: 0.98, green: 0.92, blue: 0.84, alpha: 1.0) // Skin tone
+        headGeometry.materials = [headMaterial]
         
-        let rightEye = SCNNode(geometry: eyeGeo)
-        rightEye.position = SCNVector3(0.2, 0.5, 0.45)
-        node.addChildNode(rightEye)
+        let headNode = SCNNode(geometry: headGeometry)
+        headNode.name = "grandmaHead"
+        headNode.position = SCNVector3(0, 1.3, 0)
+        bodyNode.addChildNode(headNode)
+        
+        // Eyes (larger, warmer)
+        let eyeGeometry = SCNSphere(radius: 0.12)
+        eyeGeometry.firstMaterial?.diffuse.contents = UIColor.black
+        
+        let leftEye = SCNNode(geometry: eyeGeometry)
+        leftEye.position = SCNVector3(-0.18, 0.1, 0.4)
+        headNode.addChildNode(leftEye)
+        
+        let rightEye = SCNNode(geometry: eyeGeometry)
+        rightEye.position = SCNVector3(0.18, 0.1, 0.4)
+        headNode.addChildNode(rightEye)
+        
+        // Smile (small sphere for nose)
+        let noseGeometry = SCNSphere(radius: 0.08)
+        noseGeometry.firstMaterial?.diffuse.contents = UIColor(red: 0.95, green: 0.85, blue: 0.75, alpha: 1.0)
+        let noseNode = SCNNode(geometry: noseGeometry)
+        noseNode.position = SCNVector3(0, -0.05, 0.45)
+        headNode.addChildNode(noseNode)
+        
+        // Hair (gray sphere on top)
+        let hairGeometry = SCNSphere(radius: 0.4)
+        let hairMaterial = SCNMaterial()
+        hairMaterial.diffuse.contents = UIColor.lightGray
+        hairGeometry.materials = [hairMaterial]
+        
+        let hairNode = SCNNode(geometry: hairGeometry)
+        hairNode.position = SCNVector3(0, 0.4, 0)
+        headNode.addChildNode(hairNode)
+        
+        // Arms (simple cylinders)
+        let armGeometry = SCNCylinder(radius: 0.15, height: 1.0)
+        let armMaterial = SCNMaterial()
+        armMaterial.diffuse.contents = UIColor(red: 0.98, green: 0.92, blue: 0.84, alpha: 1.0)
+        armGeometry.materials = [armMaterial]
+        
+        let leftArm = SCNNode(geometry: armGeometry)
+        leftArm.position = SCNVector3(-0.7, 0.3, 0)
+        leftArm.eulerAngles = SCNVector3(0, 0, 0.3)
+        bodyNode.addChildNode(leftArm)
+        
+        let rightArm = SCNNode(geometry: armGeometry)
+        rightArm.position = SCNVector3(0.7, 0.3, 0)
+        rightArm.eulerAngles = SCNVector3(0, 0, -0.3)
+        bodyNode.addChildNode(rightArm)
+        
+        // Add ambient lighting for warmth
+        let ambientLight = SCNLight()
+        ambientLight.type = .ambient
+        ambientLight.color = UIColor(white: 0.8, alpha: 1.0)
+        let ambientNode = SCNNode()
+        ambientNode.light = ambientLight
+        scene.rootNode.addChildNode(ambientNode)
+        
+        // Add directional light
+        let directionalLight = SCNLight()
+        directionalLight.type = .directional
+        directionalLight.color = UIColor(white: 0.6, alpha: 1.0)
+        let lightNode = SCNNode()
+        lightNode.light = directionalLight
+        lightNode.position = SCNVector3(2, 3, 2)
+        scene.rootNode.addChildNode(lightNode)
         
         scnView.scene = scene
         return scnView
     }
     
     func updateUIView(_ uiView: SCNView, context: Context) {
-        // Simple animation: gentle bobbing when speaking
-        guard let node = uiView.scene?.rootNode.childNode(withName: "grandmaNode", recursively: true) else { return }
+        // Enhanced animation: gentle bobbing and head nodding when speaking
+        guard let bodyNode = uiView.scene?.rootNode.childNode(withName: "grandmaBody", recursively: true),
+              let headNode = bodyNode.childNode(withName: "grandmaHead", recursively: false) else { return }
         
         if animate {
-            if node.action(forKey: "bobbing") == nil {
-                let moveUp = SCNAction.moveBy(x: 0, y: 0.1, z: 0, duration: 0.5)
-                let moveDown = SCNAction.moveBy(x: 0, y: -0.1, z: 0, duration: 0.5)
+            // Body bobbing animation
+            if bodyNode.action(forKey: "bobbing") == nil {
+                let moveUp = SCNAction.moveBy(x: 0, y: 0.08, z: 0, duration: 0.6)
+                let moveDown = SCNAction.moveBy(x: 0, y: -0.08, z: 0, duration: 0.6)
                 let sequence = SCNAction.sequence([moveUp, moveDown])
                 let repeatAction = SCNAction.repeatForever(sequence)
-                node.runAction(repeatAction, forKey: "bobbing")
+                bodyNode.runAction(repeatAction, forKey: "bobbing")
+            }
+            
+            // Head nodding animation
+            if headNode.action(forKey: "nodding") == nil {
+                let nod = SCNAction.rotateBy(x: 0.1, y: 0, z: 0, duration: 0.8)
+                let nodBack = SCNAction.rotateBy(x: -0.1, y: 0, z: 0, duration: 0.8)
+                let sequence = SCNAction.sequence([nod, nodBack])
+                let repeatAction = SCNAction.repeatForever(sequence)
+                headNode.runAction(repeatAction, forKey: "nodding")
             }
         } else {
-            node.removeAction(forKey: "bobbing")
+            bodyNode.removeAction(forKey: "bobbing")
+            headNode.removeAction(forKey: "nodding")
         }
     }
 }
@@ -196,12 +252,63 @@ class SpeechManager: NSObject, ObservableObject, AVSpeechSynthesizerDelegate {
         }
         
         let utterance = AVSpeechUtterance(string: text)
-        utterance.voice = AVSpeechSynthesisVoice(language: selectedLanguageCode) // User's selected language
-        utterance.rate = 0.45
-        utterance.pitchMultiplier = 1.25 // Higher pitch for a "sweeter" grandma voice
+        
+        // Select the best grandmotherly voice for the language
+        let voice = selectGrandmaVoice(for: selectedLanguageCode)
+        utterance.voice = voice
+        
+        // Adjust parameters for a sweet, warm grandma voice
+        utterance.rate = 0.42 // Slower, gentle pace for storytelling
+        utterance.pitchMultiplier = 1.28 // Higher pitch for warmth and sweetness
+        utterance.volume = 0.9 // Slightly softer volume
+        utterance.preUtteranceDelay = 0.2 // Small pause before starting
+        utterance.postUtteranceDelay = 0.1 // Small pause after finishing
         
         synthesizer.speak(utterance)
         isSpeaking = true
+    }
+    
+    // Select the best grandmotherly voice for each language
+    private func selectGrandmaVoice(for languageCode: String) -> AVSpeechSynthesisVoice? {
+        // Try to find specific high-quality voices first
+        let preferredVoices: [String: [String]] = [
+            "en-US": ["Samantha", "Karen", "Victoria"], // Warm female voices
+            "en-GB": ["Kate", "Serena"],
+            "es-ES": ["Monica", "Paulina"],
+            "fr-FR": ["Amelie", "Audrey"],
+            "de-DE": ["Anna", "Petra"],
+            "hi-IN": ["Lekha"]
+        ]
+        
+        // Get the base language (e.g., "en" from "en-US")
+        let baseLanguage = String(languageCode.prefix(2))
+        
+        // Try preferred voices for this language
+        if let voiceNames = preferredVoices[languageCode] {
+            for voiceName in voiceNames {
+                if let voice = AVSpeechSynthesisVoice(identifier: "com.apple.voice.compact.\(languageCode).\(voiceName)") {
+                    return voice
+                }
+                // Try enhanced quality
+                if let voice = AVSpeechSynthesisVoice(identifier: "com.apple.voice.enhanced.\(languageCode).\(voiceName)") {
+                    return voice
+                }
+            }
+        }
+        
+        // Fallback: Find any female voice for the language
+        let availableVoices = AVSpeechSynthesisVoice.speechVoices()
+        let femaleVoice = availableVoices.first { voice in
+            voice.language.hasPrefix(baseLanguage) && 
+            (voice.name.contains("Female") || voice.gender == .female)
+        }
+        
+        if let voice = femaleVoice {
+            return voice
+        }
+        
+        // Final fallback: Default voice for the language
+        return AVSpeechSynthesisVoice(language: languageCode)
     }
     
     func pause() {
