@@ -1,4 +1,5 @@
 import SwiftUI
+import Foundation
 
 struct MusicView: View {
     @StateObject private var audioManager = AudioManager.shared
@@ -15,27 +16,25 @@ struct MusicView: View {
     
     var body: some View {
         ZStack {
-            Color.themeBackground.ignoresSafeArea()
+            MeshGradientBackground()
+                .ignoresSafeArea()
             
-            VStack(spacing: 20) {
+            VStack(spacing: 0) {
                 // Header
-                HStack {
-                    VStack(alignment: .leading) {
-                        Text("Relaxing Sounds")
-                            .font(.title)
-                            .fontWeight(.bold)
-                            .foregroundStyle(Color.themeText)
-                        Text("Soothe your mind")
-                            .font(.subheadline)
-                            .foregroundStyle(Color.themeText.opacity(0.7))
-                    }
-                    Spacer()
+                VStack(alignment: .leading, spacing: 4) {
+                    Text("Relaxing Sounds")
+                        .font(.system(size: 34, weight: .bold, design: .serif))
+                        .foregroundStyle(Color.themeText)
+                    Text("Soothe your mind for better stories")
+                        .font(.subheadline)
+                        .foregroundStyle(.secondary)
                 }
-                .padding(.horizontal)
+                .frame(maxWidth: .infinity, alignment: .leading)
+                .padding(.horizontal, 24)
                 .padding(.top, 20)
                 
                 // Track List
-                ScrollView {
+                ScrollView(showsIndicators: false) {
                     VStack(spacing: 16) {
                         ForEach(tracks) { track in
                             MusicTrackCard(
@@ -44,17 +43,19 @@ struct MusicView: View {
                                 isPlaying: audioManager.isPlaying && audioManager.currentTrack == track.fileName
                             )
                             .onTapGesture {
-                                if audioManager.currentTrack == track.fileName {
-                                    audioManager.togglePlayPause()
-                                } else {
-                                    selectedTrack = track
-                                    audioManager.play(fileName: track.fileName)
+                                withAnimation(.spring(response: 0.4, dampingFraction: 0.7)) {
+                                    if audioManager.currentTrack == track.fileName {
+                                        audioManager.togglePlayPause()
+                                    } else {
+                                        selectedTrack = track
+                                        audioManager.play(fileName: track.fileName)
+                                    }
                                 }
                             }
                         }
                     }
-                    .padding()
-                    .padding(.bottom, 80) // Space for bottom bar
+                    .padding(24)
+                    .padding(.bottom, 120) // Space for mini player and bottom bar
                 }
             }
             
@@ -62,41 +63,51 @@ struct MusicView: View {
             if let track = selectedTrack, audioManager.currentTrack == track.fileName {
                 VStack {
                     Spacer()
-                    HStack {
-                        Image(systemName: "music.note.list")
-                            .frame(width: 40, height: 40)
-                            .background(Color.themeAccent.opacity(0.2))
-                            .clipShape(RoundedRectangle(cornerRadius: 8))
-                            .foregroundStyle(Color.themeAccent)
+                    
+                    HStack(spacing: 12) {
+                        ZStack {
+                            RoundedRectangle(cornerRadius: 12)
+                                .fill(Color.themeAccent.opacity(0.15))
+                                .frame(width: 48, height: 48)
+                            
+                            Image(systemName: "music.quarternote.3")
+                                .font(.title3)
+                                .foregroundStyle(Color.themeAccent)
+                        }
                         
-                        VStack(alignment: .leading) {
+                        VStack(alignment: .leading, spacing: 2) {
                             Text(track.title)
                                 .font(.headline)
                                 .foregroundStyle(Color.themeText)
                             Text(track.artist)
                                 .font(.caption)
-                                .foregroundStyle(Color.themeText.opacity(0.7))
+                                .foregroundStyle(.secondary)
                         }
                         
                         Spacer()
                         
-                        Button(action: { 
-                            audioManager.togglePlayPause()
-                        }) {
-                            Image(systemName: audioManager.isPlaying ? "pause.fill" : "play.fill")
-                                .font(.title2)
-                                .foregroundStyle(Color.themeAccent)
+                        HStack(spacing: 20) {
+                            Button(action: { audioManager.togglePlayPause() }) {
+                                Image(systemName: audioManager.isPlaying ? "pause.fill" : "play.fill")
+                                    .font(.title3)
+                                    .foregroundStyle(Color.themeText)
+                                    .frame(width: 44, height: 44)
+                            }
                         }
                     }
-                    .padding()
-                    .background(Color.themeBackground)
-                    .clipShape(RoundedRectangle(cornerRadius: 16))
-                    .shadow(color: Color.black.opacity(0.1), radius: 10, x: 0, y: 5)
-                    .padding(.horizontal)
-                    .padding(.bottom, 90) // Above tab bar
+                    .padding(.horizontal, 16)
+                    .padding(.vertical, 12)
+                    .background(.ultraThinMaterial)
+                    .clipShape(Capsule())
+                    .overlay(
+                        Capsule()
+                            .stroke(.white.opacity(0.5), lineWidth: 1)
+                    )
+                    .shadow(color: .black.opacity(0.1), radius: 15, x: 0, y: 10)
+                    .padding(.horizontal, 24)
+                    .padding(.bottom, 100) // Above tab bar
                 }
                 .transition(.move(edge: .bottom).combined(with: .opacity))
-                .animation(.spring(), value: selectedTrack)
             }
         }
     }
@@ -116,40 +127,68 @@ struct MusicTrackCard: View {
     let isPlaying: Bool
     
     var body: some View {
-        HStack(spacing: 15) {
+        HStack(spacing: 16) {
+            // Album Art Placeholder
             ZStack {
-                Circle()
-                    .fill(isSelected ? Color.themeAccent : Color.gray.opacity(0.1))
-                    .frame(width: 50, height: 50)
+                RoundedRectangle(cornerRadius: 12)
+                    .fill(isSelected ? Color.themeAccent : Color.secondary.opacity(0.1))
+                    .frame(width: 56, height: 56)
                 
-                Image(systemName: isSelected && isPlaying ? "waveform" : "play.fill")
-                    .foregroundStyle(isSelected ? Color.white : Color.themeAccent)
+                if isSelected && isPlaying {
+                    HStack(spacing: 2) {
+                        ForEach(0..<3) { i in
+                            WaveformBar(isSelected: isSelected)
+                                .animation(.easeInOut(duration: 0.5).repeatForever().delay(Double(i) * 0.1), value: isPlaying)
+                        }
+                    }
+                } else {
+                    Image(systemName: isSelected ? "pause.fill" : "play.fill")
+                        .foregroundStyle(isSelected ? .white : Color.themeAccent)
+                        .font(.title3.bold())
+                }
             }
             
             VStack(alignment: .leading, spacing: 4) {
                 Text(track.title)
                     .font(.headline)
-                    .foregroundStyle(Color.themeText)
+                    .foregroundStyle(isSelected ? Color.themeAccent : Color.themeText)
                 Text(track.artist)
                     .font(.subheadline)
-                    .foregroundStyle(Color.gray)
+                    .foregroundStyle(.secondary)
             }
             
             Spacer()
             
             Text(track.duration)
-                .font(.caption)
-                .foregroundStyle(Color.gray)
+                .font(.caption.monospacedDigit())
+                .foregroundStyle(.secondary)
+                .padding(.trailing, 4)
         }
-        .padding()
-        .background(Color.white)
-        .cornerRadius(16)
-        .shadow(color: Color.black.opacity(0.05), radius: 5, x: 0, y: 2)
+        .padding(12)
+        .background(isSelected ? Color.themeAccent.opacity(0.05) : Color.clear)
+        .background(.ultraThinMaterial)
+        .clipShape(RoundedRectangle(cornerRadius: 20))
         .overlay(
-            RoundedRectangle(cornerRadius: 16)
-                .stroke(isSelected ? Color.themeAccent : Color.clear, lineWidth: 2)
+            RoundedRectangle(cornerRadius: 20)
+                .stroke(isSelected ? Color.themeAccent.opacity(0.3) : .white.opacity(0.4), lineWidth: 1)
         )
         .scaleEffect(isSelected ? 1.02 : 1.0)
-        .animation(.spring(response: 0.3, dampingFraction: 0.6), value: isSelected)
     }
 }
+
+struct WaveformBar: View {
+    let isSelected: Bool
+    @State private var height: CGFloat = 10
+    
+    var body: some View {
+        RoundedRectangle(cornerRadius: 2)
+            .fill(isSelected ? .white : Color.themeAccent)
+            .frame(width: 4, height: height)
+            .onAppear {
+                withAnimation(.easeInOut(duration: 0.5).repeatForever()) {
+                    height = CGFloat.random(in: 15...25)
+                }
+            }
+    }
+}
+

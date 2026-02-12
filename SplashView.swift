@@ -2,43 +2,60 @@ import SwiftUI
 
 struct SplashView: View {
     @Binding var isActive: Bool
-    @State private var size = 0.8
-    @State private var opacity = 0.5
+    @State private var textAnimation = false
+    @State private var grandmaAnimation = false
     
     var body: some View {
-        VStack {
-            VStack {
-                Image("sweet_grandma_avatar")
-                    .resizable()
-                    .scaledToFit()
-                    .frame(width: 150, height: 150)
+        ZStack {
+            // Mesh Background
+            MeshGradientBackground()
+                .ignoresSafeArea()
+            
+            VStack(spacing: 40) {
+                // 3D Grandma Entry
+                GrandmaSceneView(animate: $grandmaAnimation)
+                    .frame(width: 300, height: 300)
                     .clipShape(Circle())
-                    .overlay(Circle().stroke(Color.white, lineWidth: 4))
-                    .shadow(radius: 10)
+                    .overlay(Circle().stroke(.white.opacity(0.3), lineWidth: 1))
+                    .shadow(color: .black.opacity(0.2), radius: 30, x: 0, y: 15)
+                    .scaleEffect(grandmaAnimation ? 1 : 0.8)
+                    .opacity(grandmaAnimation ? 1 : 0)
                 
-                Text("Granly")
-                    .font(Font.custom("Baskerville-Bold", size: 40)) // Warm, classic font
-                    .foregroundColor(.primary)
-                    .padding(.top, 10)
-            }
-            .scaleEffect(size)
-            .opacity(opacity)
-            .onAppear {
-                withAnimation(.easeIn(duration: 1.2)) {
-                    self.size = 0.9
-                    self.opacity = 1.00
+                VStack(spacing: 10) {
+                    Text("Granly")
+                        .font(.system(size: 60, weight: .bold, design: .serif))
+                        .foregroundStyle(Color.themeText)
+                        .shadow(color: .white.opacity(0.5), radius: 10)
+                    
+                    Text("Always with you.")
+                        .font(.headline)
+                        .foregroundStyle(.secondary)
+                        .kerning(1.5)
+                        .opacity(textAnimation ? 1 : 0)
+                        .offset(y: textAnimation ? 0 : 10)
                 }
+                .blur(radius: textAnimation ? 0 : 5)
+                .scaleEffect(textAnimation ? 1 : 0.9)
             }
         }
         .onAppear {
-            DispatchQueue.main.asyncAfter(deadline: .now() + 2.0) {
-                withAnimation {
+            withAnimation(.spring(response: 1.2, dampingFraction: 0.7).delay(0.3)) {
+                grandmaAnimation = true
+            }
+            
+            withAnimation(.easeOut(duration: 1.0).delay(0.8)) {
+                textAnimation = true
+            }
+            
+            DispatchQueue.main.asyncAfter(deadline: .now() + 3.5) {
+                withAnimation(.easeInOut(duration: 0.6)) {
                     self.isActive = true
                 }
             }
         }
     }
 }
+
 
 
 
