@@ -3,59 +3,125 @@ import SwiftUI
 struct SplashView: View {
     @Binding var isActive: Bool
     @State private var textAnimation = false
-    @State private var grandmaAnimation = false
+    @State private var grandmaAction: GrandmaAction = .idle
+    @State private var ringAnimation = false
+    @State private var taglineVisible = false
+    @StateObject private var settings = GrandmaSettings()
     
     var body: some View {
         ZStack {
-            // Mesh Background
-            MeshGradientBackground()
+            // Warm background
+            Color.themeBackground
                 .ignoresSafeArea()
             
-            VStack(spacing: 40) {
-                // 3D Grandma Entry
-                GrandmaSceneView(animate: $grandmaAnimation)
-                    .frame(width: 300, height: 300)
-                    .clipShape(Circle())
-                    .overlay(Circle().stroke(.white.opacity(0.3), lineWidth: 1))
-                    .shadow(color: .black.opacity(0.2), radius: 30, x: 0, y: 15)
-                    .scaleEffect(grandmaAnimation ? 1 : 0.8)
-                    .opacity(grandmaAnimation ? 1 : 0)
+            // Glow rings
+            ForEach(0..<4, id: \.self) { i in
+                Circle()
+                    .stroke(
+                        LinearGradient(
+                            colors: [
+                                Color.themeRose.opacity(0.3 - Double(i) * 0.06),
+                                Color.themeGold.opacity(0.2 - Double(i) * 0.04)
+                            ],
+                            startPoint: .topLeading,
+                            endPoint: .bottomTrailing
+                        ),
+                        lineWidth: 2
+                    )
+                    .frame(width: CGFloat(180 + i * 60), height: CGFloat(180 + i * 60))
+                    .scaleEffect(ringAnimation ? 1.1 : 0.8)
+                    .opacity(ringAnimation ? 0.8 : 0.2)
+                    .animation(
+                        .easeInOut(duration: 2.0)
+                        .repeatForever(autoreverses: true)
+                        .delay(Double(i) * 0.3),
+                        value: ringAnimation
+                    )
+            }
+            
+            VStack(spacing: 36) {
+                // 3D Grandma
+                GrandmaSceneView(
+                    action: $grandmaAction,
+                    expression: .constant(.happy),
+                    isSpeaking: .constant(false),
+                    settings: settings
+                )
+                .frame(width: 260, height: 260)
+                .clipShape(Circle())
+                .overlay(
+                    Circle()
+                        .stroke(
+                            LinearGradient(
+                                colors: [Color.themeRose.opacity(0.5), Color.themeGold.opacity(0.3)],
+                                startPoint: .topLeading,
+                                endPoint: .bottomTrailing
+                            ),
+                            lineWidth: 2
+                        )
+                )
+                .shadow(color: Color.themeRose.opacity(0.3), radius: 30, x: 0, y: 15)
+                .scaleEffect(grandmaAction != .idle ? 1 : 0.7)
+                .opacity(grandmaAction != .idle ? 1 : 0)
                 
-                VStack(spacing: 10) {
+                VStack(spacing: 12) {
+                    // Gradient Logo
                     Text("Granly")
-                        .font(.system(size: 60, weight: .bold, design: .serif))
-                        .foregroundStyle(Color.themeText)
-                        .shadow(color: .white.opacity(0.5), radius: 10)
+                        .font(.system(size: 56, weight: .bold, design: .serif))
+                        .foregroundStyle(
+                            LinearGradient(
+                                colors: [Color.themeRose, Color.themeWarm],
+                                startPoint: .leading,
+                                endPoint: .trailing
+                            )
+                        )
+                        .shadow(color: Color.themeRose.opacity(0.3), radius: 10)
                     
-                    Text("Always with you.")
-                        .font(.headline)
-                        .foregroundStyle(.secondary)
-                        .kerning(1.5)
-                        .opacity(textAnimation ? 1 : 0)
-                        .offset(y: textAnimation ? 0 : 10)
+                    // Animated tagline
+                    Text("Always with you. 💛")
+                    .font(.headline)
+                    .foregroundStyle(.secondary)
+                    .kerning(1.5)
+                    .opacity(taglineVisible ? 1 : 0)
+                    .offset(y: taglineVisible ? 0 : 12)
                 }
                 .blur(radius: textAnimation ? 0 : 5)
                 .scaleEffect(textAnimation ? 1 : 0.9)
             }
         }
         .onAppear {
-            withAnimation(.spring(response: 1.2, dampingFraction: 0.7).delay(0.3)) {
-                grandmaAnimation = true
-            }
+            ringAnimation = true
+            startLoopAnimation()
             
             withAnimation(.easeOut(duration: 1.0).delay(0.8)) {
                 textAnimation = true
             }
             
-            DispatchQueue.main.asyncAfter(deadline: .now() + 3.5) {
-                withAnimation(.easeInOut(duration: 0.6)) {
-                    self.isActive = true
-                }
+            withAnimation(.easeOut(duration: 0.8).delay(1.4)) {
+                taglineVisible = true
             }
+            
+            DispatchQueue.main.asyncAfter(deadline: .now() + 5.0) {
+                 withAnimation(.easeInOut(duration: 0.6)) {
+                     self.isActive = true
+                 }
+             }
         }
     }
+    
+    private func startLoopAnimation() {
+         // Initial pop
+         withAnimation(.spring(response: 0.6, dampingFraction: 0.7)) {
+             grandmaAction = .wave
+         }
+         
+         // Cycle actions
+         Timer.scheduledTimer(withTimeInterval: 2.0, repeats: true) { _ in
+             let actions: [GrandmaAction] = [.love, .celebrate, .wave]
+             let next = actions.randomElement() ?? .idle
+             withAnimation {
+                 grandmaAction = next
+             }
+         }
+    }
 }
-
-
-
-

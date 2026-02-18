@@ -2,10 +2,12 @@ import SwiftUI
 
 @main
 struct GranlyApp: App {
+    @AppStorage("darkMode") private var darkMode = false
+
     var body: some Scene {
         WindowGroup {
             ContentView()
-                .preferredColorScheme(.none) // Respect system light/dark mode
+                .preferredColorScheme(darkMode ? .dark : .light)
         }
     }
 }

@@ -4,101 +4,266 @@ struct ProfileView: View {
     @StateObject private var languageManager = LanguageManager()
     @AppStorage("grandmaName") private var grandmaName = "Granly"
     @AppStorage("userName") private var userName = "My Dear"
+    @AppStorage("notificationsEnabled") private var notificationsEnabled = true
+    @AppStorage("darkMode") private var darkMode = false
+    @AppStorage("storiesRead") private var storiesRead = 12
     
-    // Mock avatars for now
-    let avatars = ["sweet_grandma_avatar", "cool_grandma_avatar", "wise_grandma_avatar"]
-    @State private var selectedAvatar = "sweet_grandma_avatar"
+    @State private var showLanguageSheet = false
+    @State private var showOnboarding = false
+    @State private var showMakeover = false // New State
+    @State private var showNameEditAlert = false
+    @State private var tempName = ""
+    @State private var showResetAlert = false
+    @State private var showRateAlert = false
     
     var body: some View {
-        Form {
-            // User Profile Section
-            Section {
-                HStack {
-                    Image("user_profile_image") // Placeholder
-                        .resizable()
-                        .scaledToFill()
-                        .frame(width: 60, height: 60)
-                        .clipShape(Circle())
-                        .overlay(Circle().stroke(Color.themeAccent, lineWidth: 2))
-                    
-                    VStack(alignment: .leading) {
-                        Text(userName)
-                            .font(.headline)
-                        Text("Edit Profile")
-                            .font(.caption)
-                            .foregroundStyle(.blue)
-                    }
-                }
-                .padding(.vertical, 8)
+        NavigationStack {
+            ZStack {
+                Color.themeBackground.ignoresSafeArea()
                 
-                TextField("Your Name", text: $userName)
-                
-                NavigationLink(destination: MemoriesView()) {
-                    Label("Saved Memories", systemImage: "heart.text.square")
-                        .foregroundStyle(Color.themeAccent)
-                }
-            } header: {
-                Text("You")
-            }
-            
-            // Grandma Settings
-            Section {
-                TextField("Grandma's Name", text: $grandmaName)
-                
-                ScrollView(.horizontal, showsIndicators: false) {
-                    HStack(spacing: 15) {
-                        ForEach(avatars, id: \.self) { avatar in
-                            VStack {
-                                Image(avatar) // Using system images if assets missing for now in preview? No, use asset names.
-                                    .resizable()
-                                    .scaledToFill()
-                                    .frame(width: 60, height: 60)
-                                    .clipShape(Circle())
-                                    .overlay(
-                                        Circle()
-                                            .stroke(selectedAvatar == avatar ? Color.themeAccent : Color.clear, lineWidth: 3)
-                                    )
-                                    .onTapGesture {
-                                        selectedAvatar = avatar
-                                    }
+                ScrollView {
+                    VStack(spacing: 24) {
+                        // Hero Header
+                        VStack(spacing: 16) {
+                            ZStack {
+                                Circle()
+                                    .fill(Color.themeRose.opacity(0.2))
+                                    .frame(width: 120, height: 120)
+                                    .blur(radius: 20)
                                 
-                                if selectedAvatar == avatar {
-                                    Image(systemName: "checkmark.circle.fill")
-                                        .foregroundStyle(Color.themeAccent)
-                                        .font(.caption)
-                                }
+                                Image("grandma_avatar_circle")
+                                    .resizable()
+                                    .scaledToFit()
+                                    .frame(width: 100, height: 100)
+                                    .clipShape(Circle())
+                                    .overlay(Circle().stroke(.white, lineWidth: 4))
+                                    .shadow(radius: 10)
+                            }
+                            
+                            VStack(spacing: 4) {
+                                Text(userName)
+                                    .font(.title2.bold())
+                                    .foregroundStyle(Color.themeText)
+                                Text("Stories Read: \(storiesRead)")
+                                    .font(.subheadline)
+                                    .foregroundStyle(.secondary)
+                                    .padding(.horizontal, 12)
+                                    .padding(.vertical, 6)
+                                    .background(.ultraThinMaterial)
+                                    .clipShape(Capsule())
                             }
                         }
+                        .padding(.top, 40)
+                        
+                        // Personal Section (New)
+                        VStack(spacing: 16) {
+                            SectionHeader(title: "Personal")
+                            
+                            // Grandma Name
+                            SettingsRow(icon: "person.text.rectangle", color: .blue, title: "Grandma's Name", value: grandmaName) {
+                                tempName = grandmaName
+                                showNameEditAlert = true
+                            }
+                            
+                            // Grandma Makeover Link
+                            SettingsActionRow(icon: "sparkles.rectangle.stack.fill", color: .pink, title: "Grandma Makeover") {
+                                showMakeover = true
+                            }
+                        }
+                        .padding(20)
+                        .glassCard()
+                        .padding(.horizontal)
+                        
+                        // Settings Section
+                        VStack(spacing: 16) {
+                            SectionHeader(title: "Preferences")
+                            
+                            // Language
+                            SettingsRow(icon: "globe", color: .green, title: "Language", value: languageManager.selectedLanguage.displayName) {
+                                showLanguageSheet = true
+                            }
+                            
+                            // Dark Mode
+                            ToggleRow(icon: "moon.fill", color: .purple, title: "Dark Mode", isOn: $darkMode)
+                            
+                            // Notifications
+                            ToggleRow(icon: "bell.fill", color: .orange, title: "Daily Reminders", isOn: $notificationsEnabled)
+                        }
+                        .padding(20)
+                        .glassCard()
+                        .padding(.horizontal)
+                        
+                        // Support Section
+                        VStack(spacing: 16) {
+                            SectionHeader(title: "Support")
+                            
+                            NavigationLink(destination: AboutView()) {
+                                SettingsRow(icon: "info.circle", color: .blue, title: "About Granly", value: "") {}
+                                    .contentShape(Rectangle())
+                            }
+                            .buttonStyle(.plain)
+                            
+                            SettingsActionRow(icon: "sparkles", color: .purple, title: "View Onboarding") {
+                                showOnboarding = true
+                            }
+                            
+                            SettingsActionRow(icon: "star.fill", color: .yellow, title: "Rate Granly") {
+                                showRateAlert = true
+                            }
+                            
+                            ShareLink(item: "Check out Granly! It's the sweetest storytelling app ever. 💛") {
+                                HStack {
+                                    Image(systemName: "square.and.arrow.up")
+                                        .foregroundStyle(.pink)
+                                        .frame(width: 30)
+                                    Text("Share with Friends")
+                                        .foregroundStyle(Color.themeText)
+                                    Spacer()
+                                    Image(systemName: "chevron.right")
+                                        .font(.caption)
+                                        .foregroundStyle(.secondary)
+                                }
+                                .padding(.vertical, 8)
+                            }
+                        }
+                        .padding(20)
+                        .glassCard()
+                        .padding(.horizontal)
+                        
+                        // Danger Zone
+                        Button(action: { showResetAlert = true }) {
+                            Text("Reset All Data")
+                                .font(.subheadline.bold())
+                                .foregroundStyle(.red.opacity(0.8))
+                                .padding()
+                        }
+                        .padding(.bottom, 40)
                     }
-                    .padding(.vertical, 8)
                 }
-            } header: {
-                Text("Your Grandma")
             }
-            
-            // App Settings
-            Section {
-                Picker("Language", selection: $languageManager.selectedLanguageCode) {
-                    ForEach(AppLanguage.allCases) { language in
-                        Text(language.displayName).tag(language.rawValue)
+            .fullScreenCover(isPresented: $showMakeover) {
+                CustomizeGrandmaView()
+            }
+            .fullScreenCover(isPresented: $showOnboarding) {
+                OnboardingView(hasCompletedOnboarding: Binding(
+                    get: { !showOnboarding }, 
+                    set: { if $0 { showOnboarding = false } }
+                ))
+            }
+            .sheet(isPresented: $showLanguageSheet) {
+                LanguageSelectionView(hasSelectedLanguage: .constant(true))
+            }
+            .alert("Rename Grandma", isPresented: $showNameEditAlert) {
+                TextField("Name", text: $tempName)
+                Button("Cancel", role: .cancel) { }
+                Button("Save") { grandmaName = tempName }
+            }
+            .alert("Rate Granly", isPresented: $showRateAlert) {
+                Button("OK", role: .cancel) { }
+            } message: {
+                Text("Thank you for your love! ⭐️⭐️⭐️⭐️⭐️")
+            }
+            .alert("Reset Data?", isPresented: $showResetAlert) {
+                Button("Cancel", role: .cancel) { }
+                Button("Reset", role: .destructive) {
+                    storiesRead = 0
+                    grandmaName = "Granly"
+                    likedStoryIDsRaw = ""
+                    // Reset customization settings
+                    if let bundleID = Bundle.main.bundleIdentifier {
+                        UserDefaults.standard.removePersistentDomain(forName: bundleID)
                     }
                 }
-                .pickerStyle(.navigationLink)
-            } header: {
-                Text("Settings")
-            }
-            
-            Section {
-                Link("Privacy Policy", destination: URL(string: "https://www.example.com")!)
-                Link("Terms of Service", destination: URL(string: "https://www.example.com")!)
-                Text("Version 1.0.0")
-                    .foregroundStyle(.secondary)
-            } header: {
-                Text("About")
+            } message: {
+                Text("This will clear your read history, favorite stories, and customization settings. This cannot be undone.")
             }
         }
-        .navigationTitle("Profile & Settings")
-        .navigationBarTitleDisplayMode(.inline)
+    }
+    
+    // Helper property to access private var
+    @AppStorage("likedStoryIDs") private var likedStoryIDsRaw: String = ""
+}
+
+// MARK: - Components (Reused)
+struct SectionHeader: View {
+    let title: String
+    var body: some View {
+        Text(title.uppercased())
+            .font(.caption.bold())
+            .foregroundStyle(.secondary)
+            .frame(maxWidth: .infinity, alignment: .leading)
     }
 }
 
+struct SettingsRow: View {
+    let icon: String
+    let color: Color
+    let title: String
+    let value: String
+    let action: () -> Void
+    
+    var body: some View {
+        Button(action: action) {
+            HStack {
+                Image(systemName: icon)
+                    .foregroundStyle(color)
+                    .frame(width: 30)
+                Text(title)
+                    .foregroundStyle(Color.themeText)
+                Spacer()
+                Text(value)
+                    .foregroundStyle(.secondary)
+                Image(systemName: "chevron.right")
+                    .font(.caption)
+                    .foregroundStyle(.secondary)
+            }
+            .padding(.vertical, 8)
+        }
+    }
+}
+
+struct SettingsActionRow: View {
+    let icon: String
+    let color: Color
+    let title: String
+    let action: () -> Void
+    
+    var body: some View {
+        Button(action: action) {
+            HStack {
+                Image(systemName: icon)
+                    .foregroundStyle(color)
+                    .frame(width: 30)
+                Text(title)
+                    .foregroundStyle(Color.themeText)
+                Spacer()
+                Image(systemName: "chevron.right")
+                    .font(.caption)
+                    .foregroundStyle(.secondary)
+            }
+            .padding(.vertical, 8)
+        }
+    }
+}
+
+struct ToggleRow: View {
+    let icon: String
+    let color: Color
+    let title: String
+    @Binding var isOn: Bool
+    
+    var body: some View {
+        HStack {
+            Image(systemName: icon)
+                .foregroundStyle(color)
+                .frame(width: 30)
+            Text(title)
+                .foregroundStyle(Color.themeText)
+            Spacer()
+            Toggle("", isOn: $isOn)
+                .labelsHidden()
+                .tint(Color.themeRose)
+        }
+        .padding(.vertical, 8)
+    }
+}

@@ -3,112 +3,167 @@ import SwiftUI
 struct OnboardingView: View {
     @Binding var hasCompletedOnboarding: Bool
     @State private var currentPage = 0
+    @StateObject private var settings = GrandmaSettings() // Use default or saved settings
     
-    let slides = [
-        OnboardingSlide(image: "book.closed.fill", title: "Welcome to Granly", description: "Your virtual grandma, here to tell you stories and keep you company."),
-        OnboardingSlide(image: "heart.text.square.fill", title: "Stories for You", description: "Tell Granly how you feel, and she'll pick a story just for your mood."),
-        OnboardingSlide(image: "sparkles", title: "Always Here", description: "For those who need a grandma's warmth, Granly is always just a tap away.")
+    // 3D State
+    @State private var action: GrandmaAction = .wave
+    @State private var expression: GrandmaExpression = .happy
+    @State private var isSpeaking = false
+    
+    let slides: [OnboardingSlide] = [
+        OnboardingSlide(
+            title: "Welcome to Granly",
+            description: "Your cozy corner for heartwarming stories and grandma's wisdom.",
+            icon: "hand.wave.fill", // Fallback / Icon for text
+            action: .wave,
+            expression: .happy
+        ),
+        OnboardingSlide(
+            title: "Stories for Every Mood",
+            description: "Feeling happy, sad, or just need a hug? Granly has a story for you.",
+            icon: "book.fill",
+            action: .tellStory,
+            expression: .neutral
+        ),
+        OnboardingSlide(
+            title: "Daily Wisdom",
+            description: "Start your day with gentle advice and timeless life lessons.",
+            icon: "sun.max.fill",
+            action: .listen, // Or think
+            expression: .neutral
+        ),
+        OnboardingSlide(
+            title: "Always Here For You",
+            description: "A safe space to feel loved, supported, and understood.",
+            icon: "heart.fill",
+            action: .love,
+            expression: .happy
+        )
     ]
     
     var body: some View {
         ZStack {
-            MeshGradientBackground()
-                .ignoresSafeArea()
+            Color.themeBackground.ignoresSafeArea()
             
-            VStack {
+            VStack(spacing: 20) {
+                // Header
+                HStack {
+                    Spacer()
+                    Button("Skip") {
+                        withAnimation { hasCompletedOnboarding = true }
+                    }
+                    .font(.subheadline.weight(.medium))
+                    .foregroundStyle(Color.themeText.opacity(0.6))
+                    .padding(.horizontal)
+                }
+                .padding(.top, 20)
+                
                 Spacer()
                 
-                // Content Card
-                VStack(spacing: 30) {
-                    ZStack {
-                        Circle()
-                            .fill(Color.themeAccent.opacity(0.1))
-                            .frame(width: 180, height: 180)
-                            .blur(radius: 20)
-                        
-                        let icon = Image(systemName: slides[currentPage].image)
-                            .resizable()
-                            .scaledToFit()
-                            .frame(width: 100, height: 100)
-                            .foregroundStyle(Color.themeAccent)
-                        
-                        if #available(iOS 17.0, *) {
-                            icon.symbolEffect(.bounce, value: currentPage)
-                        } else {
-                            icon
+                // 3D GRANDMA CAROUSEL
+                TabView(selection: $currentPage) {
+                    ForEach(0..<slides.count, id: \.self) { index in
+                        VStack(spacing: 30) {
+                            // 3D Model Container
+                            ZStack {
+                                Circle()
+                                    .fill(Color.themeRose.opacity(0.1))
+                                    .frame(width: 280, height: 280)
+                                    .blur(radius: 20)
+                                
+                                GrandmaSceneView(
+                                    action: $action,
+                                    expression: $expression,
+                                    isSpeaking: $isSpeaking,
+                                    settings: settings
+                                )
+                                .frame(width: 300, height: 350)
+                                // Prevent interaction interruption
+                                .allowsHitTesting(false) 
+                            }
+                            .tag(index)
+                            
+                            // Text Content
+                            VStack(spacing: 16) {
+                                Text(slides[index].title)
+                                    .font(.system(size: 28, weight: .bold, design: .serif))
+                                    .foregroundStyle(Color.themeText)
+                                
+                                Text(slides[index].description)
+                                    .font(.body)
+                                    .multilineTextAlignment(.center)
+                                    .foregroundStyle(Color.themeText.opacity(0.8))
+                                    .padding(.horizontal, 30)
+                                    .lineSpacing(4)
+                            }
                         }
                     }
-                    .padding(.top, 20)
-                    
-                    VStack(spacing: 16) {
-                        Text(slides[currentPage].title)
-                            .font(.system(size: 32, weight: .bold, design: .serif))
-                            .foregroundStyle(Color.themeText)
-                            .multilineTextAlignment(.center)
-                        
-                        Text(slides[currentPage].description)
-                            .font(.body)
-                            .multilineTextAlignment(.center)
-                            .foregroundStyle(.secondary)
-                            .padding(.horizontal, 20)
-                            .lineSpacing(4)
-                    }
                 }
-                .padding(30)
-                .background(.ultraThinMaterial)
-                .clipShape(RoundedRectangle(cornerRadius: 40))
-                .overlay(
-                    RoundedRectangle(cornerRadius: 40)
-                        .stroke(.white.opacity(0.5), lineWidth: 1)
-                )
-                .padding(.horizontal, 24)
-                .transition(.asymmetric(insertion: .move(edge: .trailing).combined(with: .opacity), removal: .move(edge: .leading).combined(with: .opacity)))
-                .id(currentPage)
+                .tabViewStyle(.page(indexDisplayMode: .never))
+                .frame(height: 550)
+                .onChange(of: currentPage) { newValue in
+                    updateGrandmaState(for: newValue)
+                }
                 
                 Spacer()
                 
-                // Pagination & Controls
-                VStack(spacing: 30) {
+                // Bottom Controls
+                HStack {
+                    // Page Indicator
                     HStack(spacing: 8) {
                         ForEach(0..<slides.count, id: \.self) { index in
-                            Capsule()
-                                .fill(currentPage == index ? Color.themeAccent : Color.secondary.opacity(0.3))
-                                .frame(width: currentPage == index ? 24 : 8, height: 8)
+                            Circle()
+                                .fill(currentPage == index ? Color.themeRose : Color.themeRose.opacity(0.3))
+                                .frame(width: 8, height: 8)
+                                .scaleEffect(currentPage == index ? 1.2 : 1.0)
                                 .animation(.spring(), value: currentPage)
                         }
                     }
                     
+                    Spacer()
+                    
+                    // Next/Done Button
                     Button(action: {
-                        withAnimation(.spring(response: 0.5, dampingFraction: 0.8)) {
-                            if currentPage < slides.count - 1 {
-                                currentPage += 1
-                            } else {
-                                hasCompletedOnboarding = true
-                            }
+                        if currentPage < slides.count - 1 {
+                            withAnimation { currentPage += 1 }
+                        } else {
+                            withAnimation { hasCompletedOnboarding = true }
                         }
                     }) {
-                        Text(currentPage == slides.count - 1 ? "Get Started" : "Continue")
-                            .font(.headline)
-                            .foregroundColor(.white)
-                            .frame(maxWidth: .infinity)
-                            .padding(.vertical, 18)
-                            .background(Color.themeAccent)
-                            .clipShape(Capsule())
-                            .shadow(color: Color.themeAccent.opacity(0.3), radius: 15, x: 0, y: 10)
+                        ZStack {
+                            Circle()
+                                .fill(Color.themeRose)
+                                .frame(width: 60, height: 60)
+                                .shadow(color: Color.themeRose.opacity(0.4), radius: 10, y: 5)
+                            
+                            Image(systemName: currentPage == slides.count - 1 ? "checkmark" : "arrow.right")
+                                .font(.title3.bold())
+                                .foregroundStyle(.white)
+                        }
                     }
-                    .padding(.horizontal, 32)
                 }
-                .padding(.bottom, 50)
+                .padding(.horizontal, 40)
+                .padding(.bottom, 40)
             }
+        }
+        .onAppear {
+            updateGrandmaState(for: 0)
+        }
+    }
+    
+    private func updateGrandmaState(for index: Int) {
+        let slide = slides[index]
+        withAnimation {
+            action = slide.action
+            expression = slide.expression
         }
     }
 }
 
-
 struct OnboardingSlide {
-    let image: String
     let title: String
     let description: String
+    let icon: String // Keep for fallback or reference
+    let action: GrandmaAction
+    let expression: GrandmaExpression
 }
-
-

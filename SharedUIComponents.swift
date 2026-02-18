@@ -8,26 +8,28 @@ struct MeshGradientBackground: View {
         ZStack {
             Color.themeBackground
             
-            // Dynamic moving blobs with parallax
+            // Warm rose blob
             Circle()
-                .fill(Color.themeAccent.opacity(0.3))
-                .frame(width: 400, height: 400)
+                .fill(Color.themeRose.opacity(0.25))
+                .frame(width: 420, height: 420)
+                .blur(radius: 90)
+                .offset(x: (animate ? 110 : -110) + (scrollOffset * 0.2),
+                        y: (animate ? -180 : 180) + (scrollOffset * 0.1))
+            
+            // Amber/gold blob
+            Circle()
+                .fill(Color.themeWarm.opacity(0.22))
+                .frame(width: 360, height: 360)
                 .blur(radius: 80)
-                .offset(x: (animate ? 100 : -100) + (scrollOffset * 0.2), 
-                        y: (animate ? -200 : 200) + (scrollOffset * 0.1))
+                .offset(x: (animate ? -140 : 140) - (scrollOffset * 0.1),
+                        y: (animate ? 140 : -140) + (scrollOffset * 0.25))
             
+            // Soft peach blob
             Circle()
-                .fill(Color.blue.opacity(0.15))
-                .frame(width: 350, height: 350)
-                .blur(radius: 70)
-                .offset(x: (animate ? -150 : 150) - (scrollOffset * 0.1), 
-                        y: (animate ? 150 : -150) + (scrollOffset * 0.25))
-            
-            Circle()
-                .fill(Color.purple.opacity(0.2))
+                .fill(Color.themeGold.opacity(0.18))
                 .frame(width: 300, height: 300)
                 .blur(radius: 100)
-                .offset(x: (animate ? 50 : -50) + (scrollOffset * 0.15), 
+                .offset(x: (animate ? 50 : -50) + (scrollOffset * 0.15),
                         y: (animate ? 100 : -100) - (scrollOffset * 0.05))
         }
         .onAppear {
@@ -38,3 +40,24 @@ struct MeshGradientBackground: View {
     }
 }
 
+// MARK: - Reusable Glass Card Modifier
+struct GlassCard: ViewModifier {
+    var cornerRadius: CGFloat = 24
+    
+    func body(content: Content) -> some View {
+        content
+            .background(.ultraThinMaterial)
+            .clipShape(RoundedRectangle(cornerRadius: cornerRadius))
+            .overlay(
+                RoundedRectangle(cornerRadius: cornerRadius)
+                    .stroke(.white.opacity(0.4), lineWidth: 1)
+            )
+            .shadow(color: .black.opacity(0.06), radius: 12, x: 0, y: 6)
+    }
+}
+
+extension View {
+    func glassCard(cornerRadius: CGFloat = 24) -> some View {
+        modifier(GlassCard(cornerRadius: cornerRadius))
+    }
+}

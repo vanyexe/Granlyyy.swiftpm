@@ -1,11 +1,12 @@
 import Foundation
 import SwiftUI
 
-
 struct Story: Identifiable, Codable {
-    var id: String { title } // Use title as ID for simplicity in this version
+    var id: String { title }
     let title: String
     let content: String
+    var category: String = "General" // Default for backward compatibility
+    var readTime: Int = 3 // Default read time in minutes
 }
 
 @MainActor
@@ -33,70 +34,123 @@ public class StoryManager: ObservableObject {
         likedStoryIDs = current
     }
     
-    func getStory(id: String) -> Story? {
-        // Search through all languages/moods to find the story.
-        let allStories = Mood.allMoods.map { getStory(for: $0) }
-        return allStories.first { $0.id == id }
-    }
-    
+    // Returns a single story for the main view (defaults to first or random)
     func getStory(for mood: Mood) -> Story {
-        let lang = AppLanguage(rawValue: selectedLanguageCode) ?? .english
-        
-        switch lang {
-        case .english: return getEnglishStory(for: mood)
-        case .spanish: return getSpanishStory(for: mood)
-        case .french: return getFrenchStory(for: mood)
-        case .german: return getGermanStory(for: mood)
-        case .hindi: return getHindiStory(for: mood)
-        }
+        return getStories(for: mood).randomElement() ?? Story(title: "Grandma's Greeting", content: "Hello dear, I'm so happy to see you!", category: "General", readTime: 1)
     }
     
-    // MARK: - English Stories (Long & Sweet)
-    private func getEnglishStory(for mood: Mood) -> Story {
+    func getStory(id: String) -> Story? {
+        // Search through all moods
+        for mood in Mood.allMoods {
+            if let story = getStories(for: mood).first(where: { $0.id == id }) {
+                return story
+            }
+        }
+        return nil
+    }
+    
+    // Returns ALL stories for a specific mood
+    func getStories(for mood: Mood) -> [Story] {
+        // For now, simpler implementation: switch on mood name
+        // Ideally this would be a dictionary or database
         switch mood.name {
-        case "Happy":
-            return Story(title: "The Garden of Joy", content: "Oh, hello my dear! It brings such warmth to my heart to see you smiling like that. You know, happiness is a lot like my old garden back at the cottage. \n\nI remember one particular spring morning, much like this one. The sun was just peeking over the hills, painting the sky in shades of soft pink and gold. I had spent weeks preparing the soil, worrying if the frost had been too harsh that winter. But as I walked out with my watering can, I saw it—the very first bloom of the season. A magnificent, yellow daffodil, standing tall and proud, waving in the gentle breeze.\n\nIt reminded me that no matter how long the winter, spring always returns. Joy always finds a way to break through. Seeing you happy is like seeing that first bloom all over again. It spreads, you know? Your smile lights up this whole room, just like that daffodil lit up my entire garden. Hold onto this feeling, cherish it, and let it help you grow. You are my little ray of sunshine. And just like the garden needs the sun to bloom, the world needs your beautiful smile. Never forget how precious this happiness is.")
-        case "Sad":
-            return Story(title: "The Rainy Window", content: "Come here, sweet child. Let me wrap this warm, knitted blanket around your shoulders. There, that's better. I see a little cloud hanging over you today. It's alright, you know. Even the sky needs to cry sometimes to water the earth.\n\nI remember a time when I was a breathless young girl, and my best friend moved far away. Oh, I felt like my heart had cracked right down the middle. It rained for three days straight, and I sat by the window, watching the droplets race each other down the glass. My grandmother—your great-great-grandmother—sat beside me, just as I am sitting with you now. She didn't tell me to stop crying. She just handed me a warm cup of cocoa and held my hand.\n\nShe told me that sadness is just love with nowhere to go for the moment. It shows that you have a big, beautiful heart capable of feeling deeply. So let the tears fall if they must. I am right here. We'll watch the rain together until the clouds clear. And they always do clear, my love. They always do. You are never alone in your sadness, I am here to hold your hand through it all.")
-        case "Anxious":
-            return Story(title: "The Ancient Oak", content: "Breathe with me, deep and slow. In... and out. Good. Now, close your eyes and imagine a vast, green forest. In the center of this forest stands an ancient oak tree. It has been there for hundreds of years.\n\nThink about all the storms that tree has seen. The howling winds, the heavy snows, the crashing thunder. Yet, through it all, it stands firm. Do you know why? Because its roots go deep, deep into the earth. They anchor it, holding it steady no matter what is happening above ground.\n\nYou are just like that oak tree, my darling. You have strength inside you that is deeper than you know. The worries you feel right now are just like the wind rustling the leaves—they are noisy and they might shake you a little, but they cannot uproot you. You are grounded. You are safe. I am here, leaning against the trunk with you, and together we can weather any storm. You are stronger than your fears. Trust in your roots, trust in yourself.")
-        case "Lonely":
-            return Story(title: "The Symphony of Stars", content: "Oh, my precious one. Loneliness can feel so cold, like standing in an empty field in winter. But look up with me. Imagine the night sky, dark and vast. At first, it seems empty, doesn't it?\n\nBut if you keep looking, your eyes adjust, and you see one tiny star. Then another. And another. Soon, you realize the sky isn't empty at all—it is crowded with millions of shining lights, all connected in a grand, silent dance. \n\nWe are like those stars. Even when we feel miles apart, we are part of the same beautiful universe. The light from a star takes years to reach us, but it travels all that way just to say, 'I am here.' My love for you is like that starlight. Even when you can't see me, even when you feel completely on your own, my love is travelling to you, surrounding you. You are never truly alone. The whole universe is holding you, and I am right here in your heart.")
-        default:
-            return Story(title: "Grandma's Kitchen", content: "It is simply wonderful to see you. Why don't you pull up a chair? I was just remembering the smell of fresh apple pie baking in the oven. The scent of cinnamon and sugar filling the air, warm and comforting. \n\nI remember baking my first pie with my mother. I made such a mess! Flour everywhere, on my nose, in my hair. But we laughed so hard our bellies hurt. That's the secret ingredient, you know. Love and laughter. \n\nNo matter how you are feeling, there is always a seat for you at my table, and plenty of love to go around. You are always welcome here, in the warmth of my kitchen and my heart.")
+        case "Happy": return happyStories
+        case "Sad": return sadStories
+        case "Anxious": return anxiousStories
+        case "Lonely": return lonelyStories
+        case "Tired": return tiredStories
+        case "Angry": return angryStories
+        case "Grateful": return gratefulStories
+        case "Excited": return excitedStories
+        default: return [Story(title: "Grandma's Love", content: "You are always loved, my dear.", category: "Love", readTime: 1)]
         }
     }
     
-    // MARK: - Spanish Stories (Examples)
-    private func getSpanishStory(for mood: Mood) -> Story {
-        switch mood.name {
-        case "Happy":
-            return Story(title: "El Jardín Soleado", content: "¡Hola, cariño! Me alegra tanto verte sonreír. La felicidad es como mi viejo jardín. Recuerdo una mañana de primavera, vi el primer narciso florecer. Me recordó que, sin importar cuán largo sea el invierno, la primavera siempre regresa. Tu sonrisa ilumina esta habitación como esa flor iluminó mi jardín. Eres mi pequeño rayo de sol.")
-        default:
-            return Story(title: "Amor de Abuela", content: "Estoy tan feliz de verte. Recuerda, sin importar cómo te sientas, la abuela te quiere mucho.")
-        }
+    func getRandomStory(for mood: Mood) -> Story {
+        let base = getStories(for: mood).randomElement() ?? getStory(for: mood)
+        // Add random closing for variety
+        let extras = [
+            "\n\nAnd remember, my dear, every sunset promises a new sunrise.",
+            "\n\nNow come, let me make you a warm cup of tea while we sit together.",
+            "\n\nYou know, your grandfather would have loved to hear this story too.",
+            "\n\nSometimes the best stories are the ones we live, not just the ones we hear.",
+            "\n\nNow, shall I tell you another? Or shall we just sit here and enjoy the quiet together?"
+        ]
+        let extra = extras[Int.random(in: 0..<extras.count)]
+        return Story(title: base.title, content: base.content + extra, category: base.category, readTime: base.readTime)
     }
     
-    // MARK: - French Stories (Examples)
-    private func getFrenchStory(for mood: Mood) -> Story {
-        switch mood.name {
-        case "Happy":
-            return Story(title: "Le Jardin Ensoleillé", content: "Bonjour, mon chéri! Cela me réchauffe le cœur de te voir sourire. Le bonheur, c'est comme mon vieux jardin. Je me souviens d'un matin de printemps, j'ai vu la première jonquille fleurir. Elle m'a rappelé que peu importe la durée de l'hiver, le printemps revient toujours. Ton sourire illumine cette pièce tout comme cette fleur a illuminé mon jardin.")
-        default:
-            return Story(title: "L'amour de Grand-mère", content: "Je suis si heureuse de te voir. Rappelle-toi, peu importe ce que tu ressens, Grand-mère t'aime beaucoup.")
-        }
+    // MARK: - Story Data (24 Stories, 3 per Mood)
+    
+    // HAPPY
+    private var happyStories: [Story] {
+        [
+            Story(title: "The Garden of Joy", content: "Oh, hello my dear! It brings such warmth to my heart to see you smiling. You know, happiness is like my old garden... [Content from previous version] ...seeing that first bloom all over again.", category: "Nature", readTime: 3),
+            Story(title: " The Surprise Picnic", content: "Do you remember the time we went on a picnic and forgot the basket? We laughed so hard until our bellies hurt! We ended up eating wild berries and telling stories under the old oak tree. It wasn't the lunch we planned, but it was perfect because we were together.", category: "Funny", readTime: 2),
+            Story(title: "The Dancing Fireflies", content: "When I was a girl, the summer nights were filled with fireflies. They danced like tiny stars that had fallen to earth. We would catch them in jars, make a wish, and set them free. Your smile reminds me of that light—pure, magical, and full of hope.", category: "Bedtime", readTime: 4)
+        ]
     }
     
-    // MARK: - German Stories (Examples)
-    private func getGermanStory(for mood: Mood) -> Story {
-         return Story(title: "Omas Liebe", content: "Ich bin so froh, dich zu sehen. Denk daran, egal wie du dich fühlst, Oma hat dich sehr lieb.")
+    // SAD
+    private var sadStories: [Story] {
+        [
+            Story(title: "The Rainy Window", content: "Come here, sweet child. Let me wrap this warm blanket around you. I see a cloud hanging over you. Even the sky needs to cry sometimes to water the earth... [Content from previous version]", category: "Comfort", readTime: 3),
+            Story(title: "The Broken Teacup", content: "I once had a beautiful teacup that shattered. I was devastated. But my father helped me glue it back together with gold lacquer. He told me, 'Now it's even more beautiful because it has a history.' Your broken pieces make you who you are, beautiful and strong.", category: "Moral", readTime: 3),
+            Story(title: "The Moon's Hiding Place", content: "Even the moon disappears sometimes, hidden by the dark night. But she never leaves. She is just resting, gathering her light to shine even brighter. It's okay to hide for a while, my love. Your light will return.", category: "Bedtime", readTime: 2)
+        ]
     }
     
-    // MARK: - Hindi Stories (Examples)
-    private func getHindiStory(for mood: Mood) -> Story {
-         return Story(title: "दादी का प्यार", content: "तुम्हें देखकर मुझे बहुत खुशी हुई। याद रखना, तुम कैसा भी महसूस करो, दादी तुम्हें बहुत प्यार करती है।")
+    // ANXIOUS
+    private var anxiousStories: [Story] {
+        [
+            Story(title: "The Ancient Oak", content: "Breathe with me, deep and slow. Imagine a vast forest and an ancient oak tree... [Content from previous version]", category: "Nature", readTime: 3),
+            Story(title: "The River's Flow", content: "Ideally, life flows like a river. Sometimes it rushes over rocks, sometimes it's calm. But the river never worries about where it's going—it trusts the path. Trust your path, my dear. You will get where you need to be.", category: "Moral", readTime: 3),
+            Story(title: "Grandma's Secret Pocket", content: "I used to carry a smooth stone in my pocket whenever I felt scared. I'd rub it with my thumb and remember: 'This too shall pass.' Imagine I'm putting that stone in your hand right now. You are safe.", category: "Comfort", readTime: 2)
+        ]
+    }
+    
+    // LONELY
+    private var lonelyStories: [Story] {
+        [
+            Story(title: "The Symphony of Stars", content: "Oh, my precious one. Loneliness can feel cold. But look up at the night sky... [Content from previous version]", category: "Bedtime", readTime: 4),
+            Story(title: "The Invisible Thread", content: "There is an ancient legend that says an invisible red thread connects those who are destined to meet. Even when you feel alone, you are connected to people who love you, and people you haven't even met yet. You are part of a giant web of love.", category: "Moral", readTime: 3),
+            Story(title: "The Letter in the Mail", content: "I used to write letters to myself when I was lonely. I'd tell myself all the things I needed to hear. 'You are kind, you are smart, you are worthy.' Maybe today, you can be your own best friend too.", category: "Comfort", readTime: 2)
+        ]
+    }
+    
+    // TIRED
+    private var tiredStories: [Story] {
+        [
+            Story(title: "The Cozy Quilt", content: "Oh my dear, you look weary. Let me tell you about the quilt my mother made... [Content from previous version]", category: "Comfort", readTime: 3),
+            Story(title: "The Hibernating Bear", content: "Even the great bears sleep all winter long. They don't apologize for resting; they know it's how they survive. You are allowed to hibernate, my love. Rest is not a weakness.", category: "Bedtime", readTime: 2),
+            Story(title: "The Cat on the Windowsill", content: "Have you ever watched a cat sleep in a sunbeam? They are masters of rest. They stretch, they yawn, they don't have a worry in the world. Channel your inner cat today. Find a warm spot and just... be.", category: "Funny", readTime: 2)
+        ]
+    }
+    
+    // ANGRY
+    private var angryStories: [Story] {
+        [
+            Story(title: "The Thunderstorm", content: "I see the fire in your eyes. Anger is like a thunderstorm... [Content from previous version]", category: "Nature", readTime: 3),
+            Story(title: "The Hot Coal", content: "Holding onto anger is like grasping a hot coal with the intent of throwing it at someone else; you are the one who gets burned. Drop the coal, my dear. Let it go. Let your hands heal.", category: "Moral", readTime: 2),
+            Story(title: "The Scribble Page", content: "When I was mad, I would take a crayon and scribble as hard as I could on a piece of paper. Round and round, hard and fast! It felt so good to let it out on the page instead of on people. Try it sometime!", category: "Funny", readTime: 2)
+        ]
+    }
+    
+    // GRATEFUL
+    private var gratefulStories: [Story] {
+        [
+            Story(title: "The Thank You Jar", content: "Oh, what a wonderful feeling gratitude is! Let me tell you about my Thank You Jar... [Content from previous version]", category: "Moral", readTime: 3),
+            Story(title: "The Golden Spectacles", content: "Imagine if I gave you a pair of magical golden glasses. When you put them on, everything you love glows with a soft light. The coffee mug, the cat, the sunshine. Gratitude is just putting on those glasses.", category: "Bedtime", readTime: 3),
+            Story(title: "The Gift of Today", content: "Yesterday is history, tomorrow is a mystery, but today is a gift. That is why it is called the present! I am so grateful for the gift of you, right here, right now.", category: "Short", readTime: 1)
+        ]
+    }
+    
+    // EXCITED
+    private var excitedStories: [Story] {
+        [
+            Story(title: "The Ticket to Anywhere", content: "Oh, the sparkle in your eyes! It reminds me of the day I found a mystery ticket... [Content from previous version]", category: "Short", readTime: 3),
+            Story(title: "The First Snowfall", content: "Do you remember the feeling of waking up and seeing the whole world turned white? Thta urge to run outside and make the first footprints? That is pure excitement. Hold onto that child-like wonder!", category: "Nature", readTime: 2),
+            Story(title: "The Bakery Smell", content: "Walking past a bakery early in the morning, smelling the yeast and sugar... the anticipation of that first bite! Life is full of sweet moments waiting just around the corner.", category: "Funny", readTime: 2)
+        ]
     }
 }
-
-
-

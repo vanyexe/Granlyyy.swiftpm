@@ -12,45 +12,132 @@ public struct MemoriesView: View {
     
     public var body: some View {
         ZStack {
-            Color.themeBackground.ignoresSafeArea()
+            MeshGradientBackground()
+                .ignoresSafeArea()
             
-            if savedStories.isEmpty {
-                VStack {
-                    Image(systemName: "heart.slash")
-                        .font(.system(size: 60))
-                        .foregroundStyle(Color.themeAccent.opacity(0.5))
-                        .padding()
-                    
-                    Text("No saved memories yet.")
-                        .font(.title2)
-                        .foregroundStyle(Color.themeText)
-                    
-                    Text("Tap the heart icon on a story to save it here.")
-                        .font(.subheadline)
-                        .foregroundStyle(Color.themeText.opacity(0.7))
-                        .multilineTextAlignment(.center)
-                        .padding()
-                }
-            } else {
-                List(savedStories) { story in
-                    NavigationLink(destination: StoryView(mood: Mood.allMoods[0], storyToLoad: story)) {
-                        VStack(alignment: .leading) {
-                            Text(story.title)
-                                .font(.headline)
-                                .foregroundStyle(Color.themeText)
-                            
-                            Text(story.content.prefix(100) + "...")
-                                .font(.caption)
-                                .foregroundStyle(Color.gray)
-                        }
-                        .padding(.vertical, 8)
+            VStack(spacing: 0) {
+                // Header
+                HStack {
+                    VStack(alignment: .leading, spacing: 2) {
+                        Text("Saved Memories")
+                            .font(.system(size: 28, weight: .bold, design: .serif))
+                            .foregroundStyle(Color.themeText)
+                        Text("\(savedStories.count) stories saved 💛")
+                            .font(.subheadline)
+                            .foregroundStyle(.secondary)
                     }
-                    .listRowBackground(Color.white.opacity(0.5))
+                    Spacer()
                 }
-                .scrollContentBackground(.hidden)
+                .padding(.horizontal, 24)
+                .padding(.top, 16)
+                .padding(.bottom, 12)
+                
+                if savedStories.isEmpty {
+                    Spacer()
+                    // Beautiful empty state
+                    VStack(spacing: 20) {
+                        ZStack {
+                            Circle()
+                                .fill(Color.themeRose.opacity(0.1))
+                                .frame(width: 140, height: 140)
+                                .blur(radius: 20)
+                            
+                            VStack(spacing: 8) {
+                                Image(systemName: "person.crop.circle.fill")
+                                    .font(.system(size: 60))
+                                    .foregroundStyle(Color.themeText.opacity(0.8))
+                                Image(systemName: "heart.fill")
+                                    .font(.system(size: 30))
+                                    .foregroundStyle(Color.themeRose)
+                                    .offset(x: 20, y: -20)
+                            }
+                        }
+                        
+                        Text("No memories yet")
+                            .font(.system(size: 22, weight: .bold, design: .serif))
+                            .foregroundStyle(Color.themeText)
+                        
+                        Text("When grandma tells you a story you love,\ntap the heart to save it here forever.")
+                            .font(.subheadline)
+                            .foregroundStyle(.secondary)
+                            .multilineTextAlignment(.center)
+                            .lineSpacing(4)
+                        
+                        Image(systemName: "heart.slash")
+                            .font(.title)
+                            .foregroundStyle(Color.themeRose.opacity(0.3))
+                            .padding(.top, 8)
+                    }
+                    .padding(40)
+                    Spacer()
+                } else {
+                    ScrollView(showsIndicators: false) {
+                        VStack(spacing: 14) {
+                            ForEach(savedStories) { story in
+                                NavigationLink(destination: StoryView(mood: Mood.allMoods[0], storyToLoad: story)) {
+                                    MemoryCard(story: story, storyManager: storyManager)
+                                }
+                                .buttonStyle(PlainButtonStyle())
+                            }
+                        }
+                        .padding(.horizontal, 24)
+                        .padding(.bottom, 100)
+                    }
+                }
             }
         }
-        .navigationTitle("Saved Memories")
     }
 }
 
+struct MemoryCard: View {
+    let story: Story
+    let storyManager: StoryManager
+    
+    var body: some View {
+        HStack(spacing: 14) {
+            // Warm gradient icon
+            ZStack {
+                RoundedRectangle(cornerRadius: 14)
+                    .fill(
+                        LinearGradient(
+                            colors: [Color.themeRose.opacity(0.3), Color.themeWarm.opacity(0.2)],
+                            startPoint: .topLeading,
+                            endPoint: .bottomTrailing
+                        )
+                    )
+                    .frame(width: 52, height: 52)
+                
+                Image(systemName: "book.closed.fill")
+                    .font(.title2)
+                    .foregroundStyle(Color.themeText)
+            }
+            
+            VStack(alignment: .leading, spacing: 4) {
+                Text(story.title)
+                    .font(.headline)
+                    .foregroundStyle(Color.themeText)
+                    .lineLimit(1)
+                
+                Text(story.content.prefix(60) + "...")
+                    .font(.caption)
+                    .foregroundStyle(.secondary)
+                    .lineLimit(2)
+            }
+            
+            Spacer()
+            
+            // Heart toggle
+            Button(action: {
+                withAnimation(.spring(response: 0.3, dampingFraction: 0.6)) {
+                    storyManager.toggleLike(for: story)
+                }
+            }) {
+                Image(systemName: storyManager.isLiked(story: story) ? "heart.fill" : "heart")
+                    .font(.title3)
+                    .foregroundStyle(storyManager.isLiked(story: story) ? Color.themeRose : .secondary)
+            }
+        }
+        .padding(14)
+        .glassCard(cornerRadius: 20)
+    }
+}
