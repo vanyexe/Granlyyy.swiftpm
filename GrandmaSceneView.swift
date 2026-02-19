@@ -7,7 +7,7 @@
 //
 
 import SwiftUI
-import SceneKit
+@preconcurrency import SceneKit
 import AVFoundation
 
 // MARK: - Enums for Actions & Expressions

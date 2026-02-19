@@ -60,7 +60,7 @@ struct HomeView: View {
                             .tag(Tab.memories)
                             .tabItem { Label("Memories", systemImage: "heart.fill") }
                         
-                        DailyWisdomView()
+                        DigitalGrandmaWisdomView()
                             .tag(Tab.wisdom)
                             .tabItem { Label("Wisdom", systemImage: "leaf.fill") }
                         

@@ -54,4 +54,10 @@ extension Color {
             ? UIColor(white: 1, alpha: 0.08)
             : UIColor(white: 1, alpha: 0.65)
     })
+    
+    static let themeGreen = Color(UIColor { tc in
+        tc.userInterfaceStyle == .dark
+            ? UIColor(red: 0.35, green: 0.62, blue: 0.50, alpha: 1)
+            : UIColor(red: 0.45, green: 0.72, blue: 0.60, alpha: 1)
+    })
 }
