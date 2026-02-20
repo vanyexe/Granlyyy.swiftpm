@@ -45,36 +45,53 @@ final class AudioService: NSObject, ObservableObject, AVSpeechSynthesizerDelegat
         
         let utterance = AVSpeechUtterance(string: text)
         
-        // Specifically find a sweet, comforting English female voice
+        // Specifically find the most realistic, sweet English female voice
         let voices = AVSpeechSynthesisVoice.speechVoices()
-        let preferredNames = ["Samantha", "Karen", "Moira", "Tessa", "Martha"] // Known good female voices
-        
         var selectedVoice: AVSpeechSynthesisVoice?
         
-        // 1. Try to find a preferred English female voice
-        for name in preferredNames {
-            if let voice = voices.first(where: { $0.name == name && $0.language.starts(with: "en") }) {
-                selectedVoice = voice
-                break
+        // 1. Try to find a "Premium" or "Enhanced" quality female voice
+        if #available(iOS 16.0, *) {
+            // First, try for the highest possible realism (Premium)
+            selectedVoice = voices.first(where: {
+                $0.language.starts(with: "en") &&
+                $0.gender == .female &&
+                $0.quality == .premium
+            })
+            
+            // If no premium, try enhanced
+            if selectedVoice == nil {
+                selectedVoice = voices.first(where: {
+                    $0.language.starts(with: "en") &&
+                    $0.gender == .female &&
+                    $0.quality == .enhanced
+                })
             }
         }
         
-        // 2. Fallback to any English female voice
+        // 2. Try known good female names if high-quality ones aren't available
+        let preferredNames = ["Zoe", "Samantha", "Karen", "Moira", "Tessa", "Martha"]
         if selectedVoice == nil {
-            selectedVoice = voices.first(where: { $0.language.starts(with: "en") && $0.gender == .female })
+            for name in preferredNames {
+                if let voice = voices.first(where: { $0.name == name && $0.language.starts(with: "en") }) {
+                    selectedVoice = voice
+                    break
+                }
+            }
         }
         
         // 3. Last fallback
         if selectedVoice == nil {
-            selectedVoice = AVSpeechSynthesisVoice(language: "en-US")
+            selectedVoice = voices.first(where: { $0.language.starts(with: "en") && $0.gender == .female }) ?? AVSpeechSynthesisVoice(language: "en-US")
         }
         
         utterance.voice = selectedVoice
         
-        // Make her sound sweeter, gentler, and authentically older
-        utterance.rate = AVSpeechUtteranceDefaultSpeechRate * 0.82 // Slightly slower, unhurried pace
-        utterance.pitchMultiplier = 1.15 // Higher pitch for a sweeter, softer tone
+        // Make her sound sweeter, gentler, and authentically older with a real storytelling cadence
+        utterance.rate = AVSpeechUtteranceDefaultSpeechRate * 0.80 // Slightly slower, relaxing storytelling pace
+        utterance.pitchMultiplier = 1.10 // Slightly higher pitch for sweetness without sounding unnatural
         utterance.volume = 1.0
+        // Adding a slight pre-utterance delay makes it feel like she's taking a breath before speaking
+        utterance.preUtteranceDelay = 0.5
         
         currentlyPlayingContent = text
         isPlaying = true
