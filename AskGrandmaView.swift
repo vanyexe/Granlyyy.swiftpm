@@ -1,4 +1,5 @@
 import SwiftUI
+import NaturalLanguage
 
 struct ChatMessage: Identifiable {
     let id = UUID()
@@ -13,27 +14,63 @@ struct AskGrandmaView: View {
     ]
     @State private var isThinking = false
     
-    // Simple mocked responses based on keywords
+    // ML sentiment analysis and keyword matching
     private func generateGrandmaResponse(to input: String) -> String {
         let lower = input.lowercased()
+        
+        // 1. Core ML Sentiment Analysis via NLTagger
+        let tagger = NLTagger(tagSchemes: [.sentimentScore])
+        tagger.string = input
+        let (sentiment, _) = tagger.tag(at: input.startIndex, unit: .paragraph, scheme: .sentimentScore)
+        let sentimentScore = Double(sentiment?.rawValue ?? "0") ?? 0.0
+        
+        // 2. Keyword Matching for Contextual Responses
         if lower.contains("sad") || lower.contains("cry") || lower.contains("depressed") {
             return "Oh honey, come sit here with me. It's okay to feel sad. Even the sky has to cry sometimes to make the flowers grow. Take a deep breath. You are loved, so very loved."
         } else if lower.contains("anxious") || lower.contains("worried") || lower.contains("stress") {
-            return "Take a deep breath with me, right now. In... and out... Good. Now, remember we can only control what's in front of us today. Leave tomorrow's worries for tomorrow. You are stronger than you know."
+            return "Take a deep breath with me, right now. In... and out... Good. Now, remember we can only control what's in front of us today. Leave tomorrow's worries for tomorrow."
         } else if lower.contains("angry") || lower.contains("mad") || lower.contains("frustrated") {
-            return "I hear how frustrated you are, and your feelings are completely valid. But remember, holding onto a hot coal will only burn your own hand. Take a walk, get some fresh air, and let the heat pass before you decide what to do next."
-        } else if lower.contains("love") || lower.contains("relationship") || lower.contains("friend") {
-            return "Relationships are like maintaining a garden. They take patience, water, and plenty of sunshine. If someone isn't treating you kindly, remember your worth. You deserve a love that feels like home."
-        } else if lower.contains("tired") || lower.contains("exhausted") || lower.contains("burnout") {
-            return "You've been carrying so much, my brave one. It's time to put the heavy bags down. Even the strongest bears hibernate during winter. Rest is not a weakness; it's how we heal. Please go get some sleep tonight."
-        } else {
-            let fallbacks = [
+            return "I hear how frustrated you are, and your feelings are completely valid. But remember, holding onto a hot coal will only burn your own hand. Take a walk, get some fresh air."
+        } else if lower.contains("love") || lower.contains("relationship") || lower.contains("friend") || lower.contains("breakup") {
+            return "Relationships are like maintaining a garden. They take patience, water, and plenty of sunshine. You deserve a love that feels like home. Let time do its healing."
+        } else if lower.contains("tired") || lower.contains("exhausted") || lower.contains("burnout") || lower.contains("sleep") {
+            return "You've been carrying so much, my brave one. It's time to put the heavy bags down. Rest is not a weakness; it's how we heal. Please go get some sleep tonight."
+        } else if lower.contains("happy") || lower.contains("good") || lower.contains("excited") || lower.contains("great") {
+            return "Oh, that makes my heart flutter! I'm so incredibly happy for you! Remember this feeling, bottle it up, and save it for a rainy day. You deserve all the good things."
+        } else if lower.contains("sick") || lower.contains("ill") || lower.contains("hurt") || lower.contains("pain") {
+            return "Oh no, my dear. Make sure you're drinking plenty of warm fluids and getting enough rest. Your body is a temple, give it the time it needs to heal. I'm sending you a big, warm hug."
+        } else if lower.contains("school") || lower.contains("job") || lower.contains("work") || lower.contains("study") {
+            return "You are working so hard, and I am incredibly proud of you. Don't forget to take breaks. Your worth is not measured by your productivity, but by your beautiful heart."
+        }
+        
+        // 3. Generative Fallbacks based on Core ML Sentiment Score
+        if sentimentScore <= -0.2 {
+            // Negative sentiment
+            let negativeFallbacks = [
                 "I hear you, sweetheart. Sometimes just saying it out loud makes the burden a little lighter. I'm always here to listen.",
                 "That sounds like a heavy thing to carry alone. Remember you don't have to have all the answers right now. Give yourself some grace.",
-                "Oh my dear, life can be so wonderfully complicated. Whenever you feel lost, place your hand on your heart—that's where your truest wisdom lives.",
+                "Oh my dear, life can be so wonderfully complicated. Place your hand on your heart—that's where your truest wisdom lives.",
                 "Have you had a glass of water today? Eaten a good meal? Sometimes our biggest problems just need the simplest care first."
             ]
-            return fallbacks.randomElement() ?? ""
+            return negativeFallbacks.randomElement() ?? ""
+        } else if sentimentScore >= 0.2 {
+            // Positive sentiment
+            let positiveFallbacks = [
+                "That is so wonderful to hear! Your joy is contagious, my dear.",
+                "It sounds like you're having a beautiful day. Let's celebrate that!",
+                "Oh, you have such a bright light in you! Keep shining, sweetheart.",
+                "That brought a big smile to my face. I'm so proud of the person you are."
+            ]
+            return positiveFallbacks.randomElement() ?? ""
+        } else {
+            // Neutral sentiment
+            let neutralFallbacks = [
+                "I'm right here with you, dear. Tell me more about that.",
+                "That's very interesting. How does that make you feel deep down?",
+                "Mmhmm, I'm listening. You can always share your thoughts with me.",
+                "Life is indeed a journey full of surprises. What do you think you'll do next?"
+            ]
+            return neutralFallbacks.randomElement() ?? ""
         }
     }
     
