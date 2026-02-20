@@ -94,15 +94,15 @@ struct DailyWisdomView: View {
                             }) {
                                 HStack(spacing: 6) {
                                     Text(categoryEmojis[index])
-                                        .font(.granlyBody)
+                                        .font(.granlySubheadline) // Body -> Subheadline
                                     Text(categories[index])
-                                        .font(.granlySubheadline)
+                                        .font(.system(size: 11, weight: .bold, design: .rounded)) // Subheadline -> crisp small bold
                                 }
-                                .padding(.horizontal, 16)
-                                .padding(.vertical, 10)
+                                .padding(.horizontal, 14) // 16 -> 14
+                                .padding(.vertical, 8) // 10 -> 8
                                 .background(selectedCategory == index ? categoryColors[index].opacity(0.2) : Color.clear)
                                 .foregroundStyle(selectedCategory == index ? categoryColors[index] : .secondary)
-                                .glassCard(cornerRadius: 20)
+                                .glassCard(cornerRadius: 16) // 20 -> 16
                             }
                         }
                     }
@@ -118,7 +118,7 @@ struct DailyWisdomView: View {
                     HStack {
                         Spacer()
                         Text(categoryEmojis[selectedCategory])
-                            .font(.system(size: 50))
+                            .font(.system(size: 40)) // 50 -> 40
                             .padding(.leading, 24) // Offset to center visually
                         Spacer()
                         
@@ -130,32 +130,32 @@ struct DailyWisdomView: View {
                             }
                         }) {
                             Image(systemName: savedQuotes.contains(currentQuote.text) ? "bookmark.fill" : "bookmark")
-                                .font(.granlyTitle2)
+                                .font(.granlyHeadline) // Title2 -> Headline
                                 .foregroundStyle(categoryColors[selectedCategory])
                         }
                     }
                     
                     Text("\"")
-                        .font(.granlyTitle)
+                        .font(.granlyTitle2) // Title -> Title2
                         .foregroundStyle(categoryColors[selectedCategory].opacity(0.5))
                         .offset(y: 10)
                     
                     Text(currentQuote.text)
-                        .font(.system(size: 22, weight: .medium, design: .serif))
+                        .font(.system(size: 20, weight: .medium, design: .serif)) // 22 -> 20
                         .foregroundStyle(Color.themeText)
                         .multilineTextAlignment(.center)
-                        .lineSpacing(6)
+                        .lineSpacing(4) // 6 -> 4
                         .padding(.horizontal, 8)
                     
                     Text("— \(currentQuote.author)")
-                        .font(.subheadline.italic())
+                        .font(.granlyCaption) // subheadline.italic -> Caption
                         .foregroundStyle(.secondary)
                 }
-                .padding(32)
+                .padding(24) // 32 -> 24
                 .frame(maxWidth: .infinity)
-                .glassCard(cornerRadius: 32)
-                .padding(.horizontal, 24)
-                .scaleEffect(animateCard ? 1 : 0.9)
+                .glassCard(cornerRadius: 24) // 32 -> 24
+                .padding(.horizontal, 20) // 24 -> 20
+                .scaleEffect(animateCard ? 1.0 : 0.95) // softer scale
                 .opacity(animateCard ? 1 : 0)
                 
                 Spacer()
@@ -176,26 +176,26 @@ struct DailyWisdomView: View {
                         }
                     }) {
                         Image(systemName: "chevron.left")
-                            .font(.granlyTitle2)
+                            .font(.granlyHeadline) // Title2 -> Headline
                             .foregroundStyle(Color.themeText)
-                            .frame(width: 50, height: 50)
-                            .glassCard(cornerRadius: 25)
+                            .frame(width: 44, height: 44) // 50 -> 44
+                            .glassCard(cornerRadius: 16) // 25 -> 16
                     }
                     
                     // Share
                     ShareLink(item: "\"\(currentQuote.text)\" — Grandma 💛\n\nFrom Granly App") {
                         HStack(spacing: 8) {
                             Image(systemName: "square.and.arrow.up")
-                                .font(.granlyHeadline)
+                                .font(.granlySubheadline) // Headline -> Subheadline
                             Text("Share Wisdom")
-                                .font(.granlyHeadline)
+                                .font(.granlyBodyBold) // Headline -> BodyBold
                         }
                         .foregroundStyle(.white)
-                        .padding(.horizontal, 28)
-                        .padding(.vertical, 14)
+                        .padding(.horizontal, 22) // 28 -> 22
+                        .padding(.vertical, 12) // 14 -> 12
                         .background(categoryColors[selectedCategory])
                         .clipShape(Capsule())
-                        .shadow(color: categoryColors[selectedCategory].opacity(0.4), radius: 12, x: 0, y: 6)
+                        .shadow(color: categoryColors[selectedCategory].opacity(0.4), radius: 8, x: 0, y: 4) // Smaller shadow
                     }
                     
                     // Next
@@ -211,13 +211,13 @@ struct DailyWisdomView: View {
                         }
                     }) {
                         Image(systemName: "chevron.right")
-                            .font(.granlyTitle2)
+                            .font(.granlyHeadline)
                             .foregroundStyle(Color.themeText)
-                            .frame(width: 50, height: 50)
-                            .glassCard(cornerRadius: 25)
+                            .frame(width: 44, height: 44) // 50 -> 44
+                            .glassCard(cornerRadius: 16) // 25 -> 16
                     }
                 }
-                .padding(.bottom, 30)
+                .padding(.bottom, 24) // 30 -> 24
             }
         }
         .onAppear {

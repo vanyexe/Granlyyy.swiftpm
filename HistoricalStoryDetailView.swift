@@ -12,36 +12,36 @@ struct HistoricalStoryDetailView: View {
             VStack(alignment: .leading, spacing: 24) {
                 // Header Image Placeholder / Icon
                 ZStack {
-                    RoundedRectangle(cornerRadius: 24)
+                    RoundedRectangle(cornerRadius: 16) // 24 -> 16
                         .fill(LinearGradient(colors: [Color.themeRose, Color.themeWarm], startPoint: .topLeading, endPoint: .bottomTrailing))
-                        .frame(height: 200)
+                        .frame(height: 140) // 200 -> 140
                     
                     Image(systemName: story.iconName)
-                        .font(.system(size: 80))
+                        .font(.system(size: 60)) // 80 -> 60
                         .foregroundStyle(.white.opacity(0.8))
                 }
                 .padding(.horizontal)
                 .padding(.top, 10)
                 
                 // Title & Era
-                VStack(alignment: .leading, spacing: 8) {
+                VStack(alignment: .leading, spacing: 4) { // 8 -> 4
                     Text(story.title)
-                        .font(.granlyTitle)
+                        .font(.granlyTitle2) // Title -> Title2
                         .foregroundStyle(Color.themeText)
                     
                     Text(story.era)
-                        .font(.granlySubheadline)
+                        .font(.granlyCaption) // Subheadline -> Caption
                         .foregroundStyle(Color.themeRose)
                 }
                 .padding(.horizontal)
                 
                 // What Happened
-                VStack(alignment: .leading, spacing: 12) {
+                VStack(alignment: .leading, spacing: 8) { // 12 -> 8
                     HistoricalSectionHeader(title: "What Happened", icon: "book.fill")
                     
                     Text(story.summary)
                         .font(.granlyBody)
-                        .lineSpacing(6)
+                        .lineSpacing(4) // 6 -> 4
                         .foregroundStyle(Color.themeText.opacity(0.9))
                 }
                 .padding(.horizontal)
@@ -63,9 +63,9 @@ struct HistoricalStoryDetailView: View {
                         .padding(.vertical, 4)
                     }
                 }
-                .padding(20)
+                .padding(16) // 20 -> 16
                 .background(Color.themeGreen.opacity(0.1))
-                .clipShape(RoundedRectangle(cornerRadius: 20))
+                .clipShape(RoundedRectangle(cornerRadius: 16)) // 20 -> 16
                 .padding(.horizontal)
                 
                 // Grandma's Reflection
@@ -94,9 +94,9 @@ struct HistoricalStoryDetailView: View {
                         .foregroundStyle(Color.themeText)
                 }
                 .frame(maxWidth: .infinity)
-                .padding(24)
+                .padding(16) // 24 -> 16
                 .background(Color.themeWarm.opacity(0.2))
-                .clipShape(RoundedRectangle(cornerRadius: 20))
+                .clipShape(RoundedRectangle(cornerRadius: 16)) // 20 -> 16
                 .padding(.horizontal)
                 
                 // Journal Input

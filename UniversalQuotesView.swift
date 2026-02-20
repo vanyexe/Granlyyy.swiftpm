@@ -13,7 +13,7 @@ struct UniversalQuotesView: View {
                 // Header
                 VStack(alignment: .leading, spacing: 4) {
                     Text("Universal Wisdom")
-                        .font(.granlyTitle)
+                        .font(.granlyTitle2) // Title -> Title2
                         .foregroundStyle(Color.themeText)
                     Text("Timeless truths connecting us all.")
                         .font(.granlySubheadline)
@@ -70,7 +70,7 @@ struct QuoteDetailCard: View {
                 // Original Quote & Source
                 VStack(spacing: 12) {
                     Text("\"\(quote.originalQuote)\"")
-                        .font(.system(size: 24, weight: .medium, design: .serif))
+                        .font(.system(size: 20, weight: .medium, design: .serif)) // 24 -> 20
                         .foregroundStyle(Color.themeText)
                         .multilineTextAlignment(.center)
                         .lineSpacing(4)
@@ -89,11 +89,11 @@ struct QuoteDetailCard: View {
                         Image(systemName: "globe")
                             .foregroundStyle(Color.themeRose)
                         Text("Simple Meaning")
-                            .font(.granlyHeadline)
+                            .font(.granlyBodyBold) // Headline -> BodyBold
                             .foregroundStyle(Color.themeText)
                     }
                     Text(quote.modernMeaning)
-                        .font(.granlySubheadline)
+                        .font(.granlyCaption) // Subheadline -> Caption
                         .foregroundStyle(Color.themeText.opacity(0.8))
                         .lineSpacing(4)
                 }
@@ -127,11 +127,11 @@ struct QuoteDetailCard: View {
                         Image(systemName: "leaf.fill")
                             .foregroundStyle(Color.themeGreen)
                         Text("Daily Practice")
-                            .font(.granlyHeadline)
+                            .font(.granlyBodyBold) // Headline -> BodyBold
                             .foregroundStyle(Color.themeText)
                     }
                     Text(quote.dailyPractice)
-                        .font(.granlySubheadline)
+                        .font(.granlyCaption) // Subheadline -> Caption
                         .foregroundStyle(Color.themeText.opacity(0.8))
                         .lineSpacing(4)
                 }
@@ -158,12 +158,12 @@ struct QuoteDetailCard: View {
                 .padding(.top, 8)
                 
             }
-            .padding(24)
+            .padding(16) // 24 -> 16
             .background(.thickMaterial)
-            .clipShape(RoundedRectangle(cornerRadius: 32))
-            .shadow(color: Color.black.opacity(0.05), radius: 20, y: 10)
-            .padding(.horizontal, 24)
-            .padding(.vertical, 10)
+            .clipShape(RoundedRectangle(cornerRadius: 24)) // 32 -> 24
+            .shadow(color: Color.black.opacity(0.05), radius: 10, y: 5) // 20 -> 10
+            .padding(.horizontal, 20) // 24 -> 20
+            .padding(.vertical, 8) // 10 -> 8
         }
         .scrollIndicators(.hidden)
     }

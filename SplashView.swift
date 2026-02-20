@@ -26,9 +26,8 @@ struct SplashView: View {
                             startPoint: .topLeading,
                             endPoint: .bottomTrailing
                         ),
-                        lineWidth: 2
                     )
-                    .frame(width: CGFloat(180 + i * 60), height: CGFloat(180 + i * 60))
+                    .frame(width: CGFloat(140 + i * 50), height: CGFloat(140 + i * 50)) // 180+60i -> 140+50i
                     .scaleEffect(ringAnimation ? 1.1 : 0.8)
                     .opacity(ringAnimation ? 0.8 : 0.2)
                     .animation(
@@ -47,7 +46,7 @@ struct SplashView: View {
                     isSpeaking: .constant(false),
                     settings: settings
                 )
-                .frame(width: 260, height: 260)
+                .frame(width: 200, height: 200) // 260 -> 200
                 .clipShape(Circle())
                 .overlay(
                     Circle()
@@ -67,7 +66,7 @@ struct SplashView: View {
                 VStack(spacing: 12) {
                     // Gradient Logo
                     Text("Granly")
-                        .font(.granlyTitle)
+                        .font(.granlyTitle2) // Title -> Title2
                         .foregroundStyle(
                             LinearGradient(
                                 colors: [Color.themeRose, Color.themeWarm],

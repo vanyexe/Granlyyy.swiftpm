@@ -101,15 +101,15 @@ struct WisdomSectionCard<Content: View>: View {
                 ZStack {
                     Circle()
                         .fill(color.opacity(0.15))
-                        .frame(width: 50, height: 50)
+                        .frame(width: 44, height: 44) // 50 -> 44
                     Image(systemName: icon)
-                        .font(.granlyTitle2)
+                        .font(.granlyHeadline) // Title2 -> Headline
                         .foregroundStyle(color)
                 }
                 
-                VStack(alignment: .leading, spacing: 4) {
+                VStack(alignment: .leading, spacing: 2) { // 4 -> 2
                     Text(title)
-                        .font(.granlyHeadline)
+                        .font(.granlyBodyBold) // Headline -> BodyBold
                         .foregroundStyle(Color.themeText)
                     Text(subtitle)
                         .font(.granlyCaption)
@@ -119,8 +119,8 @@ struct WisdomSectionCard<Content: View>: View {
             
             content()
         }
-        .padding()
-        .glassCard(cornerRadius: 20)
+        .padding(14) // 16 -> 14
+        .glassCard(cornerRadius: 16) // 20 -> 16
         .padding(.horizontal)
     }
 }
@@ -140,10 +140,10 @@ struct ActionRow: View {
                 .foregroundStyle(Color.themeText.opacity(0.5))
                 .font(.granlyHeadline)
         }
-        .padding(.vertical, 12)
-        .padding(.horizontal, 16)
+        .padding(.vertical, 10) // 12 -> 10
+        .padding(.horizontal, 14) // 16 -> 14
         .background(Color.white.opacity(0.4))
-        .clipShape(RoundedRectangle(cornerRadius: 12))
+        .clipShape(RoundedRectangle(cornerRadius: 10)) // 12 -> 10
     }
 }
 

@@ -15,7 +15,7 @@ struct GrowthPathView: View {
                     // Header Stats
                     VStack(spacing: 16) {
                         Text("Your Emotional Garden")
-                            .font(.granlyTitle)
+                            .font(.granlyTitle2) // Title -> Title2
                             .foregroundStyle(Color.themeText)
                         
                         HStack(spacing: 30) {
@@ -40,23 +40,23 @@ struct GrowthPathView: View {
                                         showCompletionAlert = true
                                     }
                                 }) {
-                                    HStack(spacing: 20) {
+                                    HStack(spacing: 16) { // 20 -> 16
                                         // Icon
                                         ZStack {
                                             Circle()
                                                 .fill(node.isCompleted ? Color.themeGreen : Color.gray.opacity(0.2))
-                                                .frame(width: 60, height: 60)
-                                                .shadow(color: node.isCompleted ? Color.themeGreen.opacity(0.4) : .clear, radius: 8)
+                                                .frame(width: 48, height: 48) // 60 -> 48
+                                                .shadow(color: node.isCompleted ? Color.themeGreen.opacity(0.4) : .clear, radius: 6) // 8 -> 6
                                             
                                             Image(systemName: node.icon)
-                                                .font(.granlyTitle2)
+                                                .font(.granlyHeadline) // Title2 -> Headline
                                                 .foregroundStyle(node.isCompleted ? .white : .gray)
                                         }
                                         
                                         // Text
-                                        VStack(alignment: .leading, spacing: 4) {
+                                        VStack(alignment: .leading, spacing: 2) { // 4 -> 2
                                             Text(node.title)
-                                                .font(.granlyHeadline)
+                                                .font(.granlyBodyBold) // Headline -> BodyBold
                                                 .foregroundStyle(Color.themeText)
                                             Text(node.description)
                                                 .font(.granlyCaption)
@@ -67,13 +67,15 @@ struct GrowthPathView: View {
                                         
                                         if !node.isCompleted {
                                             Image(systemName: "lock.fill")
+                                                .font(.granlySubheadline) // Add slightly smaller lock
                                                 .foregroundStyle(.secondary.opacity(0.5))
                                         } else {
                                             Image(systemName: "checkmark.circle.fill")
+                                                .font(.granlySubheadline) // Add slightly smaller check
                                                 .foregroundStyle(Color.themeGreen)
                                         }
                                     }
-                                    .padding()
+                                    .padding(14) // default padding -> 14
                                     .glassCard(cornerRadius: 16)
                                 }
                                 .disabled(node.isCompleted)
@@ -116,21 +118,21 @@ struct StatRing: View {
         VStack(spacing: 8) {
             ZStack {
                 Circle()
-                    .stroke(color.opacity(0.2), lineWidth: 6)
-                    .frame(width: 80, height: 80)
+                    .stroke(color.opacity(0.2), lineWidth: 5) // 6 -> 5
+                    .frame(width: 64, height: 64) // 80 -> 64
                 
                 Circle()
                     .trim(from: 0, to: 0.7)
-                    .stroke(color, style: StrokeStyle(lineWidth: 6, lineCap: .round))
-                    .frame(width: 80, height: 80)
+                    .stroke(color, style: StrokeStyle(lineWidth: 5, lineCap: .round)) // 6 -> 5
+                    .frame(width: 64, height: 64) // 80 -> 64
                     .rotationEffect(.degrees(-90))
                 
                 VStack(spacing: 2) {
                     Image(systemName: icon)
-                        .font(.granlyBody)
+                        .font(.granlyCaption) // Body -> Caption
                         .foregroundStyle(color)
                     Text(value)
-                        .font(.granlyHeadline)
+                        .font(.granlyBodyBold) // Headline -> BodyBold
                         .foregroundStyle(Color.themeText)
                 }
             }

@@ -22,27 +22,27 @@ struct ProfileView: View {
                 Color.themeBackground.ignoresSafeArea()
                 
                 ScrollView {
-                    VStack(spacing: 24) {
+                    VStack(spacing: 20) { // 24 -> 20
                         // Hero Header
-                        VStack(spacing: 16) {
+                        VStack(spacing: 12) { // 16 -> 12
                             ZStack {
                                 Circle()
                                     .fill(Color.themeRose.opacity(0.2))
-                                    .frame(width: 120, height: 120)
+                                    .frame(width: 100, height: 100) // 120 -> 100
                                     .blur(radius: 20)
                                 
                                 Image("grandma_avatar_circle")
                                     .resizable()
                                     .scaledToFit()
-                                    .frame(width: 100, height: 100)
+                                    .frame(width: 80, height: 80) // 100 -> 80
                                     .clipShape(Circle())
-                                    .overlay(Circle().stroke(.white, lineWidth: 4))
-                                    .shadow(radius: 10)
+                                    .overlay(Circle().stroke(.white, lineWidth: 3)) // 4 -> 3
+                                    .shadow(radius: 8) // 10 -> 8
                             }
                             
                             VStack(spacing: 4) {
                                 Text(userName)
-                                    .font(.granlyTitle2)
+                                    .font(.granlyHeadline) // Title2 -> Headline
                                     .foregroundStyle(Color.themeText)
                                 Text("Stories Read: \(storiesRead)")
                                     .font(.granlySubheadline)
@@ -70,8 +70,8 @@ struct ProfileView: View {
                                 showMakeover = true
                             }
                         }
-                        .padding(20)
-                        .glassCard()
+                        .padding(16) // 20 -> 16
+                        .glassCard(cornerRadius: 16)
                         .padding(.horizontal)
                         
                         // Settings Section
@@ -89,8 +89,8 @@ struct ProfileView: View {
                             // Notifications
                             ToggleRow(icon: "bell.fill", color: .orange, title: "Daily Reminders", isOn: $notificationsEnabled)
                         }
-                        .padding(20)
-                        .glassCard()
+                        .padding(16) // 20 -> 16
+                        .glassCard(cornerRadius: 16)
                         .padding(.horizontal)
                         
                         // Support Section
@@ -126,8 +126,8 @@ struct ProfileView: View {
                                 .padding(.vertical, 8)
                             }
                         }
-                        .padding(20)
-                        .glassCard()
+                        .padding(16) // 20 -> 16
+                        .glassCard(cornerRadius: 16)
                         .padding(.horizontal)
                         
                         // Danger Zone
@@ -207,17 +207,20 @@ struct SettingsRow: View {
             HStack {
                 Image(systemName: icon)
                     .foregroundStyle(color)
-                    .frame(width: 30)
+                    .font(.system(size: 18)) // Add explicit compact icon size
+                    .frame(width: 24) // 30 -> 24
                 Text(title)
+                    .font(.granlyBodyBold) // Make items more editorial
                     .foregroundStyle(Color.themeText)
                 Spacer()
                 Text(value)
+                    .font(.granlySubheadline)
                     .foregroundStyle(.secondary)
                 Image(systemName: "chevron.right")
-                    .font(.granlyCaption)
+                    .font(.system(size: 12, weight: .semibold)) // Explicit small chevron
                     .foregroundStyle(.secondary)
             }
-            .padding(.vertical, 8)
+            .padding(.vertical, 6) // 8 -> 6
         }
     }
 }
@@ -233,15 +236,17 @@ struct SettingsActionRow: View {
             HStack {
                 Image(systemName: icon)
                     .foregroundStyle(color)
-                    .frame(width: 30)
+                    .font(.system(size: 18)) // Explicit compact
+                    .frame(width: 24) // 30 -> 24
                 Text(title)
+                    .font(.granlyBodyBold)
                     .foregroundStyle(Color.themeText)
                 Spacer()
                 Image(systemName: "chevron.right")
-                    .font(.granlyCaption)
+                    .font(.system(size: 12, weight: .semibold))
                     .foregroundStyle(.secondary)
             }
-            .padding(.vertical, 8)
+            .padding(.vertical, 6) // 8 -> 6
         }
     }
 }
@@ -256,14 +261,16 @@ struct ToggleRow: View {
         HStack {
             Image(systemName: icon)
                 .foregroundStyle(color)
-                .frame(width: 30)
+                .font(.system(size: 18))
+                .frame(width: 24) // 30 -> 24
             Text(title)
+                .font(.granlyBodyBold)
                 .foregroundStyle(Color.themeText)
             Spacer()
             Toggle("", isOn: $isOn)
                 .labelsHidden()
                 .tint(Color.themeRose)
         }
-        .padding(.vertical, 8)
+        .padding(.vertical, 6) // 8 -> 6
     }
 }

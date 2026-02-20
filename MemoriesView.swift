@@ -20,7 +20,7 @@ public struct MemoriesView: View {
                 HStack {
                     VStack(alignment: .leading, spacing: 2) {
                         Text("Saved Memories")
-                            .font(.granlyTitle)
+                            .font(.granlyTitle2) // Title -> Title2
                             .foregroundStyle(Color.themeText)
                         Text("\(savedStories.count) stories saved 💛")
                             .font(.granlySubheadline)
@@ -39,22 +39,22 @@ public struct MemoriesView: View {
                         ZStack {
                             Circle()
                                 .fill(Color.themeRose.opacity(0.1))
-                                .frame(width: 140, height: 140)
+                                .frame(width: 100, height: 100) // 140 -> 100
                                 .blur(radius: 20)
                             
                             VStack(spacing: 8) {
                                 Image(systemName: "person.crop.circle.fill")
-                                    .font(.system(size: 60))
+                                    .font(.system(size: 48)) // 60 -> 48
                                     .foregroundStyle(Color.themeText.opacity(0.8))
                                 Image(systemName: "heart.fill")
-                                    .font(.system(size: 30))
+                                    .font(.system(size: 24)) // 30 -> 24
                                     .foregroundStyle(Color.themeRose)
-                                    .offset(x: 20, y: -20)
+                                    .offset(x: 16, y: -16) // 20,-20 -> 16,-16
                             }
                         }
                         
                         Text("No memories yet")
-                            .font(.granlyTitle)
+                            .font(.granlyHeadline) // Title -> Headline
                             .foregroundStyle(Color.themeText)
                         
                         Text("When grandma tells you a story you love,\ntap the heart to save it here forever.")
@@ -105,16 +105,16 @@ struct MemoryCard: View {
                             endPoint: .bottomTrailing
                         )
                     )
-                    .frame(width: 52, height: 52)
+                    .frame(width: 48, height: 48) // 52 -> 48
                 
                 Image(systemName: "book.closed.fill")
-                    .font(.granlyTitle2)
+                    .font(.granlyHeadline) // Title2 -> Headline
                     .foregroundStyle(Color.themeText)
             }
             
-            VStack(alignment: .leading, spacing: 4) {
+            VStack(alignment: .leading, spacing: 2) { // 4 -> 2
                 Text(story.title)
-                    .font(.granlyHeadline)
+                    .font(.granlyBodyBold) // Headline -> BodyBold
                     .foregroundStyle(Color.themeText)
                     .lineLimit(1)
                 
@@ -138,6 +138,6 @@ struct MemoryCard: View {
             }
         }
         .padding(14)
-        .glassCard(cornerRadius: 20)
+        .glassCard(cornerRadius: 16) // 20 -> 16
     }
 }

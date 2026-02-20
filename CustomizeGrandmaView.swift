@@ -28,12 +28,12 @@ struct CustomizeGrandmaView: View {
                 HStack {
                     Button(action: { dismiss() }) {
                         Image(systemName: "xmark.circle.fill")
-                            .font(.granlyTitle)
+                            .font(.granlyHeadline) // Title -> Headline
                             .foregroundStyle(Color.themeText)
                     }
                     Spacer()
                     Text("Grandma Makeover")
-                        .font(.granlyTitle2)
+                        .font(.granlyHeadline) // Title2 -> Headline
                         .foregroundStyle(Color.themeText)
                     Spacer()
                     Button(action: {
@@ -42,7 +42,7 @@ struct CustomizeGrandmaView: View {
                         }
                     }) {
                         Image(systemName: "dice.fill")
-                            .font(.granlyTitle)
+                            .font(.granlyHeadline) // Title -> Headline
                             .foregroundStyle(Color.themeRose)
                     }
                 }
@@ -65,9 +65,9 @@ struct CustomizeGrandmaView: View {
                         .scaleEffect(1.1)
                         .offset(y: 20)
                 }
-                .frame(height: 300)
-                .clipShape(RoundedRectangle(cornerRadius: 30))
-                .overlay(RoundedRectangle(cornerRadius: 30).stroke(Color.themeRose.opacity(0.3), lineWidth: 1))
+                .frame(height: 240) // 300 -> 240
+                .clipShape(RoundedRectangle(cornerRadius: 24)) // 30 -> 24
+                .overlay(RoundedRectangle(cornerRadius: 24).stroke(Color.themeRose.opacity(0.3), lineWidth: 1)) // 30 -> 24
                 .padding(.horizontal)
                 .padding(.bottom, 20)
                 
@@ -78,11 +78,11 @@ struct CustomizeGrandmaView: View {
                         HStack(spacing: 20) {
                             ForEach(0..<tabs.count, id: \.self) { index in
                                 Button(action: { selectedTab = index }) {
-                                    VStack(spacing: 6) {
+                                    VStack(spacing: 4) { // 6 -> 4
                                         Image(systemName: tabIcons[index])
-                                            .font(.granlyHeadline)
-                                        Text(tabs[index])
-                                            .font(.granlyCaption)
+                                            .font(.granlySubheadline) // Headline -> Subheadline
+                                        Text(tabs[index].uppercased())
+                                            .font(.system(size: 10, weight: .bold, design: .rounded)) // Premium tag format
                                     }
                                     .padding(.vertical, 8)
                                     .padding(.horizontal, 16)
@@ -140,7 +140,7 @@ struct CustomizeGrandmaView: View {
                     }
                 }
                 .background(Color.white.opacity(0.5))
-                .clipShape(RoundedRectangle(cornerRadius: 30, style: .continuous))
+                .clipShape(RoundedRectangle(cornerRadius: 24, style: .continuous)) // 30 -> 24
                 .ignoresSafeArea(edges: .bottom)
             }
         }
@@ -159,9 +159,9 @@ struct OptionSection<Content: View>: View {
     }
     
     var body: some View {
-        VStack(alignment: .leading, spacing: 12) {
+        VStack(alignment: .leading, spacing: 8) { // 12 -> 8
             Text(title)
-                .font(.granlyHeadline)
+                .font(.granlyBodyBold) // Headline -> BodyBold
                 .foregroundStyle(.secondary)
             content
         }

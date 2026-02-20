@@ -85,9 +85,9 @@ struct AskGrandmaView: View {
                     ZStack {
                         Circle()
                             .fill(Color.themeWarm.opacity(0.3))
-                            .frame(width: 50, height: 50)
+                            .frame(width: 44, height: 44) // 50 -> 44
                         Text("👵🏻")
-                            .font(.granlyTitle)
+                            .font(.granlyTitle2) // Title -> Title2
                     }
                     
                     VStack(alignment: .leading) {
@@ -149,7 +149,7 @@ struct AskGrandmaView: View {
                         Image(systemName: "paperplane.fill")
                             .font(.granlyHeadline)
                             .foregroundStyle(.white)
-                            .frame(width: 50, height: 50)
+                            .frame(width: 44, height: 44) // 50 -> 44
                             .background(messageText.isEmpty ? Color.gray.opacity(0.5) : Color.themeRose)
                             .clipShape(Circle())
                     }
