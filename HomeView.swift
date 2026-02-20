@@ -71,12 +71,17 @@ struct HomeView: View {
                             .foregroundStyle(Color.themeText)
                     }
                     Spacer()
-                    Text("👵")
-                        .font(.system(size: 50))
-                        .shadow(radius: 4)
-                        .onTapGesture { // Now taps navigate within the TabView or trigger a sheet
-                            selectedTab = .profile
-                        }
+                    ZStack {
+                        Circle()
+                            .fill(Color.themeWarm.opacity(0.3))
+                            .frame(width: 50, height: 50)
+                        Text("👵🏻")
+                            .font(.granlyTitle)
+                    }
+                    .shadow(radius: 4)
+                    .onTapGesture { // Now taps navigate within the TabView or trigger a sheet
+                        selectedTab = .profile
+                    }
                 }
                 .padding(.horizontal)
                 .padding(.top, 10)
