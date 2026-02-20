@@ -23,59 +23,29 @@ struct HomeView: View {
     
     var body: some View {
         NavigationStack {
-            ZStack {
-                // Background
-                MeshGradientBackground(scrollOffset: scrollOffset)
-                    .ignoresSafeArea()
+            TabView(selection: $selectedTab) {
+                // Shared background applied to the Home Tab content
+                homeContent
+                    .tag(Tab.stories)
+                    .tabItem { Label("Home", systemImage: "house.fill") }
                 
-                VStack(spacing: 0) {
-                    // Header
-                    HStack {
-                        VStack(alignment: .leading, spacing: 4) {
-                            Text(greeting)
-                                .font(.granlySubheadline)
-                                .foregroundStyle(.secondary)
-                            Text("My Dear") // Ideally fetch from Profile
-                                .font(.granlyTitle2)
-                                .foregroundStyle(Color.themeText)
-                        }
-                        Spacer()
-                        Text("👵")
-                            .font(.system(size: 50))
-                            .shadow(radius: 4)
-                            .onTapGesture {
-                                selectedTab = .profile
-                            }
-                    }
-                    .padding(.horizontal)
-                    .padding(.top, 10)
-                    .background(.ultraThinMaterial)
+                MemoryBoxView()
+                    .tag(Tab.memories)
+                    .tabItem { Label("Memories", systemImage: "heart.fill") }
                     
-                    // Main Content
-                    TabView(selection: $selectedTab) {
-                        homeContent
-                            .tag(Tab.stories)
-                            .tabItem { Label("Home", systemImage: "house.fill") }
-                        
-                        MemoryBoxView()
-                            .tag(Tab.memories)
-                            .tabItem { Label("Memories", systemImage: "heart.fill") }
-                            
-                        RecipeListView()
-                            .tag(Tab.recipes)
-                            .tabItem { Label("Recipes", systemImage: "fork.knife") }
-                        
-                        DigitalGrandmaWisdomView()
-                            .tag(Tab.wisdom)
-                            .tabItem { Label("Wisdom", systemImage: "leaf.fill") }
-                        
-                        ProfileView()
-                            .tag(Tab.profile)
-                            .tabItem { Label("Profile", systemImage: "person.circle.fill") }
-                    }
-                    .tint(Color.themeRose)
-                }
+                RecipeListView()
+                    .tag(Tab.recipes)
+                    .tabItem { Label("Recipes", systemImage: "fork.knife") }
+                
+                DigitalGrandmaWisdomView()
+                    .tag(Tab.wisdom)
+                    .tabItem { Label("Wisdom", systemImage: "leaf.fill") }
+                
+                ProfileView()
+                    .tag(Tab.profile)
+                    .tabItem { Label("Profile", systemImage: "person.circle.fill") }
             }
+            .tint(Color.themeRose)
             .navigationDestination(isPresented: $showSurpriseStory) {
                 if let story = surpriseStory {
                     StoryView(mood: Mood.allMoods.randomElement()!, storyToLoad: story)
@@ -85,73 +55,102 @@ struct HomeView: View {
     }
     
     private var homeContent: some View {
-        ScrollView {
-            VStack(spacing: 24) {
-                // Daily Quote Card
-                DailyQuoteCard()
-                    .padding(.horizontal)
-                    .onTapGesture {
-                        selectedTab = .wisdom
+        ZStack {
+            MeshGradientBackground(scrollOffset: scrollOffset)
+                .ignoresSafeArea()
+            
+            VStack(spacing: 0) {
+                // Header moved inside home tab
+                HStack {
+                    VStack(alignment: .leading, spacing: 4) {
+                        Text(greeting)
+                            .font(.granlySubheadline)
+                            .foregroundStyle(.secondary)
+                        Text("My Dear") // Ideally fetch from Profile
+                            .font(.granlyTitle2)
+                            .foregroundStyle(Color.themeText)
                     }
-                
-                // Quick Actions
-                HStack(spacing: 12) {
-                    QuickActionButton(icon: "sparkles", title: "Surprise Me", color: .purple) {
-                        // Pick random story from random mood
-                        if let randomMood = Mood.allMoods.randomElement() {
-                            surpriseStory = StoryManager.shared.getRandomStory(for: randomMood)
-                            showSurpriseStory = true
+                    Spacer()
+                    Text("👵")
+                        .font(.system(size: 50))
+                        .shadow(radius: 4)
+                        .onTapGesture { // Now taps navigate within the TabView or trigger a sheet
+                            selectedTab = .profile
                         }
-                    }
-                    QuickActionButton(icon: "heart.fill", title: "Favorites", color: .red) {
-                        selectedTab = .memories
-                    }
-                    QuickActionButton(icon: "lightbulb.fill", title: "Daily Wisdom", color: .yellow) {
-                        selectedTab = .wisdom
-                    }
                 }
                 .padding(.horizontal)
+                .padding(.top, 10)
+                .background(.ultraThinMaterial)
                 
-                // Mood Grid
-                VStack(alignment: .leading, spacing: 16) {
-                    Text("How are you feeling?")
-                        .font(.granlyHeadline)
-                        .foregroundStyle(Color.themeText)
-                        .padding(.horizontal)
-                    
-                    LazyVGrid(columns: [GridItem(.flexible()), GridItem(.flexible())], spacing: 16) {
-                        ForEach(moods) { mood in
-                            NavigationLink(destination: StoryListView(mood: mood)) {
-                                MoodCard(mood: mood)
+                ScrollView {
+                    VStack(spacing: 24) {
+                        // Daily Quote Card
+                        DailyQuoteCard()
+                            .padding(.horizontal)
+                            .onTapGesture {
+                                selectedTab = .wisdom
                             }
-                        }
-                    }
-                    .padding(.horizontal)
-                }
-                
-                // Featured Stories
-                VStack(alignment: .leading, spacing: 16) {
-                    Text("Featured for You")
-                        .font(.granlyHeadline)
-                        .foregroundStyle(Color.themeText)
-                        .padding(.horizontal)
-                    
-                    ScrollView(.horizontal, showsIndicators: false) {
-                        HStack(spacing: 16) {
-                            ForEach(0..<3) { i in
-                                let mood = moods[i]
-                                let story = StoryManager.shared.getStory(for: mood)
-                                NavigationLink(destination: StoryView(mood: mood, storyToLoad: story)) {
-                                    FeaturedStoryCard(mood: mood, storyTitle: story.title)
+                        
+                        // Quick Actions
+                        HStack(spacing: 12) {
+                            QuickActionButton(icon: "sparkles", title: "Surprise Me", color: .purple) {
+                                // Pick random story from random mood
+                                if let randomMood = Mood.allMoods.randomElement() {
+                                    surpriseStory = StoryManager.shared.getRandomStory(for: randomMood)
+                                    showSurpriseStory = true
                                 }
                             }
+                            QuickActionButton(icon: "heart.fill", title: "Favorites", color: .red) {
+                                selectedTab = .memories
+                            }
+                            QuickActionButton(icon: "lightbulb.fill", title: "Daily Wisdom", color: .yellow) {
+                                selectedTab = .wisdom
+                            }
                         }
                         .padding(.horizontal)
+                        
+                        // Mood Grid
+                        VStack(alignment: .leading, spacing: 16) {
+                            Text("How are you feeling?")
+                                .font(.granlyHeadline)
+                                .foregroundStyle(Color.themeText)
+                                .padding(.horizontal)
+                            
+                            LazyVGrid(columns: [GridItem(.flexible()), GridItem(.flexible())], spacing: 16) {
+                                ForEach(moods) { mood in
+                                    NavigationLink(destination: StoryListView(mood: mood)) {
+                                        MoodCard(mood: mood)
+                                    }
+                                }
+                            }
+                            .padding(.horizontal)
+                        }
+                        
+                        // Featured Stories
+                        VStack(alignment: .leading, spacing: 16) {
+                            Text("Featured for You")
+                                .font(.granlyHeadline)
+                                .foregroundStyle(Color.themeText)
+                                .padding(.horizontal)
+                            
+                            ScrollView(.horizontal, showsIndicators: false) {
+                                HStack(spacing: 16) {
+                                    ForEach(0..<3) { i in
+                                        let mood = moods[i]
+                                        let story = StoryManager.shared.getStory(for: mood)
+                                        NavigationLink(destination: StoryView(mood: mood, storyToLoad: story)) {
+                                            FeaturedStoryCard(mood: mood, storyTitle: story.title)
+                                        }
+                                    }
+                                }
+                                .padding(.horizontal)
+                            }
+                        }
+                        .padding(.bottom, 40)
                     }
+                    .padding(.top, 20)
                 }
-                .padding(.bottom, 40)
             }
-            .padding(.top, 20)
         }
     }
     
