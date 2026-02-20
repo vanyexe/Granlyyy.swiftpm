@@ -1,7 +1,8 @@
 import SwiftUI
 import Combine
 
-class FavoritesManager: ObservableObject {
+@MainActor
+final class FavoritesManager: ObservableObject {
     static let shared = FavoritesManager()
     
     @Published var favoriteHistoricalStoryIDs: Set<String> = []

@@ -2,21 +2,24 @@ import AVFoundation
 import SwiftUI
 import Combine
 
-class AudioService: NSObject, ObservableObject, AVSpeechSynthesizerDelegate {
+@MainActor
+final class AudioService: NSObject, ObservableObject, AVSpeechSynthesizerDelegate {
     static let shared = AudioService()
     
-    private let synthesizer = AVSpeechSynthesizer()
+    private lazy var synthesizer: AVSpeechSynthesizer = {
+        let synth = AVSpeechSynthesizer()
+        synth.delegate = self
+        return synth
+    }()
     
     @Published var isPlaying = false
     @Published var currentlyPlayingContent: String? = nil
     
     override init() {
         super.init()
-        synthesizer.delegate = self
-        setupAudioSession()
     }
     
-    private func setupAudioSession() {
+    private func setupAudioSessionIfNeeded() {
         do {
             try AVAudioSession.sharedInstance().setCategory(.playback, mode: .spokenAudio, options: [.duckOthers])
             try AVAudioSession.sharedInstance().setActive(true)
@@ -38,6 +41,8 @@ class AudioService: NSObject, ObservableObject, AVSpeechSynthesizerDelegate {
     }
     
     private func startReading(_ text: String) {
+        setupAudioSessionIfNeeded()
+        
         let utterance = AVSpeechUtterance(string: text)
         
         // Try to find a warm, comforting English voice (e.g., Samantha or a UK voice for a "Grandma" feel)
@@ -65,15 +70,15 @@ class AudioService: NSObject, ObservableObject, AVSpeechSynthesizerDelegate {
     
     // MARK: - AVSpeechSynthesizerDelegate
     
-    func speechSynthesizer(_ synthesizer: AVSpeechSynthesizer, didFinish utterance: AVSpeechUtterance) {
-        DispatchQueue.main.async {
+    nonisolated func speechSynthesizer(_ synthesizer: AVSpeechSynthesizer, didFinish utterance: AVSpeechUtterance) {
+        Task { @MainActor in
             self.isPlaying = false
             self.currentlyPlayingContent = nil
         }
     }
     
-    func speechSynthesizer(_ synthesizer: AVSpeechSynthesizer, didCancel utterance: AVSpeechUtterance) {
-        DispatchQueue.main.async {
+    nonisolated func speechSynthesizer(_ synthesizer: AVSpeechSynthesizer, didCancel utterance: AVSpeechUtterance) {
+        Task { @MainActor in
             self.isPlaying = false
             self.currentlyPlayingContent = nil
         }

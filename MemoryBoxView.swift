@@ -25,7 +25,7 @@ struct MemoryBoxView: View {
                                     .shadow(color: .black.opacity(0.2), radius: 5, y: 5)
                                 
                                 Text("Grandma's Memory Box")
-                                    .font(.title2.bold().design(.serif))
+                                    .font(.system(size: 24, weight: .bold, design: .serif))
                                     .foregroundStyle(.white)
                                     .padding(.top, 8)
                             }
@@ -101,7 +101,7 @@ struct MemoryBoxView: View {
 
 // Helper views
 
-struct SectionHeaderTitle: View {
+private struct SectionHeaderTitle: View {
     let title: String
     let icon: String
     let color: Color
@@ -111,7 +111,7 @@ struct SectionHeaderTitle: View {
             Image(systemName: icon)
                 .foregroundStyle(color)
             Text(title)
-                .font(.title3.bold().design(.serif))
+                .font(.system(size: 20, weight: .bold, design: .serif))
                 .foregroundStyle(Color.themeText)
         }
         .padding(.horizontal)

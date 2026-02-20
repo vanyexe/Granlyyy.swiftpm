@@ -57,7 +57,7 @@ struct HomeView: View {
                             .tag(Tab.stories)
                             .tabItem { Label("Home", systemImage: "house.fill") }
                         
-                        MemoriesView()
+                        MemoryBoxView()
                             .tag(Tab.memories)
                             .tabItem { Label("Memories", systemImage: "heart.fill") }
                             

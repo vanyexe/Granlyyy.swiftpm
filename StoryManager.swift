@@ -80,6 +80,11 @@ public class StoryManager: ObservableObject {
         return Story(title: base.title, content: base.content + extra, category: base.category, readTime: base.readTime)
     }
     
+    // Returns all stories across all moods
+    func getAllStories() -> [Story] {
+        return happyStories + sadStories + anxiousStories + lonelyStories + tiredStories + angryStories + gratefulStories + excitedStories
+    }
+    
     // MARK: - Story Data (24 Stories, 3 per Mood)
     
     // HAPPY
