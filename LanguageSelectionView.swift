@@ -5,12 +5,12 @@ struct LanguageSelectionView: View {
     @StateObject private var languageManager = LanguageManager()
     @State private var animateCards = false
     
-    let flagEmojis: [AppLanguage: String] = [
-        .english: "🇺🇸",
-        .spanish: "🇪🇸",
-        .french: "🇫🇷",
-        .german: "🇩🇪",
-        .hindi: "🇮🇳"
+    let languageIcons: [AppLanguage: String] = [
+        .english: "character.book.closed",
+        .spanish: "character.bubble",
+        .french: "text.book.closed",
+        .german: "text.bubble",
+        .hindi: "character"
     ]
     
     var body: some View {
@@ -23,8 +23,10 @@ struct LanguageSelectionView: View {
                 
                 // Title
                 VStack(spacing: 12) {
-                    Text("🌍")
+                    Image(systemName: "globe")
                         .font(.system(size: 50))
+                        .foregroundStyle(Color.themeRose)
+                        .shadow(color: Color.themeRose.opacity(0.4), radius: 10, y: 5)
                     
                     Text("Choose Your Language")
                         .font(.granlyTitle)
@@ -55,10 +57,17 @@ struct LanguageSelectionView: View {
                                 }
                             }
                         }) {
-                            HStack(spacing: 14) {
-                                // Flag
-                                Text(flagEmojis[language] ?? "🏳️")
-                                    .font(.granlyTitle2)
+                            HStack(spacing: 16) {
+                                // Icon instead of Flag
+                                ZStack {
+                                    Circle()
+                                        .fill(isEnabled ? Color.themeRose.opacity(0.15) : Color.gray.opacity(0.1))
+                                        .frame(width: 40, height: 40)
+                                    
+                                    Image(systemName: languageIcons[language] ?? "globe")
+                                        .font(.granlyHeadline)
+                                        .foregroundStyle(isEnabled ? Color.themeRose : .secondary)
+                                }
                                 
                                 Text(language.displayName)
                                     .font(.granlyHeadline)
