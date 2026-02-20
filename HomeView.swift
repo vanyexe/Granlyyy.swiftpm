@@ -14,10 +14,12 @@ struct HomeView: View {
     @Namespace private var animation
     
     // For Navigation
-    @State private var showWisdomSheet = false
     @State private var showSurpriseStory = false
     @State private var surpriseStory: Story?
     @State private var showMemoriesSheet = false
+    @State private var showFeaturedStory = false
+    @State private var featuredStory: Story?
+    @State private var featuredMood: Mood?
     
     let moods = Mood.allMoods
     
@@ -49,6 +51,11 @@ struct HomeView: View {
             .navigationDestination(isPresented: $showSurpriseStory) {
                 if let story = surpriseStory {
                     StoryView(mood: Mood.allMoods.randomElement()!, storyToLoad: story)
+                }
+            }
+            .navigationDestination(isPresented: $showFeaturedStory) {
+                if let story = featuredStory, let mood = featuredMood {
+                    StoryView(mood: mood, storyToLoad: story)
                 }
             }
         }
@@ -95,6 +102,16 @@ struct HomeView: View {
                             .onTapGesture {
                                 selectedTab = .wisdom
                             }
+                        
+                        // Featured For You Button
+                        FeaturedForYouButton {
+                            if let randomMood = Mood.allMoods.randomElement() {
+                                featuredMood = randomMood
+                                featuredStory = StoryManager.shared.getStory(for: randomMood)
+                                showFeaturedStory = true
+                            }
+                        }
+                        .padding(.horizontal)
                         
                         // Quick Actions
                         HStack(spacing: 12) {
@@ -279,5 +296,44 @@ struct FeaturedStoryCard: View {
         .padding(14) // 16 -> 14
         .frame(width: 140, height: 160) // 160x180 -> 140x160 (more compact horizontal scroll)
         .glassCard(cornerRadius: 16) // 20 -> 16
+    }
+}
+
+struct FeaturedForYouButton: View {
+    let action: () -> Void
+    var body: some View {
+        Button(action: action) {
+            HStack(spacing: 16) {
+                // Icon Area
+                ZStack {
+                    Circle()
+                        .fill(LinearGradient(colors: [Color.themeGold, Color.themeRose], startPoint: .topLeading, endPoint: .bottomTrailing))
+                        .frame(width: 52, height: 52)
+                    Image(systemName: "sparkles.rectangle.stack.fill")
+                        .font(.system(size: 24))
+                        .foregroundStyle(.white)
+                }
+                
+                VStack(alignment: .leading, spacing: 4) {
+                    Text("FEATURED FOR YOU")
+                        .font(.system(size: 11, weight: .bold, design: .rounded))
+                        .tracking(1.5)
+                        .foregroundStyle(Color.themeRose)
+                    
+                    Text("Grandma's Pick of the Day")
+                        .font(.granlyHeadline)
+                        .foregroundStyle(Color.themeText)
+                }
+                
+                Spacer()
+                
+                Image(systemName: "chevron.right")
+                    .font(.granlySubheadline)
+                    .foregroundStyle(Color.themeText.opacity(0.3))
+            }
+            .padding(16)
+            .glassCard(cornerRadius: 18)
+        }
+        .buttonStyle(PlainButtonStyle())
     }
 }
