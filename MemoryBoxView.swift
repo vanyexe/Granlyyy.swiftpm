@@ -16,11 +16,11 @@ struct MemoryBoxView: View {
                         ZStack {
                             RoundedRectangle(cornerRadius: 16)
                                 .fill(LinearGradient(colors: [Color.themeWarm, Color.themeGold], startPoint: .topLeading, endPoint: .bottomTrailing))
-                                .frame(height: 140) // 180 -> 140
+                                .frame(height: 160) // 140 -> 160
                             
                             VStack {
                                 Image(systemName: "archivebox.fill")
-                                    .font(.system(size: 44)) // 60 -> 44
+                                    .font(.system(size: 52)) // 44 -> 52
                                     .foregroundStyle(.white)
                                     .shadow(color: .black.opacity(0.2), radius: 5, y: 5)
                                 
@@ -36,10 +36,10 @@ struct MemoryBoxView: View {
                         if favoritesManager.favoriteHistoricalStoryIDs.isEmpty && storyManager.likedStoryIDs.isEmpty {
                             VStack(spacing: 12) { // 16 -> 12
                                 Image(systemName: "heart.slash")
-                                    .font(.granlyTitle2) // Title -> Title2
+                                    .font(.system(size: 48)) // Title2 -> 48
                                     .foregroundStyle(Color.themeRose.opacity(0.5))
                                 Text("Your Memory Box is empty.")
-                                    .font(.granlyBodyBold) // Headline -> BodyBold
+                                    .font(.granlyTitle2) // BodyBold -> Title2
                                     .foregroundStyle(Color.themeText.opacity(0.8))
                                 Text("Tap the heart icon on your favorite stories and quotes to keep them safe in here.")
                                     .font(.granlyCaption) // Subheadline -> Caption
@@ -128,7 +128,7 @@ struct SavedStoryCard: View {
         VStack(alignment: .leading, spacing: 8) {
             Circle()
                 .fill(color.opacity(0.2))
-                .frame(width: 32, height: 32) // 40 -> 32
+                .frame(width: 36, height: 36) // 32 -> 36
                 .overlay(
                     Image(systemName: "heart.fill")
                         .font(.granlySubheadline) // Add subheadline font to shrink icon
@@ -138,7 +138,7 @@ struct SavedStoryCard: View {
             Spacer()
             
             Text(title)
-                .font(.granlyBodyBold) // Headline -> BodyBold
+                .font(.granlyHeadline) // BodyBold -> Headline
                 .foregroundStyle(Color.themeText)
                 .lineLimit(2)
             
@@ -147,9 +147,9 @@ struct SavedStoryCard: View {
                 .tracking(1) // Premium kerning
                 .foregroundStyle(color)
         }
-        .padding(14) // 16 -> 14
-        .frame(width: 130, height: 140) // 150x160 -> 130x140
-        .glassCard(cornerRadius: 16) // Replaced custom styling with standard glassCard
+        .padding(16) // 14 -> 16
+        .frame(width: 140, height: 150) // 130x140 -> 140x150
+        .glassCard(cornerRadius: 18) // 16 -> 18
     }
 }
 
@@ -157,21 +157,21 @@ struct SavedHistoricalRow: View {
     let story: HistoricalStory
     
     var body: some View {
-        HStack(spacing: 12) { // 16 -> 12
+        HStack(spacing: 14) { // 12 -> 14
             ZStack {
                 Rectangle()
                     .fill(Color.themeGreen.opacity(0.2))
-                    .frame(width: 48, height: 48) // 60 -> 48
-                    .clipShape(RoundedRectangle(cornerRadius: 10)) // 12 -> 10
+                    .frame(width: 52, height: 52) // 48 -> 52
+                    .clipShape(RoundedRectangle(cornerRadius: 12)) // 10 -> 12
                 
                 Image(systemName: story.iconName)
                     .font(.granlyHeadline) // Title2 -> Headline
                     .foregroundStyle(Color.themeGreen)
             }
             
-            VStack(alignment: .leading, spacing: 2) { // 4 -> 2
+            VStack(alignment: .leading, spacing: 4) { // 2 -> 4
                 Text(story.title)
-                    .font(.granlyBodyBold) // Headline -> BodyBold
+                    .font(.granlyHeadline) // BodyBold -> Headline
                     .foregroundStyle(Color.themeText)
                     .lineLimit(1)
                 
@@ -187,8 +187,8 @@ struct SavedHistoricalRow: View {
                 .foregroundStyle(Color.themeText.opacity(0.3))
                 .padding(.trailing, 4) // 8 -> 4
         }
-        .padding(12)
-        .glassCard(cornerRadius: 16) // Replaced custom styling with standard glassCard
+        .padding(14) // 12 -> 14
+        .glassCard(cornerRadius: 18) // 16 -> 18
     }
 }
 
