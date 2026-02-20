@@ -82,6 +82,56 @@ struct UniversalQuotesData {
             grandmaInterpretation: "Oh honey, you're always running so fast! Sit. Breathe. The seasons always change right on time. Trust your own timing. You are not behind.",
             dailyPractice: "For just five minutes today, sit completely still with no screens, no music, no talking. Just watch the world happen around you.",
             iconColor: Color.themeGreen
+        ),
+        
+        UniversalQuote(
+            originalQuote: "The earth is but one country, and mankind its citizens.",
+            source: "Bahá'u'lláh (Bahá'í Faith)",
+            modernMeaning: "National borders and cultural differences are artificial constructs; we all live on the same small planet and share a common destiny.",
+            corePrinciple: "Global Citizenship",
+            grandmaInterpretation: "If we zoom far enough out, sweetheart, there are no lines drawn on the Earth. We share the same air, the same water, the same sun. Treat everyone like a neighbor.",
+            dailyPractice: "Read one positive news story today from a country you have never visited and know very little about.",
+            iconColor: Color.themeRose
+        ),
+        
+        UniversalQuote(
+            originalQuote: "Good thoughts, good words, good deeds.",
+            source: "Zoroaster (Zoroastrianism)",
+            modernMeaning: "A righteous life brings harmony to the world through a simple, three-part alignment: what you think, what you say, and what you do.",
+            corePrinciple: "Integrity",
+            grandmaInterpretation: "It's not enough to just think about being kind, dear. Your thoughts must match your words, and your words must match your actions. That's how you build trust.",
+            dailyPractice: "Catch yourself before you speak a complaint today. Change the thought, speak a kinder word, or take a tiny action to fix the problem instead.",
+            iconColor: Color.themeWarm
+        ),
+        
+        UniversalQuote(
+            originalQuote: "Do not do to others what you do not want done to yourself.",
+            source: "Confucius (Confucianism)",
+            modernMeaning: "The golden rule of empathy: do not inflict the pain or frustration onto others that you would hate to experience yourself.",
+            corePrinciple: "Empathy",
+            grandmaInterpretation: "Always look in the mirror before you judge the window, my love. If you don't like being talked down to, make sure your own voice is gentle.",
+            dailyPractice: "The next time you are frustrated with someone (like a slow driver), ask yourself how you'd want someone to react to you if you were the one making a mistake.",
+            iconColor: .purple
+        ),
+        
+        UniversalQuote(
+            originalQuote: "We do not inherit the earth from our ancestors, we borrow it from our children.",
+            source: "Indigenous Proverb (Native American)",
+            modernMeaning: "We are caretakers of the present, with a profound responsibility to leave the world in a beautiful, habitable state for the generations that follow us.",
+            corePrinciple: "Stewardship",
+            grandmaInterpretation: "You're borrowing this beautiful world from your grandchildren, sweetie! Would you return a borrowed dress with stains on it? Treat the earth with the same respect.",
+            dailyPractice: "Make one conscious choice to reduce waste today—use a reusable cup, turn off the lights, or pick up a piece of litter on your walk.",
+            iconColor: .green
+        ),
+        
+        UniversalQuote(
+            originalQuote: "Do not injure, abuse, oppress, enslave, insult, torment, torture, or kill any creature or living being.",
+            source: "Mahavira (Jainism)",
+            modernMeaning: "Live a life of absolute non-violence (Ahimsa), honoring the life force and right to exist of every living entity, no matter how small.",
+            corePrinciple: "Non-Violence",
+            grandmaInterpretation: "Every tiny bug, every stray cat, every person has a right to be here. Tread lightly on the earth, my brave one, and leave peace wherever you step.",
+            dailyPractice: "If you see an insect inside your house today, try to gently catch it and release it outside rather than squishing it.",
+            iconColor: .orange
         )
     ]
 }

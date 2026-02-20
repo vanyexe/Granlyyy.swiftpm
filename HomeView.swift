@@ -3,6 +3,7 @@ import SwiftUI
 enum Tab {
     case stories
     case memories
+    case recipes
     case wisdom
     case profile
 }
@@ -59,6 +60,10 @@ struct HomeView: View {
                         MemoriesView()
                             .tag(Tab.memories)
                             .tabItem { Label("Memories", systemImage: "heart.fill") }
+                            
+                        RecipeListView()
+                            .tag(Tab.recipes)
+                            .tabItem { Label("Recipes", systemImage: "fork.knife") }
                         
                         DigitalGrandmaWisdomView()
                             .tag(Tab.wisdom)

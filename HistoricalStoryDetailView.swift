@@ -4,6 +4,8 @@ struct HistoricalStoryDetailView: View {
     let story: HistoricalStory
     @State private var journalEntry: String = ""
     @Environment(\.dismiss) private var dismiss
+    @ObservedObject private var audioService = AudioService.shared
+    @ObservedObject private var favoritesManager = FavoritesManager.shared
     
     var body: some View {
         ScrollView {
@@ -138,15 +140,36 @@ struct HistoricalStoryDetailView: View {
         }
         .background(Color.themeBackground.ignoresSafeArea())
         .navigationBarTitleDisplayMode(.inline)
-        .toolbar { // Custom back button to fix potential navigation issues
+        .toolbar {
             ToolbarItem(placement: .navigationBarLeading) {
                 Button(action: { dismiss() }) {
                     Image(systemName: "chevron.left")
                         .foregroundStyle(Color.themeText)
                 }
             }
+            ToolbarItem(placement: .navigationBarTrailing) {
+                HStack(spacing: 16) {
+                    Button(action: {
+                        favoritesManager.toggleHistoricalStory(story)
+                    }) {
+                        Image(systemName: favoritesManager.isFavorite(story) ? "heart.fill" : "heart")
+                            .foregroundStyle(Color.themeRose)
+                    }
+                    
+                    Button(action: {
+                        let textToRead = "\(story.title). \(story.summary) Lessons. \(story.lessons.joined(separator: ". "))"
+                        audioService.readText(textToRead)
+                    }) {
+                        Image(systemName: audioService.isPlaying ? "stop.fill" : "speaker.wave.2.fill")
+                            .foregroundStyle(audioService.isPlaying ? Color.red : Color.themeRose)
+                    }
+                }
+            }
         }
         .navigationBarBackButtonHidden()
+        .onDisappear {
+            audioService.stopAudio()
+        }
     }
 }
 
