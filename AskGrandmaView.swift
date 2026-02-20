@@ -87,15 +87,15 @@ struct AskGrandmaView: View {
                             .fill(Color.themeWarm.opacity(0.3))
                             .frame(width: 50, height: 50)
                         Text("👵🏻")
-                            .font(.title)
+                            .font(.granlyTitle)
                     }
                     
                     VStack(alignment: .leading) {
                         Text("Chat with Grandma")
-                            .font(.title3.bold())
+                            .font(.granlyHeadline)
                             .foregroundStyle(Color.themeText)
                         Text("Online • Ready to listen")
-                            .font(.caption)
+                            .font(.granlyCaption)
                             .foregroundStyle(.secondary)
                     }
                     Spacer()
@@ -147,7 +147,7 @@ struct AskGrandmaView: View {
                     
                     Button(action: sendMessage) {
                         Image(systemName: "paperplane.fill")
-                            .font(.title3)
+                            .font(.granlyHeadline)
                             .foregroundStyle(.white)
                             .frame(width: 50, height: 50)
                             .background(messageText.isEmpty ? Color.gray.opacity(0.5) : Color.themeRose)
@@ -189,7 +189,7 @@ struct MessageBubble: View {
             if message.isUser { Spacer() }
             
             Text(message.text)
-                .font(.body)
+                .font(.granlyBody)
                 .lineSpacing(4)
                 .foregroundStyle(message.isUser ? .white : Color.themeText)
                 .padding(.horizontal, 16)

@@ -25,11 +25,11 @@ struct AboutView: View {
                     
                     VStack(spacing: 8) {
                         Text("Granly")
-                            .font(.system(size: 36, weight: .bold, design: .serif))
+                            .font(.granlyTitle)
                             .foregroundStyle(Color.themeText)
                         
                         Text("Version 2.0")
-                            .font(.subheadline)
+                            .font(.granlySubheadline)
                             .foregroundStyle(.secondary)
                     }
                 }
@@ -38,21 +38,21 @@ struct AboutView: View {
                 // Love Letter
                 VStack(alignment: .leading, spacing: 16) {
                     Text("Dearest You,")
-                        .font(.headline)
+                        .font(.granlyHeadline)
                         .foregroundStyle(Color.themeText)
                     
                     Text("Granly was built with a simple wish: to bring a little warmth, comfort, and storytelling magic into your daily life. In a world that often moves too fast, we hope Granly offers you a quiet corner to pause, breathe, and feel loved.")
-                        .font(.body)
+                        .font(.granlyBody)
                         .lineSpacing(6)
                         .foregroundStyle(Color.themeText.opacity(0.8))
                     
                     Text("Whether you need a listening ear, a gentle story, or just a friendly smile, Granly is here for you. Always.")
-                        .font(.body)
+                        .font(.granlyBody)
                         .lineSpacing(6)
                         .foregroundStyle(Color.themeText.opacity(0.8))
                     
                     Text("With love,\nThe Granly Team 💛")
-                        .font(.subheadline.bold())
+                        .font(.granlySubheadline)
                         .foregroundStyle(Color.themeRose)
                         .padding(.top, 8)
                 }
@@ -63,7 +63,7 @@ struct AboutView: View {
                 // Features
                 VStack(alignment: .leading, spacing: 20) {
                     Text("What's New")
-                        .font(.title3.bold())
+                        .font(.granlyHeadline)
                         .foregroundStyle(Color.themeText)
                         .padding(.horizontal)
                     
@@ -81,10 +81,10 @@ struct AboutView: View {
                 // Credits
                 VStack(spacing: 8) {
                     Text("Designed & Developed with ❤️")
-                        .font(.caption)
+                        .font(.granlyCaption)
                         .foregroundStyle(.secondary)
                     Text("© 2026 Granly App")
-                        .font(.caption2)
+                        .font(.granlyCaption)
                         .foregroundStyle(.secondary.opacity(0.7))
                 }
                 .padding(.bottom, 40)
@@ -105,16 +105,16 @@ struct FeatureRow: View {
     var body: some View {
         HStack(spacing: 16) {
             Image(systemName: icon)
-                .font(.title2)
+                .font(.granlyTitle2)
                 .foregroundStyle(color)
                 .frame(width: 40)
             
             VStack(alignment: .leading, spacing: 2) {
                 Text(title)
-                    .font(.headline)
+                    .font(.granlyHeadline)
                     .foregroundStyle(Color.themeText)
                 Text(desc)
-                    .font(.caption)
+                    .font(.granlyCaption)
                     .foregroundStyle(.secondary)
             }
             Spacer()

@@ -13,11 +13,11 @@ struct RecipeListView: View {
                         // Header
                         VStack(alignment: .leading, spacing: 8) {
                             Text("Grandma's Kitchen")
-                                .font(.system(size: 36, weight: .bold, design: .serif))
+                                .font(.granlyTitle)
                                 .foregroundStyle(Color.themeText)
                             
                             Text("Comfort food for the soul.")
-                                .font(.title3)
+                                .font(.granlyHeadline)
                                 .foregroundStyle(Color.themeRose)
                         }
                         .padding(.horizontal)
@@ -51,14 +51,14 @@ struct RecipeCard: View {
                     .frame(width: 60, height: 60)
                 
                 Image(systemName: recipe.iconName)
-                    .font(.title)
+                    .font(.granlyTitle)
                     .foregroundStyle(recipe.color)
             }
             .padding(.top, 16)
             
             VStack(spacing: 4) {
                 Text(recipe.title)
-                    .font(.headline.bold())
+                    .font(.granlyHeadline)
                     .multilineTextAlignment(.center)
                     .foregroundStyle(Color.themeText)
                     .lineLimit(2)
@@ -66,9 +66,9 @@ struct RecipeCard: View {
                 
                 HStack(spacing: 4) {
                     Image(systemName: "clock")
-                        .font(.caption2)
+                        .font(.granlyCaption)
                     Text(recipe.cookTime)
-                        .font(.caption.bold())
+                        .font(.granlyCaption)
                 }
                 .foregroundStyle(.secondary)
             }
@@ -106,7 +106,7 @@ struct RecipeDetailView: View {
                 // Title and Timing
                 VStack(alignment: .leading, spacing: 12) {
                     Text(recipe.title)
-                        .font(.system(size: 32, weight: .bold, design: .serif))
+                        .font(.granlyTitle)
                         .foregroundStyle(Color.themeText)
                     
                     HStack(spacing: 16) {
@@ -120,10 +120,10 @@ struct RecipeDetailView: View {
                 VStack(alignment: .leading, spacing: 12) {
                     HStack {
                         Image(systemName: "quote.opening")
-                            .font(.title2)
+                            .font(.granlyTitle2)
                             .foregroundStyle(recipe.color)
                         Text("Grandma Says...")
-                            .font(.title3.bold())
+                            .font(.granlyHeadline)
                             .foregroundStyle(Color.themeText)
                     }
                     
@@ -140,7 +140,7 @@ struct RecipeDetailView: View {
                 // Ingredients
                 VStack(alignment: .leading, spacing: 12) {
                     Text("Ingredients")
-                        .font(.title2.bold())
+                        .font(.granlyTitle2)
                         .foregroundStyle(Color.themeText)
                     
                     VStack(alignment: .leading, spacing: 8) {
@@ -151,7 +151,7 @@ struct RecipeDetailView: View {
                                     .frame(width: 8, height: 8)
                                     .padding(.top, 6)
                                 Text(ingredient)
-                                    .font(.body)
+                                    .font(.granlyBody)
                                     .foregroundStyle(Color.themeText)
                             }
                         }
@@ -166,21 +166,21 @@ struct RecipeDetailView: View {
                 // Instructions
                 VStack(alignment: .leading, spacing: 16) {
                     Text("Instructions")
-                        .font(.title2.bold())
+                        .font(.granlyTitle2)
                         .foregroundStyle(Color.themeText)
                     
                     VStack(alignment: .leading, spacing: 20) {
                         ForEach(Array(recipe.instructions.enumerated()), id: \.offset) { index, step in
                             HStack(alignment: .top, spacing: 16) {
                                 Text("\(index + 1)")
-                                    .font(.headline)
+                                    .font(.granlyHeadline)
                                     .foregroundStyle(.white)
                                     .frame(width: 28, height: 28)
                                     .background(recipe.color)
                                     .clipShape(Circle())
                                 
                                 Text(step)
-                                    .font(.body)
+                                    .font(.granlyBody)
                                     .lineSpacing(4)
                                     .foregroundStyle(Color.themeText)
                             }
@@ -218,7 +218,7 @@ struct TimingBadge: View {
             Image(systemName: icon)
                 .foregroundStyle(Color.themeRose)
             Text(text)
-                .font(.subheadline.bold())
+                .font(.granlySubheadline)
                 .foregroundStyle(Color.themeText)
         }
         .padding(.horizontal, 12)

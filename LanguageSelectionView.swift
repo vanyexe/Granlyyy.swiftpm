@@ -27,12 +27,12 @@ struct LanguageSelectionView: View {
                         .font(.system(size: 50))
                     
                     Text("Choose Your Language")
-                        .font(.system(size: 30, weight: .bold, design: .serif))
+                        .font(.granlyTitle)
                         .foregroundStyle(Color.themeText)
                         .multilineTextAlignment(.center)
                     
                     Text("Select a language to begin your journey with Granly")
-                        .font(.subheadline)
+                        .font(.granlySubheadline)
                         .foregroundStyle(.secondary)
                         .multilineTextAlignment(.center)
                         .padding(.horizontal, 20)
@@ -58,10 +58,10 @@ struct LanguageSelectionView: View {
                             HStack(spacing: 14) {
                                 // Flag
                                 Text(flagEmojis[language] ?? "🏳️")
-                                    .font(.title2)
+                                    .font(.granlyTitle2)
                                 
                                 Text(language.displayName)
-                                    .font(.headline)
+                                    .font(.granlyHeadline)
                                     .foregroundStyle(isEnabled ? Color.themeText : .secondary)
                                 
                                 Spacer()
@@ -69,16 +69,16 @@ struct LanguageSelectionView: View {
                                 if isEnabled {
                                     if languageManager.selectedLanguage == language {
                                         Image(systemName: "checkmark.circle.fill")
-                                            .font(.title3)
+                                            .font(.granlyHeadline)
                                             .foregroundStyle(Color.themeAccent)
                                     } else {
                                         Image(systemName: "circle")
-                                            .font(.title3)
+                                            .font(.granlyHeadline)
                                             .foregroundStyle(.secondary.opacity(0.5))
                                     }
                                 } else {
                                     Text("Coming Soon")
-                                        .font(.caption.bold())
+                                        .font(.granlyCaption)
                                         .foregroundStyle(.white)
                                         .padding(.horizontal, 10)
                                         .padding(.vertical, 4)

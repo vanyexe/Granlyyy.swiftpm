@@ -84,16 +84,16 @@ struct StoryView: View {
                 HStack {
                     Button(action: { dismiss() }) {
                         Image(systemName: "chevron.down")
-                            .font(.title3.bold())
+                            .font(.granlyHeadline)
                     }
                     Spacer()
                     VStack(spacing: 2) {
                         Text("TELLING FROM")
-                            .font(.caption2.bold())
+                            .font(.granlyCaption)
                             .kerning(1)
                             .opacity(0.7)
                         Text(mood.name.uppercased())
-                            .font(.caption.bold())
+                            .font(.granlyCaption)
                     }
                     Spacer()
                     
@@ -101,11 +101,11 @@ struct StoryView: View {
                     if let story = story {
                         ShareLink(item: "\(story.title)\n\n\(story.content)\n\n— From Granly App 💛") {
                             Image(systemName: "square.and.arrow.up")
-                                .font(.title3.bold())
+                                .font(.granlyHeadline)
                         }
                     } else {
                         Image(systemName: "square.and.arrow.up")
-                            .font(.title3.bold())
+                            .font(.granlyHeadline)
                             .opacity(0.3)
                     }
                 }
@@ -135,7 +135,7 @@ struct StoryView: View {
                     // Floating Toast
                     if showHeartToast {
                         Text(toastMessage)
-                            .font(.subheadline.bold())
+                            .font(.granlySubheadline)
                             .foregroundStyle(Color.themeText)
                             .padding(.horizontal, 16)
                             .padding(.vertical, 8)
@@ -158,7 +158,7 @@ struct StoryView: View {
                                 let lines = splitToLines(story.content)
                                 
                                 Text(story.title)
-                                    .font(.system(size: 30, weight: .bold, design: .serif))
+                                    .font(.granlyTitle)
                                     .foregroundStyle(.white)
                                     .padding(.bottom, 16)
                                     .padding(.horizontal)
@@ -311,7 +311,7 @@ struct ControlsView: View {
                     story = StoryManager.shared.getRandomStory(for: mood)
                 }) {
                     Image(systemName: "shuffle")
-                        .font(.title3)
+                        .font(.granlyHeadline)
                         .foregroundStyle(Color.themeWarm)
                 }
                 .frame(maxWidth: .infinity)
@@ -328,7 +328,7 @@ struct ControlsView: View {
                     }
                 }) {
                     Image(systemName: "backward.end.fill")
-                        .font(.title2)
+                        .font(.granlyTitle2)
                 }
                 .frame(maxWidth: .infinity)
                 
@@ -349,7 +349,7 @@ struct ControlsView: View {
                             .fill(.white)
                             .frame(width: 66, height: 66)
                         Image(systemName: speechManager.isSpeaking ? "pause.fill" : "play.fill")
-                            .font(.title.bold())
+                            .font(.granlyTitle)
                             .foregroundStyle(Color(red: 0.15, green: 0.10, blue: 0.12))
                             .offset(x: speechManager.isSpeaking ? 0 : 2)
                     }
@@ -362,7 +362,7 @@ struct ControlsView: View {
                     animateAvatar = false
                 }) {
                     Image(systemName: "stop.fill")
-                        .font(.title2)
+                        .font(.granlyTitle2)
                 }
                 .frame(maxWidth: .infinity)
                 
@@ -375,7 +375,7 @@ struct ControlsView: View {
                     }
                 }) {
                     Image(systemName: (story != nil && storyManager.isLiked(story: story!)) ? "heart.fill" : "heart")
-                        .font(.title3)
+                        .font(.granlyHeadline)
                         .foregroundStyle((story != nil && storyManager.isLiked(story: story!)) ? Color.themeRose : .white)
                 }
                 .frame(maxWidth: .infinity)

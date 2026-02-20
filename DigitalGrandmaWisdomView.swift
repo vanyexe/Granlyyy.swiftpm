@@ -13,10 +13,10 @@ struct DigitalGrandmaWisdomView: View {
                     // Header
                     VStack(alignment: .leading, spacing: 4) {
                         Text("Wisdom & Growth")
-                            .font(.system(size: 32, weight: .bold, design: .serif))
+                            .font(.granlyTitle)
                             .foregroundStyle(Color.themeText)
                         Text("A gentle space to reflect and grow.")
-                            .font(.subheadline)
+                            .font(.granlySubheadline)
                             .foregroundStyle(.secondary)
                     }
                     .padding(.horizontal)
@@ -103,16 +103,16 @@ struct WisdomSectionCard<Content: View>: View {
                         .fill(color.opacity(0.15))
                         .frame(width: 50, height: 50)
                     Image(systemName: icon)
-                        .font(.title2)
+                        .font(.granlyTitle2)
                         .foregroundStyle(color)
                 }
                 
                 VStack(alignment: .leading, spacing: 4) {
                     Text(title)
-                        .font(.title3.bold())
+                        .font(.granlyHeadline)
                         .foregroundStyle(Color.themeText)
                     Text(subtitle)
-                        .font(.caption)
+                        .font(.granlyCaption)
                         .foregroundStyle(.secondary)
                 }
             }
@@ -131,14 +131,14 @@ struct ActionRow: View {
     var body: some View {
         HStack {
             Text(title)
-                .font(.subheadline.bold())
+                .font(.granlySubheadline)
                 .foregroundStyle(Color.themeText)
             
             Spacer()
             
             Image(systemName: "arrow.right.circle.fill")
                 .foregroundStyle(Color.themeText.opacity(0.5))
-                .font(.title3)
+                .font(.granlyHeadline)
         }
         .padding(.vertical, 12)
         .padding(.horizontal, 16)

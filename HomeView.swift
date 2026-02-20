@@ -33,10 +33,10 @@ struct HomeView: View {
                     HStack {
                         VStack(alignment: .leading, spacing: 4) {
                             Text(greeting)
-                                .font(.subheadline)
+                                .font(.granlySubheadline)
                                 .foregroundStyle(.secondary)
                             Text("My Dear") // Ideally fetch from Profile
-                                .font(.custom("Baskerville-Bold", size: 28))
+                                .font(.granlyTitle2)
                                 .foregroundStyle(Color.themeText)
                         }
                         Spacer()
@@ -115,7 +115,7 @@ struct HomeView: View {
                 // Mood Grid
                 VStack(alignment: .leading, spacing: 16) {
                     Text("How are you feeling?")
-                        .font(.title3.bold())
+                        .font(.granlyHeadline)
                         .foregroundStyle(Color.themeText)
                         .padding(.horizontal)
                     
@@ -132,7 +132,7 @@ struct HomeView: View {
                 // Featured Stories
                 VStack(alignment: .leading, spacing: 16) {
                     Text("Featured for You")
-                        .font(.title3.bold())
+                        .font(.granlyHeadline)
                         .foregroundStyle(Color.themeText)
                         .padding(.horizontal)
                     
@@ -170,10 +170,10 @@ struct DailyQuoteCard: View {
         HStack {
             VStack(alignment: .leading, spacing: 8) {
                 Text("Daily Inspiration")
-                    .font(.caption.bold())
+                    .font(.granlyCaption)
                     .foregroundStyle(.white.opacity(0.8))
                 Text("\"Keep your face always toward the sunshine and shadows will fall behind you.\"")
-                    .font(.system(size: 18, weight: .semibold, design: .serif))
+                    .font(.granlyHeadline)
                     .foregroundStyle(.white)
             }
             Spacer()
@@ -204,12 +204,12 @@ struct QuickActionButton: View {
                     .frame(width: 44, height: 44)
                     .overlay(
                         Image(systemName: icon)
-                            .font(.headline)
+                            .font(.granlyHeadline)
                             .foregroundStyle(color)
                     )
                 
                 Text(title)
-                    .font(.caption.bold())
+                    .font(.granlyCaption)
                     .foregroundStyle(Color.themeText)
             }
             .frame(maxWidth: .infinity)
@@ -229,7 +229,7 @@ struct MoodCard: View {
                 .foregroundStyle(mood.baseColor)
             
             Text(mood.name)
-                .font(.headline)
+                .font(.granlyHeadline)
                 .foregroundStyle(Color.themeText)
         }
         .frame(maxWidth: .infinity)
@@ -252,7 +252,7 @@ struct FeaturedStoryCard: View {
                     .clipShape(Circle())
                 Spacer()
                 Text("3 min")
-                    .font(.caption2.bold())
+                    .font(.granlyCaption)
                     .padding(.horizontal, 8)
                     .padding(.vertical, 4)
                     .background(.ultraThinMaterial)
@@ -262,12 +262,12 @@ struct FeaturedStoryCard: View {
             Spacer()
             
             Text(storyTitle)
-                .font(.headline)
+                .font(.granlyHeadline)
                 .foregroundStyle(Color.themeText)
                 .lineLimit(2)
             
             Text(mood.name)
-                .font(.caption)
+                .font(.granlyCaption)
                 .foregroundStyle(.secondary)
         }
         .padding(16)

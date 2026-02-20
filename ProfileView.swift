@@ -42,10 +42,10 @@ struct ProfileView: View {
                             
                             VStack(spacing: 4) {
                                 Text(userName)
-                                    .font(.title2.bold())
+                                    .font(.granlyTitle2)
                                     .foregroundStyle(Color.themeText)
                                 Text("Stories Read: \(storiesRead)")
-                                    .font(.subheadline)
+                                    .font(.granlySubheadline)
                                     .foregroundStyle(.secondary)
                                     .padding(.horizontal, 12)
                                     .padding(.vertical, 6)
@@ -120,7 +120,7 @@ struct ProfileView: View {
                                         .foregroundStyle(Color.themeText)
                                     Spacer()
                                     Image(systemName: "chevron.right")
-                                        .font(.caption)
+                                        .font(.granlyCaption)
                                         .foregroundStyle(.secondary)
                                 }
                                 .padding(.vertical, 8)
@@ -133,7 +133,7 @@ struct ProfileView: View {
                         // Danger Zone
                         Button(action: { showResetAlert = true }) {
                             Text("Reset All Data")
-                                .font(.subheadline.bold())
+                                .font(.granlySubheadline)
                                 .foregroundStyle(.red.opacity(0.8))
                                 .padding()
                         }
@@ -189,7 +189,7 @@ struct SectionHeader: View {
     let title: String
     var body: some View {
         Text(title.uppercased())
-            .font(.caption.bold())
+            .font(.granlyCaption)
             .foregroundStyle(.secondary)
             .frame(maxWidth: .infinity, alignment: .leading)
     }
@@ -214,7 +214,7 @@ struct SettingsRow: View {
                 Text(value)
                     .foregroundStyle(.secondary)
                 Image(systemName: "chevron.right")
-                    .font(.caption)
+                    .font(.granlyCaption)
                     .foregroundStyle(.secondary)
             }
             .padding(.vertical, 8)
@@ -238,7 +238,7 @@ struct SettingsActionRow: View {
                     .foregroundStyle(Color.themeText)
                 Spacer()
                 Image(systemName: "chevron.right")
-                    .font(.caption)
+                    .font(.granlyCaption)
                     .foregroundStyle(.secondary)
             }
             .padding(.vertical, 8)

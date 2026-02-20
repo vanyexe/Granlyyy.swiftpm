@@ -13,10 +13,10 @@ struct UniversalQuotesView: View {
                 // Header
                 VStack(alignment: .leading, spacing: 4) {
                     Text("Universal Wisdom")
-                        .font(.system(size: 32, weight: .bold, design: .serif))
+                        .font(.granlyTitle)
                         .foregroundStyle(Color.themeText)
                     Text("Timeless truths connecting us all.")
-                        .font(.subheadline)
+                        .font(.granlySubheadline)
                         .foregroundStyle(.secondary)
                 }
                 .frame(maxWidth: .infinity, alignment: .leading)
@@ -60,7 +60,7 @@ struct QuoteDetailCard: View {
             VStack(spacing: 24) {
                 // Core Principle Badge
                 Text(quote.corePrinciple)
-                    .font(.caption.bold())
+                    .font(.granlyCaption)
                     .foregroundStyle(.white)
                     .padding(.horizontal, 16)
                     .padding(.vertical, 8)
@@ -89,11 +89,11 @@ struct QuoteDetailCard: View {
                         Image(systemName: "globe")
                             .foregroundStyle(Color.themeRose)
                         Text("Simple Meaning")
-                            .font(.headline)
+                            .font(.granlyHeadline)
                             .foregroundStyle(Color.themeText)
                     }
                     Text(quote.modernMeaning)
-                        .font(.subheadline)
+                        .font(.granlySubheadline)
                         .foregroundStyle(Color.themeText.opacity(0.8))
                         .lineSpacing(4)
                 }
@@ -108,7 +108,7 @@ struct QuoteDetailCard: View {
                         Image(systemName: "heart.fill")
                             .foregroundStyle(Color.themeWarm)
                         Text("Grandma Says...")
-                            .font(.headline)
+                            .font(.granlyHeadline)
                             .foregroundStyle(Color.themeText)
                     }
                     Text("\"\(quote.grandmaInterpretation)\"")
@@ -127,11 +127,11 @@ struct QuoteDetailCard: View {
                         Image(systemName: "leaf.fill")
                             .foregroundStyle(Color.themeGreen)
                         Text("Daily Practice")
-                            .font(.headline)
+                            .font(.granlyHeadline)
                             .foregroundStyle(Color.themeText)
                     }
                     Text(quote.dailyPractice)
-                        .font(.subheadline)
+                        .font(.granlySubheadline)
                         .foregroundStyle(Color.themeText.opacity(0.8))
                         .lineSpacing(4)
                 }
@@ -143,7 +143,7 @@ struct QuoteDetailCard: View {
                 // Next Steps Linking
                 VStack(spacing: 12) {
                     Text("Continue Your Journey")
-                        .font(.headline)
+                        .font(.granlyHeadline)
                         .foregroundStyle(Color.themeText)
                         .padding(.top, 10)
                     
@@ -180,14 +180,14 @@ private struct DetailActionRow: View {
                 .foregroundStyle(Color.themeRose)
             
             Text(title)
-                .font(.subheadline.bold())
+                .font(.granlySubheadline)
                 .foregroundStyle(Color.themeText)
             
             Spacer()
             
             Image(systemName: "chevron.right.circle.fill")
                 .foregroundStyle(Color.themeText.opacity(0.5))
-                .font(.title3)
+                .font(.granlyHeadline)
         }
         .padding(.vertical, 16)
         .padding(.horizontal, 20)

@@ -63,12 +63,12 @@ struct OnboardingView: View {
                             // Text Content
                             VStack(spacing: 16) {
                                 Text(slides[index].title)
-                                    .font(.system(size: 32, weight: .bold, design: .serif))
+                                    .font(.granlyTitle)
                                     .foregroundStyle(Color.themeText)
                                     .multilineTextAlignment(.center)
                                 
                                 Text(slides[index].description)
-                                    .font(.body)
+                                    .font(.granlyBody)
                                     .multilineTextAlignment(.center)
                                     .foregroundStyle(Color.themeText.opacity(0.8))
                                     .padding(.horizontal, 32)
@@ -104,7 +104,7 @@ struct OnboardingView: View {
                         }
                     }) {
                         Text(currentPage == slides.count - 1 ? "Get Started" : "Continue")
-                            .font(.headline)
+                            .font(.granlyHeadline)
                             .foregroundStyle(.white)
                             .frame(maxWidth: .infinity)
                             .frame(height: 56)

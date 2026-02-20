@@ -25,7 +25,7 @@ struct MemoryBoxView: View {
                                     .shadow(color: .black.opacity(0.2), radius: 5, y: 5)
                                 
                                 Text("Grandma's Memory Box")
-                                    .font(.system(size: 24, weight: .bold, design: .serif))
+                                    .font(.granlyTitle)
                                     .foregroundStyle(.white)
                                     .padding(.top, 8)
                             }
@@ -36,13 +36,13 @@ struct MemoryBoxView: View {
                         if favoritesManager.favoriteHistoricalStoryIDs.isEmpty && storyManager.likedStoryIDs.isEmpty {
                             VStack(spacing: 16) {
                                 Image(systemName: "heart.slash")
-                                    .font(.largeTitle)
+                                    .font(.granlyTitle)
                                     .foregroundStyle(Color.themeRose.opacity(0.5))
                                 Text("Your Memory Box is empty.")
-                                    .font(.headline)
+                                    .font(.granlyHeadline)
                                     .foregroundStyle(Color.themeText.opacity(0.8))
                                 Text("Tap the heart icon on your favorite stories and quotes to keep them safe in here.")
-                                    .font(.subheadline)
+                                    .font(.granlySubheadline)
                                     .foregroundStyle(Color.themeText.opacity(0.6))
                                     .multilineTextAlignment(.center)
                             }
@@ -111,7 +111,7 @@ private struct SectionHeaderTitle: View {
             Image(systemName: icon)
                 .foregroundStyle(color)
             Text(title)
-                .font(.system(size: 20, weight: .bold, design: .serif))
+                .font(.granlyTitle)
                 .foregroundStyle(Color.themeText)
         }
         .padding(.horizontal)
@@ -137,12 +137,12 @@ struct SavedStoryCard: View {
             Spacer()
             
             Text(title)
-                .font(.headline)
+                .font(.granlyHeadline)
                 .foregroundStyle(Color.themeText)
                 .lineLimit(2)
             
             Text(category)
-                .font(.caption.bold())
+                .font(.granlyCaption)
                 .foregroundStyle(color)
         }
         .padding(16)
@@ -165,18 +165,18 @@ struct SavedHistoricalRow: View {
                     .clipShape(RoundedRectangle(cornerRadius: 12))
                 
                 Image(systemName: story.iconName)
-                    .font(.title2)
+                    .font(.granlyTitle2)
                     .foregroundStyle(Color.themeGreen)
             }
             
             VStack(alignment: .leading, spacing: 4) {
                 Text(story.title)
-                    .font(.headline)
+                    .font(.granlyHeadline)
                     .foregroundStyle(Color.themeText)
                     .lineLimit(1)
                 
                 Text(story.era)
-                    .font(.subheadline)
+                    .font(.granlySubheadline)
                     .foregroundStyle(Color.themeText.opacity(0.6))
             }
             

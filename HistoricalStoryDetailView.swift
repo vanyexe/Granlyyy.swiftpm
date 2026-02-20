@@ -26,11 +26,11 @@ struct HistoricalStoryDetailView: View {
                 // Title & Era
                 VStack(alignment: .leading, spacing: 8) {
                     Text(story.title)
-                        .font(.system(size: 32, weight: .bold, design: .serif))
+                        .font(.granlyTitle)
                         .foregroundStyle(Color.themeText)
                     
                     Text(story.era)
-                        .font(.subheadline.bold())
+                        .font(.granlySubheadline)
                         .foregroundStyle(Color.themeRose)
                 }
                 .padding(.horizontal)
@@ -40,7 +40,7 @@ struct HistoricalStoryDetailView: View {
                     HistoricalSectionHeader(title: "What Happened", icon: "book.fill")
                     
                     Text(story.summary)
-                        .font(.body)
+                        .font(.granlyBody)
                         .lineSpacing(6)
                         .foregroundStyle(Color.themeText.opacity(0.9))
                 }
@@ -57,7 +57,7 @@ struct HistoricalStoryDetailView: View {
                                 .padding(.top, 2)
                             
                             Text(lesson)
-                                .font(.body)
+                                .font(.granlyBody)
                                 .foregroundStyle(Color.themeText)
                         }
                         .padding(.vertical, 4)
@@ -84,7 +84,7 @@ struct HistoricalStoryDetailView: View {
                 // Personal Growth Takeaway
                 VStack(alignment: .center, spacing: 12) {
                     Text("🌱 Growth Takeaway")
-                        .font(.headline)
+                        .font(.granlyHeadline)
                         .foregroundStyle(Color.themeText)
                     
                     Text("\"\(story.personalGrowthTakeaway)\"")
@@ -122,7 +122,7 @@ struct HistoricalStoryDetailView: View {
                 // Next Steps Linking
                 VStack(spacing: 12) {
                     Text("Continue Your Journey")
-                        .font(.headline)
+                        .font(.granlyHeadline)
                         .foregroundStyle(Color.themeText)
                         .padding(.top, 10)
                     
@@ -182,7 +182,7 @@ struct HistoricalSectionHeader: View {
             Image(systemName: icon)
                 .foregroundStyle(Color.themeRose)
             Text(title)
-                .font(.title3.bold())
+                .font(.granlyHeadline)
                 .foregroundStyle(Color.themeText)
         }
     }
@@ -199,14 +199,14 @@ private struct DetailActionRow: View {
                 .foregroundStyle(Color.themeRose)
             
             Text(title)
-                .font(.subheadline.bold())
+                .font(.granlySubheadline)
                 .foregroundStyle(Color.themeText)
             
             Spacer()
             
             Image(systemName: "chevron.right.circle.fill")
                 .foregroundStyle(Color.themeText.opacity(0.5))
-                .font(.title3)
+                .font(.granlyHeadline)
         }
         .padding(.vertical, 16)
         .padding(.horizontal, 20)

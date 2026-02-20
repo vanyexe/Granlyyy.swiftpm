@@ -15,7 +15,7 @@ struct GrowthPathView: View {
                     // Header Stats
                     VStack(spacing: 16) {
                         Text("Your Emotional Garden")
-                            .font(.system(size: 28, weight: .bold, design: .serif))
+                            .font(.granlyTitle)
                             .foregroundStyle(Color.themeText)
                         
                         HStack(spacing: 30) {
@@ -49,17 +49,17 @@ struct GrowthPathView: View {
                                                 .shadow(color: node.isCompleted ? Color.themeGreen.opacity(0.4) : .clear, radius: 8)
                                             
                                             Image(systemName: node.icon)
-                                                .font(.title2)
+                                                .font(.granlyTitle2)
                                                 .foregroundStyle(node.isCompleted ? .white : .gray)
                                         }
                                         
                                         // Text
                                         VStack(alignment: .leading, spacing: 4) {
                                             Text(node.title)
-                                                .font(.headline)
+                                                .font(.granlyHeadline)
                                                 .foregroundStyle(Color.themeText)
                                             Text(node.description)
-                                                .font(.caption)
+                                                .font(.granlyCaption)
                                                 .foregroundStyle(.secondary)
                                                 .multilineTextAlignment(.leading)
                                         }
@@ -127,15 +127,15 @@ struct StatRing: View {
                 
                 VStack(spacing: 2) {
                     Image(systemName: icon)
-                        .font(.body)
+                        .font(.granlyBody)
                         .foregroundStyle(color)
                     Text(value)
-                        .font(.title3.bold())
+                        .font(.granlyHeadline)
                         .foregroundStyle(Color.themeText)
                 }
             }
             Text(label)
-                .font(.caption.bold())
+                .font(.granlyCaption)
                 .foregroundStyle(.secondary)
         }
     }

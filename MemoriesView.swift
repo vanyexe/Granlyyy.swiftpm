@@ -20,10 +20,10 @@ public struct MemoriesView: View {
                 HStack {
                     VStack(alignment: .leading, spacing: 2) {
                         Text("Saved Memories")
-                            .font(.system(size: 28, weight: .bold, design: .serif))
+                            .font(.granlyTitle)
                             .foregroundStyle(Color.themeText)
                         Text("\(savedStories.count) stories saved 💛")
-                            .font(.subheadline)
+                            .font(.granlySubheadline)
                             .foregroundStyle(.secondary)
                     }
                     Spacer()
@@ -54,17 +54,17 @@ public struct MemoriesView: View {
                         }
                         
                         Text("No memories yet")
-                            .font(.system(size: 22, weight: .bold, design: .serif))
+                            .font(.granlyTitle)
                             .foregroundStyle(Color.themeText)
                         
                         Text("When grandma tells you a story you love,\ntap the heart to save it here forever.")
-                            .font(.subheadline)
+                            .font(.granlySubheadline)
                             .foregroundStyle(.secondary)
                             .multilineTextAlignment(.center)
                             .lineSpacing(4)
                         
                         Image(systemName: "heart.slash")
-                            .font(.title)
+                            .font(.granlyTitle)
                             .foregroundStyle(Color.themeRose.opacity(0.3))
                             .padding(.top, 8)
                     }
@@ -108,18 +108,18 @@ struct MemoryCard: View {
                     .frame(width: 52, height: 52)
                 
                 Image(systemName: "book.closed.fill")
-                    .font(.title2)
+                    .font(.granlyTitle2)
                     .foregroundStyle(Color.themeText)
             }
             
             VStack(alignment: .leading, spacing: 4) {
                 Text(story.title)
-                    .font(.headline)
+                    .font(.granlyHeadline)
                     .foregroundStyle(Color.themeText)
                     .lineLimit(1)
                 
                 Text(story.content.prefix(60) + "...")
-                    .font(.caption)
+                    .font(.granlyCaption)
                     .foregroundStyle(.secondary)
                     .lineLimit(2)
             }
@@ -133,7 +133,7 @@ struct MemoryCard: View {
                 }
             }) {
                 Image(systemName: storyManager.isLiked(story: story) ? "heart.fill" : "heart")
-                    .font(.title3)
+                    .font(.granlyHeadline)
                     .foregroundStyle(storyManager.isLiked(story: story) ? Color.themeRose : .secondary)
             }
         }

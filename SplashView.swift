@@ -67,7 +67,7 @@ struct SplashView: View {
                 VStack(spacing: 12) {
                     // Gradient Logo
                     Text("Granly")
-                        .font(.system(size: 56, weight: .bold, design: .serif))
+                        .font(.granlyTitle)
                         .foregroundStyle(
                             LinearGradient(
                                 colors: [Color.themeRose, Color.themeWarm],
@@ -79,7 +79,7 @@ struct SplashView: View {
                     
                     // Animated tagline
                     Text("Always with you. 💛")
-                    .font(.headline)
+                    .font(.granlyHeadline)
                     .foregroundStyle(.secondary)
                     .kerning(1.5)
                     .opacity(taglineVisible ? 1 : 0)

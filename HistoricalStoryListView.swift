@@ -8,13 +8,13 @@ struct HistoricalStoryListView: View {
             ScrollView {
                 VStack(alignment: .leading, spacing: 16) {
                     Text("Stories That Shaped Us")
-                        .font(.system(size: 28, weight: .bold, design: .serif))
+                        .font(.granlyTitle)
                         .foregroundStyle(Color.themeText)
                         .padding(.horizontal)
                         .padding(.top, 10)
                     
                     Text("Learn from the most impactful events in human history.")
-                        .font(.subheadline)
+                        .font(.granlySubheadline)
                         .foregroundStyle(.secondary)
                         .padding(.horizontal)
                     
@@ -52,18 +52,18 @@ struct HistoricalStoryCard: View {
                     .frame(width: 60, height: 60)
                 
                 Image(systemName: story.iconName)
-                    .font(.title2)
+                    .font(.granlyTitle2)
                     .foregroundStyle(Color.themeRose)
             }
             
             VStack(alignment: .leading, spacing: 4) {
                 Text(story.title)
-                    .font(.headline)
+                    .font(.granlyHeadline)
                     .foregroundStyle(Color.themeText)
                     .multilineTextAlignment(.leading)
                 
                 Text(story.era)
-                    .font(.caption)
+                    .font(.granlyCaption)
                     .foregroundStyle(.secondary)
             }
             

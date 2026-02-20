@@ -66,10 +66,10 @@ struct DailyWisdomView: View {
                 // Header
                 VStack(alignment: .leading, spacing: 4) {
                     Text("Daily Wisdom")
-                        .font(.system(size: 32, weight: .bold, design: .serif))
+                        .font(.granlyTitle)
                         .foregroundStyle(Color.themeText)
                     Text("Grandma's timeless advice ✨")
-                        .font(.subheadline)
+                        .font(.granlySubheadline)
                         .foregroundStyle(.secondary)
                 }
                 .frame(maxWidth: .infinity, alignment: .leading)
@@ -94,9 +94,9 @@ struct DailyWisdomView: View {
                             }) {
                                 HStack(spacing: 6) {
                                     Text(categoryEmojis[index])
-                                        .font(.callout)
+                                        .font(.granlyBody)
                                     Text(categories[index])
-                                        .font(.subheadline.bold())
+                                        .font(.granlySubheadline)
                                 }
                                 .padding(.horizontal, 16)
                                 .padding(.vertical, 10)
@@ -130,13 +130,13 @@ struct DailyWisdomView: View {
                             }
                         }) {
                             Image(systemName: savedQuotes.contains(currentQuote.text) ? "bookmark.fill" : "bookmark")
-                                .font(.title2)
+                                .font(.granlyTitle2)
                                 .foregroundStyle(categoryColors[selectedCategory])
                         }
                     }
                     
                     Text("\"")
-                        .font(.system(size: 60, weight: .bold, design: .serif))
+                        .font(.granlyTitle)
                         .foregroundStyle(categoryColors[selectedCategory].opacity(0.5))
                         .offset(y: 10)
                     
@@ -176,7 +176,7 @@ struct DailyWisdomView: View {
                         }
                     }) {
                         Image(systemName: "chevron.left")
-                            .font(.title2.bold())
+                            .font(.granlyTitle2)
                             .foregroundStyle(Color.themeText)
                             .frame(width: 50, height: 50)
                             .glassCard(cornerRadius: 25)
@@ -186,9 +186,9 @@ struct DailyWisdomView: View {
                     ShareLink(item: "\"\(currentQuote.text)\" — Grandma 💛\n\nFrom Granly App") {
                         HStack(spacing: 8) {
                             Image(systemName: "square.and.arrow.up")
-                                .font(.headline)
+                                .font(.granlyHeadline)
                             Text("Share Wisdom")
-                                .font(.headline)
+                                .font(.granlyHeadline)
                         }
                         .foregroundStyle(.white)
                         .padding(.horizontal, 28)
@@ -211,7 +211,7 @@ struct DailyWisdomView: View {
                         }
                     }) {
                         Image(systemName: "chevron.right")
-                            .font(.title2.bold())
+                            .font(.granlyTitle2)
                             .foregroundStyle(Color.themeText)
                             .frame(width: 50, height: 50)
                             .glassCard(cornerRadius: 25)

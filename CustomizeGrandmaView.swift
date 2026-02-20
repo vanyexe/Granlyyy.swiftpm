@@ -28,12 +28,12 @@ struct CustomizeGrandmaView: View {
                 HStack {
                     Button(action: { dismiss() }) {
                         Image(systemName: "xmark.circle.fill")
-                            .font(.title)
+                            .font(.granlyTitle)
                             .foregroundStyle(Color.themeText)
                     }
                     Spacer()
                     Text("Grandma Makeover")
-                        .font(.custom("Baskerville-Bold", size: 24))
+                        .font(.granlyTitle2)
                         .foregroundStyle(Color.themeText)
                     Spacer()
                     Button(action: {
@@ -42,7 +42,7 @@ struct CustomizeGrandmaView: View {
                         }
                     }) {
                         Image(systemName: "dice.fill")
-                            .font(.title)
+                            .font(.granlyTitle)
                             .foregroundStyle(Color.themeRose)
                     }
                 }
@@ -80,9 +80,9 @@ struct CustomizeGrandmaView: View {
                                 Button(action: { selectedTab = index }) {
                                     VStack(spacing: 6) {
                                         Image(systemName: tabIcons[index])
-                                            .font(.headline)
+                                            .font(.granlyHeadline)
                                         Text(tabs[index])
-                                            .font(.caption.bold())
+                                            .font(.granlyCaption)
                                     }
                                     .padding(.vertical, 8)
                                     .padding(.horizontal, 16)
@@ -161,7 +161,7 @@ struct OptionSection<Content: View>: View {
     var body: some View {
         VStack(alignment: .leading, spacing: 12) {
             Text(title)
-                .font(.headline)
+                .font(.granlyHeadline)
                 .foregroundStyle(.secondary)
             content
         }
@@ -234,7 +234,7 @@ struct TextGrid<T: Identifiable & RawRepresentable>: View where T.RawValue == St
             ForEach(options) { option in
                 Button(action: { selected = option }) {
                     Text(option.rawValue)
-                        .font(.subheadline.bold())
+                        .font(.granlySubheadline)
                         .frame(maxWidth: .infinity)
                         .padding(.vertical, 12)
                         .background(selected.id == option.id ? Color.themeRose : Color.white)

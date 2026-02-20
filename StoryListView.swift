@@ -24,14 +24,14 @@ struct StoryListView: View {
                 HStack {
                     Button(action: { dismiss() }) {
                         Image(systemName: "chevron.left")
-                            .font(.title2.bold())
+                            .font(.granlyTitle2)
                             .foregroundStyle(Color.themeText)
                             .frame(width: 44, height: 44)
                             .glassCard(cornerRadius: 12)
                     }
                     Spacer()
                     Text("\(mood.name) Stories")
-                        .font(.custom("Baskerville-Bold", size: 24))
+                        .font(.granlyTitle2)
                         .foregroundStyle(Color.themeText)
                     Spacer()
                     // Hidden balance
@@ -45,7 +45,7 @@ struct StoryListView: View {
                         ForEach(categories, id: \.self) { category in
                             Button(action: { selectedCategory = category }) {
                                 Text(category)
-                                    .font(.subheadline.bold())
+                                    .font(.granlySubheadline)
                                     .padding(.horizontal, 16)
                                     .padding(.vertical, 8)
                                     .background(selectedCategory == category ? mood.baseColor : Color.clear)
@@ -90,18 +90,18 @@ struct StoryListRow: View {
                     .frame(width: 50, height: 50)
                 Image(systemName: getIcon(for: story.category))
                     .foregroundStyle(moodColor)
-                    .font(.title3)
+                    .font(.granlyHeadline)
             }
             
             VStack(alignment: .leading, spacing: 4) {
                 Text(story.title)
-                    .font(.headline)
+                    .font(.granlyHeadline)
                     .foregroundStyle(Color.themeText)
                     .lineLimit(1)
                 
                 HStack {
                     Text(story.category)
-                        .font(.caption.bold())
+                        .font(.granlyCaption)
                         .foregroundStyle(moodColor)
                         .padding(.horizontal, 6)
                         .padding(.vertical, 2)
@@ -109,7 +109,7 @@ struct StoryListRow: View {
                         .cornerRadius(4)
                     
                     Text("• \(story.readTime) min read")
-                        .font(.caption)
+                        .font(.granlyCaption)
                         .foregroundStyle(.secondary)
                 }
             }
@@ -124,7 +124,7 @@ struct StoryListRow: View {
             }) {
                 Image(systemName: storyManager.isLiked(story: story) ? "heart.fill" : "heart")
                     .foregroundStyle(storyManager.isLiked(story: story) ? Color.themeRose : .gray.opacity(0.4))
-                    .font(.title3)
+                    .font(.granlyHeadline)
             }
         }
         .padding()
