@@ -10,7 +10,7 @@ struct MemoryBoxView: View {
                 Color.themeBackground.ignoresSafeArea()
                 
                 ScrollView {
-                    VStack(alignment: .leading, spacing: 20) {
+                    VStack(alignment: .leading, spacing: 16) { // 20 -> 16
                         
                         // Header Image showing a wooden box or memory jar
                         ZStack {
@@ -34,21 +34,21 @@ struct MemoryBoxView: View {
                         .padding(.top, 10)
                         
                         if favoritesManager.favoriteHistoricalStoryIDs.isEmpty && storyManager.likedStoryIDs.isEmpty {
-                            VStack(spacing: 16) {
+                            VStack(spacing: 12) { // 16 -> 12
                                 Image(systemName: "heart.slash")
-                                    .font(.granlyTitle)
+                                    .font(.granlyTitle2) // Title -> Title2
                                     .foregroundStyle(Color.themeRose.opacity(0.5))
                                 Text("Your Memory Box is empty.")
-                                    .font(.granlyHeadline)
+                                    .font(.granlyBodyBold) // Headline -> BodyBold
                                     .foregroundStyle(Color.themeText.opacity(0.8))
                                 Text("Tap the heart icon on your favorite stories and quotes to keep them safe in here.")
-                                    .font(.granlySubheadline)
+                                    .font(.granlyCaption) // Subheadline -> Caption
                                     .foregroundStyle(Color.themeText.opacity(0.6))
                                     .multilineTextAlignment(.center)
                             }
                             .frame(maxWidth: .infinity)
-                            .padding(.top, 60)
-                            .padding(.horizontal, 40)
+                            .padding(.top, 40) // 60 -> 40
+                            .padding(.horizontal, 24) // 40 -> 24
                         } else {
                             
                             // 1. Digital Grandma Mood Stories
@@ -111,7 +111,7 @@ private struct SectionHeaderTitle: View {
             Image(systemName: icon)
                 .foregroundStyle(color)
             Text(title)
-                .font(.granlyTitle)
+                .font(.granlyTitle2) // Title -> Title2
                 .foregroundStyle(Color.themeText)
         }
         .padding(.horizontal)
@@ -149,9 +149,7 @@ struct SavedStoryCard: View {
         }
         .padding(14) // 16 -> 14
         .frame(width: 130, height: 140) // 150x160 -> 130x140
-        .background(Color.themeCard)
-        .clipShape(RoundedRectangle(cornerRadius: 14)) // 16 -> 14
-        .shadow(color: .black.opacity(0.05), radius: 5, y: 2)
+        .glassCard(cornerRadius: 16) // Replaced custom styling with standard glassCard
     }
 }
 
@@ -190,9 +188,7 @@ struct SavedHistoricalRow: View {
                 .padding(.trailing, 4) // 8 -> 4
         }
         .padding(12)
-        .background(Color.themeCard)
-        .clipShape(RoundedRectangle(cornerRadius: 14)) // 16 -> 14
-        .shadow(color: .black.opacity(0.05), radius: 5, y: 2)
+        .glassCard(cornerRadius: 16) // Replaced custom styling with standard glassCard
     }
 }
 
