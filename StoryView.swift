@@ -110,8 +110,8 @@ struct StoryView: View {
                     }
                 }
                 .foregroundStyle(.white)
-                .padding(.horizontal)
-                .padding(.top, 10)
+                .padding(.horizontal, 20) // 16 -> 20 (more margin breathing room)
+                .padding(.top, 4) // 10 -> 4 (tighter top)
                 
                 // Grandma View
                 ZStack {
@@ -144,11 +144,10 @@ struct StoryView: View {
                             .shadow(radius: 10)
                             .transition(.scale.combined(with: .opacity).combined(with: .move(edge: .bottom)))
                             .offset(y: -80) // Float above head
-                            .zIndex(1)
                     }
                 }
-                .frame(height: 220)
-                .padding(.vertical, 16)
+                .frame(height: 160) // 220 -> 160 (Much more compact header area)
+                .padding(.vertical, 8) // 16 -> 8
                 
                 // Story Content and Controls (Same as before)
                 ScrollViewReader { proxy in
@@ -158,22 +157,23 @@ struct StoryView: View {
                                 let lines = splitToLines(story.content)
                                 
                                 Text(story.title)
-                                    .font(.granlyTitle)
+                                    .font(.granlyTitle2) // Title -> Title2 (Compact headers)
                                     .foregroundStyle(.white)
-                                    .padding(.bottom, 16)
-                                    .padding(.horizontal)
+                                    .padding(.bottom, 8) // 16 -> 8
+                                    .padding(.horizontal, 24) // 16 -> 24
                                 
                                 ForEach(Array(lines.enumerated()), id: \.offset) { index, line in
                                     let isActive = isLineActive(index: index, lines: lines)
                                     
                                     Text(line)
-                                        .font(.system(size: 24, weight: .semibold))
-                                        .foregroundStyle(isActive ? .white : .white.opacity(0.30))
-                                        .padding(.horizontal)
+                                        .font(.granlyHeadline) // 24pt custom -> Headline (Much sleeker reading size)
+                                        .foregroundStyle(isActive ? .white : .white.opacity(0.40)) // 0.3 -> 0.4 (Better low contrast legibility)
+                                        .padding(.horizontal, 24) // 16 -> 24
                                         .multilineTextAlignment(.leading)
                                         .scaleEffect(isActive ? 1.01 : 1.0, anchor: .leading)
                                         .id(index)
                                         .animation(.spring(response: 0.3, dampingFraction: 0.7), value: isActive)
+                                        .lineSpacing(4) // Add tighter line spacing for the body lines
                                 }
                             } else {
                                 ProgressView().tint(.white)

@@ -24,9 +24,9 @@ struct StoryListView: View {
                 HStack {
                     Button(action: { dismiss() }) {
                         Image(systemName: "chevron.left")
-                            .font(.granlyTitle2)
+                            .font(.granlyHeadline) // Title2 -> Headline for a smaller back button
                             .foregroundStyle(Color.themeText)
-                            .frame(width: 44, height: 44)
+                            .frame(width: 36, height: 36) // 44 -> 36
                             .glassCard(cornerRadius: 12)
                     }
                     Spacer()
@@ -35,19 +35,19 @@ struct StoryListView: View {
                         .foregroundStyle(Color.themeText)
                     Spacer()
                     // Hidden balance
-                    Color.clear.frame(width: 44, height: 44)
+                    Color.clear.frame(width: 36, height: 36)
                 }
                 .padding()
                 
                 // Category Filter
                 ScrollView(.horizontal, showsIndicators: false) {
-                    HStack(spacing: 12) {
+                    HStack(spacing: 10) { // 12 -> 10
                         ForEach(categories, id: \.self) { category in
                             Button(action: { selectedCategory = category }) {
                                 Text(category)
-                                    .font(.granlySubheadline)
-                                    .padding(.horizontal, 16)
-                                    .padding(.vertical, 8)
+                                    .font(.granlyBodyBold) // Subheadline -> BodyBold for smaller compact tags
+                                    .padding(.horizontal, 14) // 16 -> 14
+                                    .padding(.vertical, 6) // 8 -> 6
                                     .background(selectedCategory == category ? mood.baseColor : Color.clear)
                                     .foregroundStyle(selectedCategory == category ? .white : Color.themeText)
                                     .clipShape(Capsule())
@@ -56,19 +56,19 @@ struct StoryListView: View {
                         }
                     }
                     .padding(.horizontal)
-                    .padding(.bottom, 16)
+                    .padding(.bottom, 12) // 16 -> 12
                 }
                 
                 // Story List
                 ScrollView {
-                    LazyVStack(spacing: 16) {
+                    LazyVStack(spacing: 12) { // 16 -> 12
                         ForEach(filteredStories) { story in
                             NavigationLink(destination: StoryView(mood: mood, storyToLoad: story)) {
                                 StoryListRow(story: story, moodColor: mood.baseColor)
                             }
                         }
                     }
-                    .padding()
+                    .padding(.horizontal) // Just horizontal padding to tighten list
                 }
             }
         }
@@ -82,31 +82,32 @@ struct StoryListRow: View {
     @ObservedObject var storyManager = StoryManager.shared
     
     var body: some View {
-        HStack(spacing: 16) {
+        HStack(spacing: 12) { // 16 -> 12
             // Icon / Category Badge
             ZStack {
                 Circle()
                     .fill(moodColor.opacity(0.15))
-                    .frame(width: 50, height: 50)
+                    .frame(width: 40, height: 40) // 50 -> 40
                 Image(systemName: getIcon(for: story.category))
                     .foregroundStyle(moodColor)
-                    .font(.granlyHeadline)
+                    .font(.granlySubheadline) // Headline -> Subheadline
             }
             
             VStack(alignment: .leading, spacing: 4) {
                 Text(story.title)
-                    .font(.granlyHeadline)
+                    .font(.granlyBodyBold) // Headline -> BodyBold
                     .foregroundStyle(Color.themeText)
                     .lineLimit(1)
                 
                 HStack {
-                    Text(story.category)
+                    Text(story.category.uppercased()) // Premium pill tag
+                        .font(.system(size: 9, weight: .bold, design: .rounded))
+                        .tracking(0.5)
                         .font(.granlyCaption)
                         .foregroundStyle(moodColor)
                         .padding(.horizontal, 6)
                         .padding(.vertical, 2)
-                        .background(moodColor.opacity(0.1))
-                        .cornerRadius(4)
+                        .clipShape(Capsule()) // 4px Radius -> Pill capsule
                     
                     Text("• \(story.readTime) min read")
                         .font(.granlyCaption)
@@ -127,8 +128,8 @@ struct StoryListRow: View {
                     .font(.granlyHeadline)
             }
         }
-        .padding()
-        .glassCard(cornerRadius: 16)
+        .padding(14) // 16 -> 14
+        .glassCard(cornerRadius: 14) // 16 -> 14
     }
     
     func getIcon(for category: String) -> String {

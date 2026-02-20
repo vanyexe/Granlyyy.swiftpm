@@ -132,7 +132,7 @@ struct HomeView: View {
                         }
                         
                         // Featured Stories
-                        VStack(alignment: .leading, spacing: 16) {
+                        VStack(alignment: .leading, spacing: 12) { // 16 -> 12
                             Text("Featured for You")
                                 .font(.granlyHeadline)
                                 .foregroundStyle(Color.themeText)
@@ -182,15 +182,15 @@ struct DailyQuoteCard: View {
             }
             Spacer()
             Image(systemName: "quote.opening")
-                .font(.system(size: 40))
+                .font(.system(size: 32)) // Reduced from 40
                 .foregroundStyle(.white.opacity(0.2))
         }
-        .padding(20)
+        .padding(16) // Reduced from 20
         .background(
             LinearGradient(colors: [Color.themeRose, Color.themeWarm], startPoint: .topLeading, endPoint: .bottomTrailing)
         )
-        .clipShape(RoundedRectangle(cornerRadius: 20))
-        .shadow(color: Color.themeRose.opacity(0.4), radius: 10, x: 0, y: 5)
+        .clipShape(RoundedRectangle(cornerRadius: 16)) // Tighter corners
+        .shadow(color: Color.themeRose.opacity(0.4), radius: 8, x: 0, y: 4) // Smaller shadow
     }
 }
 
@@ -202,23 +202,23 @@ struct QuickActionButton: View {
     
     var body: some View {
         Button(action: action) {
-            VStack(spacing: 8) {
+            VStack(spacing: 6) { // 8 -> 6
                 Circle()
                     .fill(color.opacity(0.15))
-                    .frame(width: 44, height: 44)
+                    .frame(width: 38, height: 38) // 44 -> 38
                     .overlay(
                         Image(systemName: icon)
-                            .font(.granlyHeadline)
+                            .font(.granlySubheadline) // Headline -> Subheadline
                             .foregroundStyle(color)
                     )
                 
                 Text(title)
-                    .font(.granlyCaption)
+                    .font(.system(size: 11, weight: .bold, design: .rounded)) // Custom small crisp text
                     .foregroundStyle(Color.themeText)
             }
             .frame(maxWidth: .infinity)
-            .padding(.vertical, 12)
-            .glassCard(cornerRadius: 16)
+            .padding(.vertical, 10) // 12 -> 10
+            .glassCard(cornerRadius: 14) // 16 -> 14
         }
     }
 }
@@ -229,16 +229,16 @@ struct MoodCard: View {
     var body: some View {
         VStack(spacing: 12) {
             Image(systemName: mood.icon)
-                .font(.system(size: 32))
+                .font(.system(size: 28)) // 32 -> 28
                 .foregroundStyle(mood.baseColor)
             
             Text(mood.name)
-                .font(.granlyHeadline)
+                .font(.granlyBodyBold) // Headline -> BodyBold
                 .foregroundStyle(Color.themeText)
         }
         .frame(maxWidth: .infinity)
-        .padding(.vertical, 24)
-        .glassCard(cornerRadius: 20)
+        .padding(.vertical, 20) // 24 -> 20
+        .glassCard(cornerRadius: 16) // 20 -> 16
     }
 }
 
@@ -247,16 +247,17 @@ struct FeaturedStoryCard: View {
     let storyTitle: String
     
     var body: some View {
-        VStack(alignment: .leading, spacing: 12) {
+        VStack(alignment: .leading, spacing: 10) { // Tighter spacing
             HStack {
                 Image(systemName: mood.icon)
+                    .font(.system(size: 14)) // Explicit small icon
                     .foregroundStyle(.white)
-                    .padding(8)
+                    .padding(6) // 8 -> 6
                     .background(mood.baseColor.opacity(0.8))
                     .clipShape(Circle())
                 Spacer()
                 Text("3 min")
-                    .font(.granlyCaption)
+                    .font(.system(size: 10, weight: .bold, design: .rounded)) // Crisp tiny rounded
                     .padding(.horizontal, 8)
                     .padding(.vertical, 4)
                     .background(.ultraThinMaterial)
@@ -266,16 +267,17 @@ struct FeaturedStoryCard: View {
             Spacer()
             
             Text(storyTitle)
-                .font(.granlyHeadline)
+                .font(.granlyBodyBold) // Headline -> BodyBold
                 .foregroundStyle(Color.themeText)
                 .lineLimit(2)
             
-            Text(mood.name)
-                .font(.granlyCaption)
-                .foregroundStyle(.secondary)
+            Text(mood.name.uppercased())
+                .font(.system(size: 10, weight: .bold, design: .rounded))
+                .tracking(1) // Premium letter spacing
+                .foregroundStyle(mood.baseColor)
         }
-        .padding(16)
-        .frame(width: 160, height: 180)
-        .glassCard(cornerRadius: 20)
+        .padding(14) // 16 -> 14
+        .frame(width: 140, height: 160) // 160x180 -> 140x160 (more compact horizontal scroll)
+        .glassCard(cornerRadius: 16) // 20 -> 16
     }
 }
