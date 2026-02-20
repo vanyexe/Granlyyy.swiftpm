@@ -119,8 +119,10 @@ struct SplashView: View {
          Timer.scheduledTimer(withTimeInterval: 2.0, repeats: true) { _ in
              let actions: [GrandmaAction] = [.love, .celebrate, .wave]
              let next = actions.randomElement() ?? .idle
-             withAnimation {
-                 grandmaAction = next
+             Task { @MainActor in
+                 withAnimation {
+                     self.grandmaAction = next
+                 }
              }
          }
     }

@@ -37,7 +37,7 @@ struct GrandmaSceneView: UIViewRepresentable {
     // Internal state for lip sync
     @State private var lipSyncTimer: Timer?
     
-    class Coordinator: NSObject {
+    class Coordinator: NSObject, @unchecked Sendable {
         var scene: SCNScene?
         var gestureTimer: Timer?
         var lipSyncTimer: Timer?
@@ -277,9 +277,12 @@ struct GrandmaSceneView: UIViewRepresentable {
     }
     
     private func startGestures(_ root: SCNNode, _ c: Coordinator) {
-         c.gestureTimer = Timer.scheduledTimer(withTimeInterval: 2.5, repeats: true) { _ in
-             self.gesture(c.gestureIdx, root)
-             c.gestureIdx = (c.gestureIdx + 1) % 3
+         c.gestureTimer = Timer.scheduledTimer(withTimeInterval: 2.5, repeats: true) { [weak c] _ in
+             guard let c = c else { return }
+             Task { @MainActor in
+                 self.gesture(c.gestureIdx, root)
+                 c.gestureIdx = (c.gestureIdx + 1) % 3
+             }
          }
     }
     
