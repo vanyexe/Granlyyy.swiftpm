@@ -45,14 +45,35 @@ final class AudioService: NSObject, ObservableObject, AVSpeechSynthesizerDelegat
         
         let utterance = AVSpeechUtterance(string: text)
         
-        // Try to find a warm, comforting English voice (e.g., Samantha or a UK voice for a "Grandma" feel)
-        if let englishVoice = AVSpeechSynthesisVoice(language: "en-GB") ?? AVSpeechSynthesisVoice(language: "en-US") {
-            utterance.voice = englishVoice
+        // Specifically find a sweet, comforting English female voice
+        let voices = AVSpeechSynthesisVoice.speechVoices()
+        let preferredNames = ["Samantha", "Karen", "Moira", "Tessa", "Martha"] // Known good female voices
+        
+        var selectedVoice: AVSpeechSynthesisVoice?
+        
+        // 1. Try to find a preferred English female voice
+        for name in preferredNames {
+            if let voice = voices.first(where: { $0.name == name && $0.language.starts(with: "en") }) {
+                selectedVoice = voice
+                break
+            }
         }
         
-        // Adjust these to sound softer and older
-        utterance.rate = AVSpeechUtteranceDefaultSpeechRate * 0.85 // Slightly slower
-        utterance.pitchMultiplier = 0.9 // Slightly lower pitch
+        // 2. Fallback to any English female voice
+        if selectedVoice == nil {
+            selectedVoice = voices.first(where: { $0.language.starts(with: "en") && $0.gender == .female })
+        }
+        
+        // 3. Last fallback
+        if selectedVoice == nil {
+            selectedVoice = AVSpeechSynthesisVoice(language: "en-US")
+        }
+        
+        utterance.voice = selectedVoice
+        
+        // Make her sound sweeter, gentler, and authentically older
+        utterance.rate = AVSpeechUtteranceDefaultSpeechRate * 0.82 // Slightly slower, unhurried pace
+        utterance.pitchMultiplier = 1.15 // Higher pitch for a sweeter, softer tone
         utterance.volume = 1.0
         
         currentlyPlayingContent = text
