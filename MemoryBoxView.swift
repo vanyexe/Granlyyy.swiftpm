@@ -16,18 +16,18 @@ struct MemoryBoxView: View {
                         ZStack {
                             RoundedRectangle(cornerRadius: 16)
                                 .fill(LinearGradient(colors: [Color.themeWarm, Color.themeGold], startPoint: .topLeading, endPoint: .bottomTrailing))
-                                .frame(height: 180)
+                                .frame(height: 140) // 180 -> 140
                             
                             VStack {
                                 Image(systemName: "archivebox.fill")
-                                    .font(.system(size: 60))
+                                    .font(.system(size: 44)) // 60 -> 44
                                     .foregroundStyle(.white)
                                     .shadow(color: .black.opacity(0.2), radius: 5, y: 5)
                                 
                                 Text("Grandma's Memory Box")
-                                    .font(.granlyTitle)
+                                    .font(.granlyTitle2) // Title -> Title2
                                     .foregroundStyle(.white)
-                                    .padding(.top, 8)
+                                    .padding(.top, 4) // 8 -> 4
                             }
                         }
                         .padding(.horizontal)
@@ -128,27 +128,29 @@ struct SavedStoryCard: View {
         VStack(alignment: .leading, spacing: 8) {
             Circle()
                 .fill(color.opacity(0.2))
-                .frame(width: 40, height: 40)
+                .frame(width: 32, height: 32) // 40 -> 32
                 .overlay(
                     Image(systemName: "heart.fill")
+                        .font(.granlySubheadline) // Add subheadline font to shrink icon
                         .foregroundStyle(color)
                 )
             
             Spacer()
             
             Text(title)
-                .font(.granlyHeadline)
+                .font(.granlyBodyBold) // Headline -> BodyBold
                 .foregroundStyle(Color.themeText)
                 .lineLimit(2)
             
-            Text(category)
-                .font(.granlyCaption)
+            Text(category.uppercased())
+                .font(.system(size: 10, weight: .bold, design: .rounded)) // Custom small tag
+                .tracking(1) // Premium kerning
                 .foregroundStyle(color)
         }
-        .padding(16)
-        .frame(width: 150, height: 160)
+        .padding(14) // 16 -> 14
+        .frame(width: 130, height: 140) // 150x160 -> 130x140
         .background(Color.themeCard)
-        .clipShape(RoundedRectangle(cornerRadius: 16))
+        .clipShape(RoundedRectangle(cornerRadius: 14)) // 16 -> 14
         .shadow(color: .black.opacity(0.05), radius: 5, y: 2)
     }
 }
@@ -157,38 +159,39 @@ struct SavedHistoricalRow: View {
     let story: HistoricalStory
     
     var body: some View {
-        HStack(spacing: 16) {
+        HStack(spacing: 12) { // 16 -> 12
             ZStack {
                 Rectangle()
                     .fill(Color.themeGreen.opacity(0.2))
-                    .frame(width: 60, height: 60)
-                    .clipShape(RoundedRectangle(cornerRadius: 12))
+                    .frame(width: 48, height: 48) // 60 -> 48
+                    .clipShape(RoundedRectangle(cornerRadius: 10)) // 12 -> 10
                 
                 Image(systemName: story.iconName)
-                    .font(.granlyTitle2)
+                    .font(.granlyHeadline) // Title2 -> Headline
                     .foregroundStyle(Color.themeGreen)
             }
             
-            VStack(alignment: .leading, spacing: 4) {
+            VStack(alignment: .leading, spacing: 2) { // 4 -> 2
                 Text(story.title)
-                    .font(.granlyHeadline)
+                    .font(.granlyBodyBold) // Headline -> BodyBold
                     .foregroundStyle(Color.themeText)
                     .lineLimit(1)
                 
                 Text(story.era)
-                    .font(.granlySubheadline)
+                    .font(.granlyCaption) // Subheadline -> Caption
                     .foregroundStyle(Color.themeText.opacity(0.6))
             }
             
             Spacer()
             
             Image(systemName: "chevron.right")
+                .font(.granlySubheadline)
                 .foregroundStyle(Color.themeText.opacity(0.3))
-                .padding(.trailing, 8)
+                .padding(.trailing, 4) // 8 -> 4
         }
         .padding(12)
         .background(Color.themeCard)
-        .clipShape(RoundedRectangle(cornerRadius: 16))
+        .clipShape(RoundedRectangle(cornerRadius: 14)) // 16 -> 14
         .shadow(color: .black.opacity(0.05), radius: 5, y: 2)
     }
 }

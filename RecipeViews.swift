@@ -44,21 +44,21 @@ struct RecipeCard: View {
     let recipe: Recipe
     
     var body: some View {
-        VStack(spacing: 12) {
+        VStack(spacing: 8) { // 12 -> 8
             ZStack {
                 Circle()
                     .fill(recipe.color.opacity(0.15))
-                    .frame(width: 60, height: 60)
+                    .frame(width: 48, height: 48) // 60 -> 48
                 
                 Image(systemName: recipe.iconName)
-                    .font(.granlyTitle)
+                    .font(.granlyTitle2) // Title -> Title2
                     .foregroundStyle(recipe.color)
             }
-            .padding(.top, 16)
+            .padding(.top, 14) // 16 -> 14
             
             VStack(spacing: 4) {
                 Text(recipe.title)
-                    .font(.granlyHeadline)
+                    .font(.granlyBodyBold) // Headline -> BodyBold
                     .multilineTextAlignment(.center)
                     .foregroundStyle(Color.themeText)
                     .lineLimit(2)
@@ -73,12 +73,12 @@ struct RecipeCard: View {
                 .foregroundStyle(.secondary)
             }
             .padding(.horizontal, 8)
-            .padding(.bottom, 16)
+            .padding(.bottom, 14) // 16 -> 14
         }
         .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .top)
         .background(Color.themeCard)
-        .clipShape(RoundedRectangle(cornerRadius: 20))
-        .shadow(color: .black.opacity(0.05), radius: 8, y: 4)
+        .clipShape(RoundedRectangle(cornerRadius: 16)) // 20 -> 16
+        .shadow(color: .black.opacity(0.05), radius: 6, y: 3) // 8 -> 6
     }
 }
 
@@ -91,14 +91,14 @@ struct RecipeDetailView: View {
             VStack(alignment: .leading, spacing: 24) {
                 // Header Image
                 ZStack {
-                    RoundedRectangle(cornerRadius: 24)
+                    RoundedRectangle(cornerRadius: 20) // 24 -> 20
                         .fill(LinearGradient(colors: [recipe.color, recipe.color.opacity(0.6)], startPoint: .topLeading, endPoint: .bottomTrailing))
-                        .frame(height: 250)
+                        .frame(height: 180) // 250 -> 180
                     
                     Image(systemName: recipe.iconName)
-                        .font(.system(size: 80))
+                        .font(.system(size: 60)) // 80 -> 60
                         .foregroundStyle(.white.opacity(0.9))
-                        .shadow(color: .black.opacity(0.1), radius: 10, y: 5)
+                        .shadow(color: .black.opacity(0.1), radius: 8, y: 4)
                 }
                 .padding(.horizontal)
                 .padding(.top, 10)
