@@ -5,6 +5,7 @@ struct CustomizeGrandmaView: View {
     @StateObject private var settings = GrandmaSettings()
     @Environment(\.dismiss) private var dismiss
     @State private var showConfetti = false
+    @State private var showFlash = false
     
     // Tab selection
     // Tab selection
@@ -43,30 +44,39 @@ struct CustomizeGrandmaView: View {
                     
                     Spacer()
                     
-                    Text("Grandma Makeover")
+                    // Undo
+                    Button(action: {
+                        let generator = UIImpactFeedbackGenerator(style: .light)
+                        generator.impactOccurred()
+                        settings.undo()
+                    }) {
+                        Image(systemName: "arrow.uturn.backward.circle.fill")
+                            .font(.system(size: 24))
+                            .foregroundStyle(settings.canUndo ? Color.themeText : Color.gray.opacity(0.3))
+                    }
+                    .disabled(!settings.canUndo)
+                    
+                    Text("Makeover")
                         .font(.granlyHeadline)
                         .foregroundStyle(Color.themeText)
-                        .shadow(color: .white.opacity(0.5), radius: 2, x: 0, y: 1)
+                        .padding(.horizontal, 8)
+                    
+                    // Redo
+                    Button(action: {
+                        let generator = UIImpactFeedbackGenerator(style: .light)
+                        generator.impactOccurred()
+                        settings.redo()
+                    }) {
+                        Image(systemName: "arrow.uturn.forward.circle.fill")
+                            .font(.system(size: 24))
+                            .foregroundStyle(settings.canRedo ? Color.themeText : Color.gray.opacity(0.3))
+                    }
+                    .disabled(!settings.canRedo)
                     
                     Spacer()
                     
-                    Button(action: {
-                        let generator = UINotificationFeedbackGenerator()
-                        generator.notificationOccurred(.success)
-                        showConfetti = true
-                        DispatchQueue.main.asyncAfter(deadline: .now() + 1.5) {
-                            showConfetti = false
-                        }
-                    }) {
-                        Text("Save")
-                            .font(.granlyBodyBold)
-                            .foregroundStyle(.white)
-                            .padding(.horizontal, 16)
-                            .padding(.vertical, 8)
-                            .background(Color.themeRose)
-                            .clipShape(Capsule())
-                            .shadow(color: Color.themeRose.opacity(0.4), radius: 6, x: 0, y: 3)
-                    }
+                    // Invisible spacer to balance the `reset` button on the left without breaking layout
+                    Image(systemName: "circle").opacity(0).frame(width: 28)
                 }
                 .padding(.horizontal, 20)
                 .padding(.top, 16)
@@ -104,6 +114,13 @@ struct CustomizeGrandmaView: View {
                         ConfettiView()
                             .allowsHitTesting(false)
                     }
+                    
+                    // Camera Shutter Flash Effect
+                    if showFlash {
+                        Color.white
+                            .ignoresSafeArea()
+                            .allowsHitTesting(false)
+                    }
                 }
                 .frame(maxWidth: .infinity, maxHeight: .infinity)
                 .clipShape(RoundedRectangle(cornerRadius: 32, style: .continuous))
@@ -111,8 +128,40 @@ struct CustomizeGrandmaView: View {
                 .padding(.horizontal, 20)
                 .padding(.bottom, 24)
                 
-                // Snapchat-style Bottom Dock
+                // Snapchat-style Bottom Dock with Shutter
                 VStack(spacing: 0) {
+                    
+                    // Camera Shutter Button
+                    Button(action: {
+                        let generator = UINotificationFeedbackGenerator()
+                        generator.notificationOccurred(.success)
+                        
+                        // Flash Animation
+                        showFlash = true
+                        withAnimation(.easeOut(duration: 0.5)) {
+                            showFlash = false
+                        }
+                        
+                        // Confetti
+                        showConfetti = true
+                        DispatchQueue.main.asyncAfter(deadline: .now() + 1.5) {
+                            showConfetti = false
+                        }
+                    }) {
+                        ZStack {
+                            Circle()
+                                .stroke(.white, lineWidth: 5)
+                                .frame(width: 72, height: 72)
+                                .shadow(color: .black.opacity(0.15), radius: 4, x: 0, y: 2)
+                            
+                            Circle()
+                                .fill(Color.white.opacity(0.85))
+                                .frame(width: 60, height: 60)
+                        }
+                    }
+                    .padding(.bottom, -8)
+                    .zIndex(1)
+                    
                     // Category Icons (Horizontal Scroll)
                     ScrollView(.horizontal, showsIndicators: false) {
                         HStack(spacing: 24) {
@@ -155,27 +204,27 @@ struct CustomizeGrandmaView: View {
                         HStack(spacing: 16) {
                             switch selectedTab {
                             case 0: // Hair
-                                OptionGroup(title: "Style") { TextGrid(options: HairStyle.allCases, selected: $settings.hairStyle) }
-                                OptionGroup(title: "Color") { ColorGrid(options: HairColor.allCases, selected: $settings.hairColor) }
+                                OptionGroup(title: "Style") { TextGrid(options: HairStyle.allCases, selected: $settings.hairStyle, settings: settings) }
+                                OptionGroup(title: "Color") { ColorGrid(options: HairColor.allCases, selected: $settings.hairColor, settings: settings) }
                             case 1: // Glasses
-                                OptionGroup(title: "Frames") { TextGrid(options: GlassesStyle.allCases, selected: $settings.glassesStyle) }
+                                OptionGroup(title: "Frames") { TextGrid(options: GlassesStyle.allCases, selected: $settings.glassesStyle, settings: settings) }
                             case 2: // Outfit
-                                OptionGroup(title: "Color") { ColorGrid(options: OutfitColor.allCases, selected: $settings.outfitColor) }
+                                OptionGroup(title: "Color") { ColorGrid(options: OutfitColor.allCases, selected: $settings.outfitColor, settings: settings) }
                             case 3: // Pattern
-                                OptionGroup(title: "Pattern") { TextGrid(options: OutfitPattern.allCases, selected: $settings.outfitPattern) }
+                                OptionGroup(title: "Pattern") { TextGrid(options: OutfitPattern.allCases, selected: $settings.outfitPattern, settings: settings) }
                             case 4: // Accessories
-                                OptionGroup(title: "Necklace") { TextGrid(options: AccessoryType.allCases, selected: $settings.accessory) }
+                                OptionGroup(title: "Necklace") { TextGrid(options: AccessoryType.allCases, selected: $settings.accessory, settings: settings) }
                             case 5: // Hats
-                                OptionGroup(title: "Hat Style") { TextGrid(options: HatStyle.allCases, selected: $settings.hatStyle) }
+                                OptionGroup(title: "Hat Style") { TextGrid(options: HatStyle.allCases, selected: $settings.hatStyle, settings: settings) }
                             case 6: // Earrings
-                                OptionGroup(title: "Earrings") { TextGrid(options: EarringStyle.allCases, selected: $settings.earringStyle) }
+                                OptionGroup(title: "Earrings") { TextGrid(options: EarringStyle.allCases, selected: $settings.earringStyle, settings: settings) }
                             case 7: // Face
-                                OptionGroup(title: "Skin Tone") { SkinToneGrid(options: SkinTone.allCases, selected: $settings.skinTone) }
-                                OptionGroup(title: "Expression") { TextGrid(options: FacialExpression.allCases, selected: $settings.facialExpression) }
+                                OptionGroup(title: "Skin Tone") { SkinToneGrid(options: SkinTone.allCases, selected: $settings.skinTone, settings: settings) }
+                                OptionGroup(title: "Expression") { TextGrid(options: FacialExpression.allCases, selected: $settings.facialExpression, settings: settings) }
                             case 8: // Backgrounds
-                                OptionGroup(title: "Theme") { TextGrid(options: BackgroundTheme.allCases, selected: $settings.backgroundTheme) }
+                                OptionGroup(title: "Theme") { TextGrid(options: BackgroundTheme.allCases, selected: $settings.backgroundTheme, settings: settings) }
                             case 9: // Filters
-                                OptionGroup(title: "Camera Filter") { TextGrid(options: CameraFilter.allCases, selected: $settings.filter) }
+                                OptionGroup(title: "Camera Filter") { TextGrid(options: CameraFilter.allCases, selected: $settings.filter, settings: settings) }
                             default: EmptyView()
                             }
                         }
@@ -252,11 +301,13 @@ struct OptionGroup<Content: View>: View {
 struct ColorGrid<T: Identifiable & RawRepresentable>: View where T.RawValue == String {
     let options: [T]
     @Binding var selected: T
+    var settings: GrandmaSettings?
     
     var body: some View {
         HStack(spacing: 16) {
             ForEach(options) { option in
                 Button(action: {
+                    settings?.saveState()
                     let haptic = UISelectionFeedbackGenerator()
                     haptic.selectionChanged()
                     withAnimation(.easeInOut(duration: 0.2)) { selected = option }
@@ -289,11 +340,13 @@ struct ColorGrid<T: Identifiable & RawRepresentable>: View where T.RawValue == S
 struct SkinToneGrid: View {
     let options: [SkinTone]
     @Binding var selected: SkinTone
+    var settings: GrandmaSettings?
     
     var body: some View {
         HStack(spacing: 16) {
             ForEach(options) { option in
                 Button(action: {
+                    settings?.saveState()
                     let haptic = UISelectionFeedbackGenerator()
                     haptic.selectionChanged()
                     withAnimation(.easeInOut(duration: 0.2)) { selected = option }
@@ -320,11 +373,13 @@ struct SkinToneGrid: View {
 struct TextGrid<T: Identifiable & RawRepresentable>: View where T.RawValue == String {
     let options: [T]
     @Binding var selected: T
+    var settings: GrandmaSettings?
     
     var body: some View {
         HStack(spacing: 12) {
             ForEach(options) { option in
                 Button(action: {
+                    settings?.saveState()
                     let haptic = UISelectionFeedbackGenerator()
                     haptic.selectionChanged()
                     withAnimation(.easeInOut(duration: 0.2)) { selected = option }

@@ -147,6 +147,21 @@ enum FacialExpression: String, CaseIterable, Identifiable {
     var id: String { rawValue }
 }
 
+struct MakeoverState: Equatable {
+    var hairColor: HairColor
+    var hairStyle: HairStyle
+    var glassesStyle: GlassesStyle
+    var outfitColor: OutfitColor
+    var accessory: AccessoryType
+    var skinTone: SkinTone
+    var filter: CameraFilter
+    var hatStyle: HatStyle
+    var earringStyle: EarringStyle
+    var backgroundTheme: BackgroundTheme
+    var facialExpression: FacialExpression
+    var outfitPattern: OutfitPattern
+}
+
 // MARK: - Settings Manager
 class GrandmaSettings: ObservableObject {
     @AppStorage("hairColor") var hairColor: HairColor = .gray
@@ -164,7 +179,80 @@ class GrandmaSettings: ObservableObject {
     @AppStorage("facialExpression") var facialExpression: FacialExpression = .smile
     @AppStorage("outfitPattern") var outfitPattern: OutfitPattern = .solid
     
+    // Undo/Redo Stacks
+    @Published var undoStack: [MakeoverState] = []
+    @Published var redoStack: [MakeoverState] = []
+    
+    var canUndo: Bool { !undoStack.isEmpty }
+    var canRedo: Bool { !redoStack.isEmpty }
+    
+    func saveState() {
+        let currentState = MakeoverState(
+            hairColor: hairColor, hairStyle: hairStyle, glassesStyle: glassesStyle,
+            outfitColor: outfitColor, accessory: accessory, skinTone: skinTone,
+            filter: filter, hatStyle: hatStyle, earringStyle: earringStyle,
+            backgroundTheme: backgroundTheme, facialExpression: facialExpression,
+            outfitPattern: outfitPattern
+        )
+        // If the top of the stack is already this state, don't duplicate it.
+        if undoStack.last != currentState {
+            undoStack.append(currentState)
+            // Once we make a new change, we invalidate the redo future
+            redoStack.removeAll()
+        }
+    }
+    
+    func undo() {
+        guard canUndo else { return }
+        let currentState = MakeoverState(
+            hairColor: hairColor, hairStyle: hairStyle, glassesStyle: glassesStyle,
+            outfitColor: outfitColor, accessory: accessory, skinTone: skinTone,
+            filter: filter, hatStyle: hatStyle, earringStyle: earringStyle,
+            backgroundTheme: backgroundTheme, facialExpression: facialExpression,
+            outfitPattern: outfitPattern
+        )
+        
+        if let previousState = undoStack.popLast() {
+            redoStack.append(currentState)
+            restore(state: previousState)
+        }
+    }
+    
+    func redo() {
+        guard canRedo else { return }
+        let currentState = MakeoverState(
+            hairColor: hairColor, hairStyle: hairStyle, glassesStyle: glassesStyle,
+            outfitColor: outfitColor, accessory: accessory, skinTone: skinTone,
+            filter: filter, hatStyle: hatStyle, earringStyle: earringStyle,
+            backgroundTheme: backgroundTheme, facialExpression: facialExpression,
+            outfitPattern: outfitPattern
+        )
+        
+        if let nextState = redoStack.popLast() {
+            undoStack.append(currentState)
+            restore(state: nextState)
+        }
+    }
+    
+    private func restore(state: MakeoverState) {
+        withAnimation {
+            hairColor = state.hairColor
+            hairStyle = state.hairStyle
+            glassesStyle = state.glassesStyle
+            outfitColor = state.outfitColor
+            accessory = state.accessory
+            skinTone = state.skinTone
+            filter = state.filter
+            hatStyle = state.hatStyle
+            earringStyle = state.earringStyle
+            backgroundTheme = state.backgroundTheme
+            facialExpression = state.facialExpression
+            outfitPattern = state.outfitPattern
+        }
+    }
+    
     func randomize() {
+        saveState()
         withAnimation {
             hairColor = HairColor.allCases.randomElement()!
             hairStyle = HairStyle.allCases.randomElement()!
@@ -180,6 +268,7 @@ class GrandmaSettings: ObservableObject {
     }
     
     func reset() {
+        saveState()
         withAnimation {
             hairColor = .gray
             hairStyle = .bun
