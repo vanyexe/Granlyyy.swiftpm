@@ -111,6 +111,42 @@ enum SkinTone: String, CaseIterable, Identifiable {
     }
 }
 
+enum HatStyle: String, CaseIterable, Identifiable {
+    case none = "None"
+    case sunHat = "Sun Hat"
+    case beanie = "Cozy Beanie"
+    case beret = "Vintage Beret"
+    
+    var id: String { rawValue }
+}
+
+enum EarringStyle: String, CaseIterable, Identifiable {
+    case none = "None"
+    case pearl = "Pearl Drops"
+    case goldHoop = "Gold Hoops"
+    case diamond = "Diamond Studs"
+    
+    var id: String { rawValue }
+}
+
+enum BackgroundTheme: String, CaseIterable, Identifiable {
+    case cozyRoom = "Cozy Room"
+    case garden = "Spring Garden"
+    case library = "Old Library"
+    case gradient = "Soft Gradient"
+    
+    var id: String { rawValue }
+}
+
+enum FacialExpression: String, CaseIterable, Identifiable {
+    case neutral = "Neutral"
+    case smile = "Smile"
+    case laughing = "Laughing"
+    case surprised = "Surprised"
+    
+    var id: String { rawValue }
+}
+
 // MARK: - Settings Manager
 class GrandmaSettings: ObservableObject {
     @AppStorage("hairColor") var hairColor: HairColor = .gray
@@ -121,6 +157,12 @@ class GrandmaSettings: ObservableObject {
     @AppStorage("skinTone") var skinTone: SkinTone = .light
     @AppStorage("cameraFilter") var filter: CameraFilter = .none
     
+    // New Makeover Properties
+    @AppStorage("hatStyle") var hatStyle: HatStyle = .none
+    @AppStorage("earringStyle") var earringStyle: EarringStyle = .none
+    @AppStorage("backgroundTheme") var backgroundTheme: BackgroundTheme = .gradient
+    @AppStorage("facialExpression") var facialExpression: FacialExpression = .smile
+    
     func randomize() {
         withAnimation {
             hairColor = HairColor.allCases.randomElement()!
@@ -128,8 +170,26 @@ class GrandmaSettings: ObservableObject {
             glassesStyle = GlassesStyle.allCases.randomElement()!
             outfitColor = OutfitColor.allCases.randomElement()!
             accessory = AccessoryType.allCases.randomElement()!
-            // Keep skin tone stable unless explicitly requested usually, but full random implies all
             skinTone = SkinTone.allCases.randomElement()!
+            hatStyle = HatStyle.allCases.randomElement()!
+            earringStyle = EarringStyle.allCases.randomElement()!
+            facialExpression = FacialExpression.allCases.randomElement()!
+        }
+    }
+    
+    func reset() {
+        withAnimation {
+            hairColor = .gray
+            hairStyle = .bun
+            glassesStyle = .round
+            outfitColor = .lavender
+            accessory = .pearl
+            skinTone = .light
+            filter = .none
+            hatStyle = .none
+            earringStyle = .none
+            backgroundTheme = .gradient
+            facialExpression = .smile
         }
     }
 }
@@ -142,3 +202,7 @@ extension OutfitColor: RawRepresentable { }
 extension AccessoryType: RawRepresentable { }
 extension SkinTone: RawRepresentable { }
 extension CameraFilter: RawRepresentable { }
+extension HatStyle: RawRepresentable { }
+extension EarringStyle: RawRepresentable { }
+extension BackgroundTheme: RawRepresentable { }
+extension FacialExpression: RawRepresentable { }
