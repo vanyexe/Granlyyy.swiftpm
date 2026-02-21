@@ -9,7 +9,7 @@ struct DailyWisdomView: View {
     
     // Expanded Categories
     let categories = ["Life Lessons", "Love & Family", "Resilience", "Simple Joys", "Happiness", "Patience"]
-    let categoryEmojis = ["🌿", "💕", "💪", "🌻", "😊", "⏳"]
+    let categoryIcons = ["leaf.fill", "heart.fill", "shield.fill", "sparkles", "sun.max.fill", "hourglass"]
     let categoryColors: [Color] = [
         Color(red: 0.45, green: 0.72, blue: 0.60), // Life - Green
         Color(red: 0.90, green: 0.50, blue: 0.55), // Love - Pink
@@ -68,7 +68,11 @@ struct DailyWisdomView: View {
                     Text("Daily Wisdom")
                         .font(.granlyTitle)
                         .foregroundStyle(Color.themeText)
-                    Text("Grandma's timeless advice ✨")
+                    HStack(spacing: 6) {
+                        Text("Grandma's timeless advice")
+                        Image(systemName: "sparkles")
+                            .foregroundStyle(Color.themeGold)
+                    }
                         .font(.granlySubheadline)
                         .foregroundStyle(.secondary)
                 }
@@ -93,7 +97,7 @@ struct DailyWisdomView: View {
                                 }
                             }) {
                                 HStack(spacing: 6) {
-                                    Text(categoryEmojis[index])
+                                    Image(systemName: categoryIcons[index])
                                         .font(.granlySubheadline) // Body -> Subheadline
                                     Text(categories[index])
                                         .font(.system(size: 11, weight: .bold, design: .rounded)) // Subheadline -> crisp small bold
@@ -117,7 +121,7 @@ struct DailyWisdomView: View {
                     // Header Row: Emoji + Bookmark
                     HStack {
                         Spacer()
-                        Text(categoryEmojis[selectedCategory])
+                        Image(systemName: categoryIcons[selectedCategory])
                             .font(.system(size: 40)) // 50 -> 40
                             .padding(.leading, 24) // Offset to center visually
                         Spacer()
@@ -183,7 +187,7 @@ struct DailyWisdomView: View {
                     }
                     
                     // Share
-                    ShareLink(item: "\"\(currentQuote.text)\" — Grandma 💛\n\nFrom Granly App") {
+                    ShareLink(item: "\"\(currentQuote.text)\" — Grandma\n\nFrom Granly App") {
                         HStack(spacing: 8) {
                             Image(systemName: "square.and.arrow.up")
                                 .font(.granlySubheadline) // Headline -> Subheadline

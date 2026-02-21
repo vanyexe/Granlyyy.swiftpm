@@ -75,8 +75,9 @@ struct HomeView: View {
                         Circle()
                             .fill(Color.themeWarm.opacity(0.3))
                             .frame(width: 50, height: 50)
-                        Text("👵🏻")
+                        Image(systemName: "eyeglasses")
                             .font(.granlyTitle)
+                            .foregroundStyle(Color.themeRose)
                     }
                     .shadow(radius: 4)
                     .onTapGesture { // Now taps navigate within the TabView or trigger a sheet

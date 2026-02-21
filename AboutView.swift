@@ -51,7 +51,7 @@ struct AboutView: View {
                         .lineSpacing(6)
                         .foregroundStyle(Color.themeText.opacity(0.8))
                     
-                    Text("With love,\nThe Granly Team 💛")
+                    Text("With love,\nThe Granly Team")
                         .font(.granlySubheadline)
                         .foregroundStyle(Color.themeRose)
                         .padding(.top, 8)
@@ -80,7 +80,7 @@ struct AboutView: View {
                 
                 // Credits
                 VStack(spacing: 8) {
-                    Text("Designed & Developed with ❤️")
+                    Text("Designed & Developed with Care")
                         .font(.granlyCaption)
                         .foregroundStyle(.secondary)
                     Text("© 2026 Granly App")

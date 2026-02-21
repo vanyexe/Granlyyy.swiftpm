@@ -86,8 +86,9 @@ struct AskGrandmaView: View {
                         Circle()
                             .fill(Color.themeWarm.opacity(0.3))
                             .frame(width: 44, height: 44) // 50 -> 44
-                        Text("👵🏻")
+                        Image(systemName: "eyeglasses")
                             .font(.granlyTitle2) // Title -> Title2
+                            .foregroundStyle(Color.themeRose)
                     }
                     
                     VStack(alignment: .leading) {

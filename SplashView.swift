@@ -77,7 +77,11 @@ struct SplashView: View {
                         .shadow(color: Color.themeRose.opacity(0.3), radius: 10)
                     
                     // Animated tagline
-                    Text("Always with you. 💛")
+                    HStack(spacing: 4) {
+                        Text("Always with you.")
+                        Image(systemName: "heart.fill")
+                            .foregroundStyle(Color.themeRose)
+                    }
                     .font(.granlyHeadline)
                     .foregroundStyle(.secondary)
                     .kerning(1.5)

@@ -14,7 +14,7 @@ struct StoryView: View {
     
     // Tap Interaction
     @State private var showHeartToast = false
-    @State private var toastMessage = "I love you, dear! 🤗"
+    @State private var toastMessage = "I love you, dear!"
     @State private var waveTrigger = false
     
     // 3D Actions & Expressions
@@ -99,7 +99,7 @@ struct StoryView: View {
                     
                     // Share button
                     if let story = story {
-                        ShareLink(item: "\(story.title)\n\n\(story.content)\n\n— From Granly App 💛") {
+                        ShareLink(item: "\(story.title)\n\n\(story.content)\n\n— From Granly App") {
                             Image(systemName: "square.and.arrow.up")
                                 .font(.granlyHeadline)
                         }
@@ -134,10 +134,15 @@ struct StoryView: View {
                     
                     // Floating Toast
                     if showHeartToast {
-                        Text(toastMessage)
-                            .font(.granlySubheadline)
-                            .foregroundStyle(Color.themeText)
-                            .padding(.horizontal, 16)
+                        HStack(spacing: 6) {
+                            Text(toastMessage)
+                                .font(.granlySubheadline)
+                            Image(systemName: "heart.fill")
+                                .font(.granlySubheadline)
+                                .foregroundStyle(Color.themeRose)
+                        }
+                        .foregroundStyle(Color.themeText)
+                        .padding(.horizontal, 16)
                             .padding(.vertical, 8)
                             .background(.white.opacity(0.9))
                             .clipShape(Capsule())
@@ -220,7 +225,7 @@ struct StoryView: View {
     
     // MARK: - Tap Handler
     private func handleGrandmaTap() {
-        let messages = ["Hehe! 💕", "I love you, dear! 🤗", "You're doing great! ✨", "Always here for you 💛", "Oh my! How sweet 🌸"]
+        let messages = ["Hehe!", "I love you, dear!", "You're doing great!", "Always here for you", "Oh my! How sweet"]
         toastMessage = messages.randomElement()!
         
         // Haptics

@@ -73,19 +73,27 @@ struct HistoricalStoryDetailView: View {
                     HistoricalSectionHeader(title: "Grandma Asks...", icon: "person.2.fill")
                     
                     ForEach(story.reflectionQuestions, id: \.self) { question in
-                        Text("🤔 " + question)
-                            .font(.body.italic())
-                            .foregroundStyle(Color.themeText)
-                            .padding(.vertical, 4)
+                        HStack(alignment: .top) {
+                            Image(systemName: "questionmark.circle.fill")
+                                .foregroundStyle(Color.themeRose)
+                            Text(question)
+                                .font(.body.italic())
+                                .foregroundStyle(Color.themeText)
+                        }
+                        .padding(.vertical, 4)
                     }
                 }
                 .padding(.horizontal)
                 
                 // Personal Growth Takeaway
                 VStack(alignment: .center, spacing: 12) {
-                    Text("🌱 Growth Takeaway")
-                        .font(.granlyHeadline)
-                        .foregroundStyle(Color.themeText)
+                    HStack(spacing: 6) {
+                        Image(systemName: "leaf.fill")
+                            .foregroundStyle(Color.themeGreen)
+                        Text("Growth Takeaway")
+                            .font(.granlyHeadline)
+                            .foregroundStyle(Color.themeText)
+                    }
                     
                     Text("\"\(story.personalGrowthTakeaway)\"")
                         .font(.title3.italic())

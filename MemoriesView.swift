@@ -22,9 +22,13 @@ public struct MemoriesView: View {
                         Text("Saved Memories")
                             .font(.granlyTitle2) // Title -> Title2
                             .foregroundStyle(Color.themeText)
-                        Text("\(savedStories.count) stories saved 💛")
-                            .font(.granlySubheadline)
-                            .foregroundStyle(.secondary)
+                        HStack(spacing: 4) {
+                            Text("\(savedStories.count) stories saved")
+                            Image(systemName: "heart.fill")
+                                .foregroundStyle(Color.themeRose)
+                        }
+                        .font(.granlySubheadline)
+                        .foregroundStyle(.secondary)
                     }
                     Spacer()
                 }

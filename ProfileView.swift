@@ -111,7 +111,7 @@ struct ProfileView: View {
                                 showRateAlert = true
                             }
                             
-                            ShareLink(item: "Check out Granly! It's the sweetest storytelling app ever. 💛") {
+                            ShareLink(item: "Check out Granly! It's the sweetest storytelling app ever.") {
                                 HStack {
                                     Image(systemName: "square.and.arrow.up")
                                         .foregroundStyle(.pink)
@@ -161,7 +161,7 @@ struct ProfileView: View {
             .alert("Rate Granly", isPresented: $showRateAlert) {
                 Button("OK", role: .cancel) { }
             } message: {
-                Text("Thank you for your love! ⭐️⭐️⭐️⭐️⭐️")
+                Text("Thank you for your love!")
             }
             .alert("Reset Data?", isPresented: $showResetAlert) {
                 Button("Cancel", role: .cancel) { }
