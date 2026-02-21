@@ -588,38 +588,13 @@ struct GrandmaSceneView: UIViewRepresentable {
     }
     
     private func addLights(_ scene: SCNScene) {
-         // High Quality PBR Environment Lighting
-         let ambient = SCNLight()
-         ambient.type = .ambient
-         ambient.intensity = 400
-         let ambientNode = SCNNode()
-         ambientNode.light = ambient
+         let ambient = SCNLight(); ambient.type = .ambient; ambient.intensity = 300
+         let ambientNode = SCNNode(); ambientNode.light = ambient
          scene.rootNode.addChildNode(ambientNode)
          
-         // Directional Light with Soft Shadows
-         let dirLight = SCNLight()
-         dirLight.type = .directional
-         dirLight.intensity = 1000
-         dirLight.castsShadow = true
-         dirLight.shadowMode = .deferred
-         dirLight.shadowColor = UIColor.black.withAlphaComponent(0.3)
-         dirLight.shadowRadius = 8.0     // Soft, realistic shadows
-         dirLight.shadowMapSize = CGSize(width: 2048, height: 2048)
-         
-         let dirNode = SCNNode()
-         dirNode.light = dirLight
-         dirNode.position = SCNVector3(3, 5, 4)
-         dirNode.look(at: SCNVector3(0, 1, 0))
-         scene.rootNode.addChildNode(dirNode)
-         
-         // Subtle Fill Light
-         let fillLight = SCNLight()
-         fillLight.type = .omni
-         fillLight.intensity = 300
-         let fillNode = SCNNode()
-         fillNode.light = fillLight
-         fillNode.position = SCNVector3(-3, 2, 2)
-         scene.rootNode.addChildNode(fillNode)
+         let omni = SCNLight(); omni.type = .omni; omni.intensity = 800
+         let on = SCNNode(); on.light = omni; on.position = SCNVector3(2, 2, 5)
+         scene.rootNode.addChildNode(on)
     }
     
     private func addCamera(_ scene: SCNScene) {
@@ -628,10 +603,8 @@ struct GrandmaSceneView: UIViewRepresentable {
     
     private func mat(_ c: UIColor, rough: CGFloat = 0.6, metal: CGFloat = 0.0) -> SCNMaterial {
         let m = SCNMaterial()
-        m.lightingModel = .physicallyBased
         m.diffuse.contents = c
         m.roughness.contents = rough
-        m.metalness.contents = metal
         return m
     }
 }
