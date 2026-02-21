@@ -331,9 +331,22 @@ struct GrandmaSceneView: UIViewRepresentable {
         let blinkAction = SCNAction.sequence([
             SCNAction.wait(duration: delay),
             SCNAction.run { _ in
+                let beginBlink = SCNAction.run { node in
+                    SCNTransaction.begin()
+                    SCNTransaction.animationDuration = 0.05
+                    node.scale = SCNVector3(1, 0.1, 1)
+                    SCNTransaction.commit()
+                }
+                let endBlink = SCNAction.run { node in
+                    SCNTransaction.begin()
+                    SCNTransaction.animationDuration = 0.1
+                    node.scale = SCNVector3(1, 1, 1)
+                    SCNTransaction.commit()
+                }
                 let blink = SCNAction.sequence([
-                    SCNAction.scaleTo(x: 1, y: 0.1, z: 1, duration: 0.05),
-                    SCNAction.scaleTo(x: 1, y: 1, z: 1, duration: 0.1)
+                    beginBlink,
+                    SCNAction.wait(duration: 0.05),
+                    endBlink
                 ])
                 if let leftEye = head.childNode(withName: "eye_L", recursively: true),
                    let rightEye = head.childNode(withName: "eye_R", recursively: true) {
@@ -341,8 +354,8 @@ struct GrandmaSceneView: UIViewRepresentable {
                     rightEye.runAction(blink)
                 }
             },
-            SCNAction.run { [weak self] _ in
-                self?.scheduleBlink(head)
+            SCNAction.run { _ in
+                self.scheduleBlink(head)
             }
         ])
         
