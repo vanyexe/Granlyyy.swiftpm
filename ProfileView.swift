@@ -99,8 +99,24 @@ struct ProfileView: View {
                             SectionHeader(title: "Support")
                             
                             NavigationLink(destination: AboutView()) {
-                                SettingsRow(icon: "info.circle", color: .blue, title: "About Granly", value: "Version 2.0") {}
-                                    .contentShape(Rectangle())
+                                HStack {
+                                    Image(systemName: "info.circle")
+                                        .foregroundStyle(.blue)
+                                        .font(.system(size: 18))
+                                        .frame(width: 24)
+                                    Text("About Granly")
+                                        .font(.granlyBodyBold)
+                                        .foregroundStyle(Color.themeText)
+                                    Spacer()
+                                    Text("Version 2.0")
+                                        .font(.granlySubheadline)
+                                        .foregroundStyle(.secondary)
+                                    Image(systemName: "chevron.right")
+                                        .font(.system(size: 12, weight: .semibold))
+                                        .foregroundStyle(.secondary)
+                                }
+                                .padding(.vertical, 6)
+                                .contentShape(Rectangle())
                             }
                             .buttonStyle(.plain)
                             
