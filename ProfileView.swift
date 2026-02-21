@@ -19,10 +19,11 @@ struct ProfileView: View {
     var body: some View {
         NavigationStack {
             ZStack {
-                Color.themeBackground.ignoresSafeArea()
+                MeshGradientBackground()
+                    .ignoresSafeArea()
                 
                 ScrollView {
-                    VStack(spacing: 20) { // 24 -> 20
+                    VStack(spacing: 24) { // 24 -> 20
                         // Hero Header
                         VStack(spacing: 12) { // 16 -> 12
                             ZStack {
@@ -141,6 +142,8 @@ struct ProfileView: View {
                     }
                 }
             }
+            .navigationTitle("Profile")
+            .navigationBarHidden(true)
             .fullScreenCover(isPresented: $showMakeover) {
                 CustomizeGrandmaView()
             }
