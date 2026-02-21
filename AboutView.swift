@@ -5,27 +5,29 @@ struct AboutView: View {
     
     var body: some View {
         ScrollView {
-            VStack(spacing: 30) {
-                // Header
+            VStack(spacing: 32) {
+                // High-End Header
                 VStack(spacing: 16) {
-                    Image("AboutIcon") // Placeholder, use system image as fallback
-                        .resizable()
-                        .scaledToFit()
-                        .frame(width: 64, height: 64) // 80 -> 64
+                    Image(systemName: "eyeglasses")
+                        .font(.system(size: 48, weight: .light))
+                        .foregroundStyle(Color.themeRose)
+                        .frame(width: 100, height: 100)
                         .background(
                             Circle()
-                                .fill(Color.themeWarm.opacity(0.2))
-                                .frame(width: 100, height: 100) // 120 -> 100
+                                .fill(
+                                    LinearGradient(
+                                        colors: [Color.themeRose.opacity(0.15), Color.themeWarm.opacity(0.15)],
+                                        startPoint: .topLeading,
+                                        endPoint: .bottomTrailing
+                                    )
+                                )
                         )
-                        .overlay(
-                            Image(systemName: "heart.text.square.fill")
-                                .font(.system(size: 32)) // 40 -> 32
-                                .foregroundStyle(Color.themeRose)
-                        )
+                        .overlay(Circle().stroke(Color.white.opacity(0.2), lineWidth: 1))
+                        .shadow(color: Color.black.opacity(0.05), radius: 10)
                     
-                    VStack(spacing: 8) {
+                    VStack(spacing: 4) {
                         Text("Granly")
-                            .font(.granlyTitle2) // Title -> Title2
+                            .font(.system(size: 28, weight: .bold, design: .rounded))
                             .foregroundStyle(Color.themeText)
                         
                         Text("Version 2.0")
@@ -35,51 +37,35 @@ struct AboutView: View {
                 }
                 .padding(.top, 40)
                 
-                // Love Letter
-                VStack(alignment: .leading, spacing: 12) { // 16 -> 12
-                    Text("Dearest You,")
+                // Mission Statement / Overview
+                VStack(spacing: 16) {
+                    Text("Our Mission")
                         .font(.granlyHeadline)
                         .foregroundStyle(Color.themeText)
+                        .frame(maxWidth: .infinity, alignment: .leading)
                     
-                    Text("Granly was built with a simple wish: to bring a little warmth, comfort, and storytelling magic into your daily life. In a world that often moves too fast, we hope Granly offers you a quiet corner to pause, breathe, and feel loved.")
-                        .font(.granlyBody)
-                        .lineSpacing(4) // 6 -> 4
-                        .foregroundStyle(Color.themeText.opacity(0.8))
-                    
-                    Text("Whether you need a listening ear, a gentle story, or just a friendly smile, Granly is here for you. Always.")
+                    Text("Granly was built with a simple wish: to bring warmth, comfort, and timeless storytelling magic into your daily life. It is your quiet corner to pause, breathe, and feel loved.")
                         .font(.granlyBody)
                         .lineSpacing(6)
                         .foregroundStyle(Color.themeText.opacity(0.8))
-                    
-                    Text("With love,\nThe Granly Team")
-                        .font(.granlySubheadline)
-                        .foregroundStyle(Color.themeRose)
-                        .padding(.top, 8)
+                        .frame(maxWidth: .infinity, alignment: .leading)
                 }
-                .padding(16) // 24 -> 16
+                .padding(20)
                 .glassCard(cornerRadius: 16)
                 .padding(.horizontal)
                 
-                // Features
-                VStack(alignment: .leading, spacing: 20) {
-                    Text("What's New")
-                        .font(.granlyHeadline)
-                        .foregroundStyle(Color.themeText)
-                        .padding(.horizontal)
-                    
-                    VStack(spacing: 8) { // 12 -> 8
-                        FeatureRow(icon: "sparkles", color: .yellow, title: "Premium Experience", desc: "A brand new, warm & cozy design.")
-                        FeatureRow(icon: "face.smiling", color: .orange, title: "Enhanced Grandma", desc: "More expressions, animations, and love.")
-                        FeatureRow(icon: "book.fill", color: .blue, title: "Daily Wisdom", desc: "Fresh advice and quotes every day.")
-                        FeatureRow(icon: "heart.fill", color: .red, title: "More Stories", desc: "Over 20 new stories for every mood.")
-                    }
-                    .padding(16) // 20 -> 16
-                    .glassCard(cornerRadius: 16)
-                    .padding(.horizontal)
+                // Links/Resources List
+                VStack(spacing: 0) {
+                    AboutRow(icon: "star.fill", iconColor: .yellow, title: "Rate on App Store", hasDivider: true)
+                    AboutRow(icon: "globe", iconColor: .blue, title: "Website", hasDivider: true)
+                    AboutRow(icon: "lock.fill", iconColor: .green, title: "Privacy Policy", hasDivider: true)
+                    AboutRow(icon: "doc.text.fill", iconColor: .gray, title: "Terms of Service", hasDivider: false)
                 }
+                .glassCard(cornerRadius: 16)
+                .padding(.horizontal)
                 
-                // Credits
-                VStack(spacing: 8) {
+                // Developer / Credits
+                VStack(spacing: 6) {
                     Text("Designed & Developed with Care")
                         .font(.granlyCaption)
                         .foregroundStyle(.secondary)
@@ -96,28 +82,39 @@ struct AboutView: View {
     }
 }
 
-struct FeatureRow: View {
+struct AboutRow: View {
     let icon: String
-    let color: Color
+    let iconColor: Color
     let title: String
-    let desc: String
+    let hasDivider: Bool
     
     var body: some View {
-        HStack(spacing: 16) {
-            Image(systemName: icon)
-                .font(.granlyHeadline) // Title2 -> Headline
-                .foregroundStyle(color)
-                .frame(width: 32) // 40 -> 32
-            
-            VStack(alignment: .leading, spacing: 2) {
+        VStack(spacing: 0) {
+            HStack(spacing: 16) {
+                Image(systemName: icon)
+                    .foregroundStyle(iconColor)
+                    .font(.system(size: 18))
+                    .frame(width: 24)
+                
                 Text(title)
-                    .font(.granlyBodyBold) // Headline -> BodyBold
+                    .font(.granlyBodyBold)
                     .foregroundStyle(Color.themeText)
-                Text(desc)
-                    .font(.granlyCaption)
+                
+                Spacer()
+                
+                Image(systemName: "chevron.right")
+                    .font(.system(size: 12, weight: .semibold))
                     .foregroundStyle(.secondary)
             }
-            Spacer()
+            .padding(.vertical, 16)
+            .padding(.horizontal, 20)
+            
+            if hasDivider {
+                Divider()
+                    .background(Color.white.opacity(0.1))
+                    .padding(.leading, 60)
+            }
         }
+        .contentShape(Rectangle())
     }
 }
