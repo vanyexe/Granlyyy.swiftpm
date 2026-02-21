@@ -355,7 +355,9 @@ struct GrandmaSceneView: UIViewRepresentable {
                 }
             },
             SCNAction.run { _ in
-                self.scheduleBlink(head)
+                Task { @MainActor in
+                    self.scheduleBlink(head)
+                }
             }
         ])
         
