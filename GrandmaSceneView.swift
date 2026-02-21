@@ -319,7 +319,35 @@ struct GrandmaSceneView: UIViewRepresentable {
          ])
          if let head = root.childNode(withName: "head", recursively: true) {
              head.runAction(.repeatForever(tilt))
+             
+             // Start Blink Routine
+             scheduleBlink(head)
          }
+    }
+    
+    private func scheduleBlink(_ head: SCNNode) {
+        let delay = Double.random(in: 2.0...6.0)
+        
+        let blinkAction = SCNAction.sequence([
+            SCNAction.wait(duration: delay),
+            SCNAction.run { _ in
+                let blink = SCNAction.sequence([
+                    SCNAction.scaleTo(x: 1, y: 0.1, z: 1, duration: 0.05),
+                    SCNAction.scaleTo(x: 1, y: 1, z: 1, duration: 0.1)
+                ])
+                if let leftEye = head.childNode(withName: "eye_L", recursively: true),
+                   let rightEye = head.childNode(withName: "eye_R", recursively: true) {
+                    leftEye.runAction(blink)
+                    rightEye.runAction(blink)
+                }
+            },
+            SCNAction.run { [weak self] _ in
+                self?.scheduleBlink(head)
+            }
+        ])
+        
+        // Use a unique key to prevent compounding of blink actions if startIdle is called again
+        head.runAction(blinkAction, forKey: "blinkCycle")
     }
 
     // MARK: - Build 3D Model
@@ -339,6 +367,8 @@ struct GrandmaSceneView: UIViewRepresentable {
         buildFace(head, settings: settings)
         buildEars(head, settings: settings)
         buildHair(head, settings: settings)
+        // If there's a hat, it might cover the hair, but build Hats after Hair anyway
+        buildHats(head, settings: settings)
         buildGlasses(head, settings: settings)
         buildArms(body, settings: settings)
         buildAccessories(body, settings: settings)
@@ -350,7 +380,9 @@ struct GrandmaSceneView: UIViewRepresentable {
              let x = s * 0.16
              let sc = SCNNode(geometry: SCNSphere(radius: 0.10))
              sc.geometry?.materials = [mat(.white)]
-             sc.position = SCNVector3(x, 0.08, 0.38); h.addChildNode(sc)
+             sc.position = SCNVector3(x, 0.08, 0.38)
+             sc.name = "eye_\(s > 0 ? "R" : "L")"
+             h.addChildNode(sc)
              let ir = SCNNode(geometry: SCNSphere(radius: 0.058))
              ir.geometry?.materials = [mat(.green)]
              ir.position = SCNVector3(0, 0, 0.06); sc.addChildNode(ir)
@@ -386,11 +418,28 @@ struct GrandmaSceneView: UIViewRepresentable {
             ear.position = SCNVector3(s * 0.44, 0.05, 0.02)
             ear.scale = SCNVector3(0.6, 0.9, 0.5)
             h.addChildNode(ear)
-            // Earrings
-            let earring = SCNNode(geometry: SCNSphere(radius: 0.03))
-            earring.geometry?.materials = [mat(.white)]
-            earring.position = SCNVector3(0, -0.08, 0)
-            ear.addChildNode(earring)
+            
+            // New Earring System
+            switch settings.earringStyle {
+            case .pearl:
+                let earring = SCNNode(geometry: SCNSphere(radius: 0.035))
+                earring.geometry?.materials = [mat(.white, rough: 0.2, metal: 0.1)]
+                earring.position = SCNVector3(0, -0.1, 0)
+                ear.addChildNode(earring)
+            case .goldHoop:
+                let hoop = SCNNode(geometry: SCNTorus(ringRadius: 0.04, pipeRadius: 0.008))
+                hoop.geometry?.materials = [mat(UIColor(red: 1.0, green: 0.8, blue: 0.2, alpha: 1), rough: 0.2, metal: 1.0)]
+                hoop.position = SCNVector3(0, -0.12, 0)
+                hoop.eulerAngles = SCNVector3(Float.pi/2, 0, 0)
+                ear.addChildNode(hoop)
+            case .diamond:
+                let stud = SCNNode(geometry: SCNPyramid(width: 0.04, height: 0.04, length: 0.04))
+                stud.geometry?.materials = [mat(UIColor(white: 0.95, alpha: 1), rough: 0.1, metal: 0.8)]
+                stud.position = SCNVector3(0, -0.08, 0.06)
+                stud.eulerAngles = SCNVector3(Float.pi/2, 0, 0)
+                ear.addChildNode(stud)
+            case .none: break
+            }
          }
     }
     
@@ -480,21 +529,94 @@ struct GrandmaSceneView: UIViewRepresentable {
         }
     }
     
+    private func buildHats(_ head: SCNNode, settings: GrandmaSettings) {
+        switch settings.hatStyle {
+        case .sunHat:
+            let brim = SCNNode(geometry: SCNCylinder(radius: 0.75, height: 0.02))
+            brim.geometry?.materials = [mat(UIColor(red: 0.9, green: 0.8, blue: 0.6, alpha: 1))]
+            brim.position = SCNVector3(0, 0.4, -0.05)
+            brim.eulerAngles = SCNVector3(-0.1, 0, 0)
+            head.addChildNode(brim)
+            
+            let top = SCNNode(geometry: SCNCylinder(radius: 0.45, height: 0.3))
+            top.geometry?.materials = [mat(UIColor(red: 0.9, green: 0.8, blue: 0.6, alpha: 1))]
+            top.position = SCNVector3(0, 0.55, -0.05)
+            top.eulerAngles = SCNVector3(-0.1, 0, 0)
+            head.addChildNode(top)
+        case .beanie:
+            let beanie = SCNNode(geometry: SCNSphere(radius: 0.52))
+            beanie.geometry?.materials = [mat(UIColor(red: 0.2, green: 0.4, blue: 0.6, alpha: 1), rough: 0.9)]
+            beanie.position = SCNVector3(0, 0.15, -0.05)
+            // Flatten the bottom half
+            let plane = SCNNode(geometry: SCNBox(width: 2, height: 1, length: 2, chamferRadius: 0))
+            plane.position = SCNVector3(0, -0.5, 0)
+            
+            head.addChildNode(beanie)
+            
+            let pom = SCNNode(geometry: SCNSphere(radius: 0.15))
+            pom.geometry?.materials = [mat(UIColor.white, rough: 0.9)]
+            pom.position = SCNVector3(0, 0.55, 0)
+            beanie.addChildNode(pom)
+        case .beret:
+            let beret = SCNNode(geometry: SCNCylinder(radius: 0.5, height: 0.15))
+            beret.geometry?.materials = [mat(UIColor(red: 0.8, green: 0.2, blue: 0.2, alpha: 1), rough: 0.9)]
+            beret.position = SCNVector3(0.1, 0.45, 0)
+            beret.eulerAngles = SCNVector3(-0.2, 0, -0.2)
+            head.addChildNode(beret)
+            
+            let tip = SCNNode(geometry: SCNCylinder(radius: 0.02, height: 0.05))
+            tip.geometry?.materials = [mat(UIColor(red: 0.8, green: 0.2, blue: 0.2, alpha: 1), rough: 0.9)]
+            tip.position = SCNVector3(0, 0.1, 0)
+            beret.addChildNode(tip)
+        case .none: break
+        }
+    }
+    
     private func addLights(_ scene: SCNScene) {
-         let ambient = SCNLight(); ambient.type = .ambient; ambient.intensity = 300
-         let ambientNode = SCNNode(); ambientNode.light = ambient
+         // High Quality PBR Environment Lighting
+         let ambient = SCNLight()
+         ambient.type = .ambient
+         ambient.intensity = 400
+         let ambientNode = SCNNode()
+         ambientNode.light = ambient
          scene.rootNode.addChildNode(ambientNode)
          
-         let omni = SCNLight(); omni.type = .omni; omni.intensity = 800
-         let on = SCNNode(); on.light = omni; on.position = SCNVector3(2, 2, 5)
-         scene.rootNode.addChildNode(on)
+         // Directional Light with Soft Shadows
+         let dirLight = SCNLight()
+         dirLight.type = .directional
+         dirLight.intensity = 1000
+         dirLight.castsShadow = true
+         dirLight.shadowMode = .deferred
+         dirLight.shadowColor = UIColor.black.withAlphaComponent(0.3)
+         dirLight.shadowRadius = 8.0     // Soft, realistic shadows
+         dirLight.shadowMapSize = CGSize(width: 2048, height: 2048)
+         
+         let dirNode = SCNNode()
+         dirNode.light = dirLight
+         dirNode.position = SCNVector3(3, 5, 4)
+         dirNode.look(at: SCNVector3(0, 1, 0))
+         scene.rootNode.addChildNode(dirNode)
+         
+         // Subtle Fill Light
+         let fillLight = SCNLight()
+         fillLight.type = .omni
+         fillLight.intensity = 300
+         let fillNode = SCNNode()
+         fillNode.light = fillLight
+         fillNode.position = SCNVector3(-3, 2, 2)
+         scene.rootNode.addChildNode(fillNode)
     }
     
     private func addCamera(_ scene: SCNScene) {
         let cn = SCNNode(); cn.camera = SCNCamera(); cn.position = SCNVector3(0, 1.3, 3.5); scene.rootNode.addChildNode(cn)
     }
     
-    private func mat(_ c: UIColor, rough: CGFloat = 0.6) -> SCNMaterial {
-        let m = SCNMaterial(); m.diffuse.contents = c; m.roughness.contents = rough; return m
+    private func mat(_ c: UIColor, rough: CGFloat = 0.6, metal: CGFloat = 0.0) -> SCNMaterial {
+        let m = SCNMaterial()
+        m.lightingModel = .physicallyBased
+        m.diffuse.contents = c
+        m.roughness.contents = rough
+        m.metalness.contents = metal
+        return m
     }
 }
