@@ -98,7 +98,7 @@ struct ProfileView: View {
                             SectionHeader(title: "Support")
                             
                             NavigationLink(destination: AboutView()) {
-                                SettingsRow(icon: "info.circle", color: .blue, title: "About Granly", value: "") {}
+                                SettingsRow(icon: "info.circle", color: .blue, title: "About Granly", value: "Version 2.0") {}
                                     .contentShape(Rectangle())
                             }
                             .buttonStyle(.plain)
