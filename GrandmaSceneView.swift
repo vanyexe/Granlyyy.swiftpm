@@ -98,10 +98,6 @@ struct GrandmaSceneView: UIViewRepresentable {
         
         // 4. Lip Sync (Jaw Movement)
         updateLipSync(root, isSpeaking: isSpeaking, context: context)
-        
-        // Re-apply camera/lights since we cleared root
-        addLights(scene)
-        addCamera(scene)
     }
     
     // MARK: - Action Engine (Body Language)
