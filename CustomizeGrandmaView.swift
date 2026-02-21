@@ -7,9 +7,10 @@ struct CustomizeGrandmaView: View {
     @State private var showConfetti = false
     
     // Tab selection
+    // Tab selection
     @State private var selectedTab = 0
-    let tabs = ["Hair", "Glasses", "Outfit", "Accessories", "Hats", "Earrings", "Face", "Backgrounds", "Filters"]
-    let tabIcons = ["comb.fill", "eyeglasses", "tshirt.fill", "sparkles", "graduationcap.fill", "circle.fill", "face.smiling", "photo.fill", "camera.filters"]
+    let tabs = ["Hair", "Glasses", "Outfit", "Pattern", "Accessories", "Hats", "Earrings", "Face", "Backgrounds", "Filters"]
+    let tabIcons = ["comb.fill", "eyeglasses", "tshirt.fill", "paintpalette.fill", "sparkles", "graduationcap.fill", "circle.fill", "face.smiling", "photo.fill", "camera.filters"]
     
     var body: some View {
         ZStack {
@@ -22,8 +23,8 @@ struct CustomizeGrandmaView: View {
                 backgroundForTheme(settings.backgroundTheme)
             }
             
-            // Subtle frosted overlay so the UI stays readable
-            Color.white.opacity(0.15)
+            // Subtle frosted overlay so the UI stays readable (Adaptive for Light/Dark Mode)
+            Color(UIColor.systemBackground).opacity(0.15)
                 .background(.ultraThinMaterial)
                 .ignoresSafeArea()
             
@@ -160,18 +161,20 @@ struct CustomizeGrandmaView: View {
                                 OptionGroup(title: "Frames") { TextGrid(options: GlassesStyle.allCases, selected: $settings.glassesStyle) }
                             case 2: // Outfit
                                 OptionGroup(title: "Color") { ColorGrid(options: OutfitColor.allCases, selected: $settings.outfitColor) }
-                            case 3: // Accessories
+                            case 3: // Pattern
+                                OptionGroup(title: "Pattern") { TextGrid(options: OutfitPattern.allCases, selected: $settings.outfitPattern) }
+                            case 4: // Accessories
                                 OptionGroup(title: "Necklace") { TextGrid(options: AccessoryType.allCases, selected: $settings.accessory) }
-                            case 4: // Hats
+                            case 5: // Hats
                                 OptionGroup(title: "Hat Style") { TextGrid(options: HatStyle.allCases, selected: $settings.hatStyle) }
-                            case 5: // Earrings
+                            case 6: // Earrings
                                 OptionGroup(title: "Earrings") { TextGrid(options: EarringStyle.allCases, selected: $settings.earringStyle) }
-                            case 6: // Face
+                            case 7: // Face
                                 OptionGroup(title: "Skin Tone") { SkinToneGrid(options: SkinTone.allCases, selected: $settings.skinTone) }
                                 OptionGroup(title: "Expression") { TextGrid(options: FacialExpression.allCases, selected: $settings.facialExpression) }
-                            case 7: // Backgrounds
+                            case 8: // Backgrounds
                                 OptionGroup(title: "Theme") { TextGrid(options: BackgroundTheme.allCases, selected: $settings.backgroundTheme) }
-                            case 8: // Filters
+                            case 9: // Filters
                                 OptionGroup(title: "Camera Filter") { TextGrid(options: CameraFilter.allCases, selected: $settings.filter) }
                             default: EmptyView()
                             }
@@ -183,8 +186,9 @@ struct CustomizeGrandmaView: View {
                 }
                 .background(
                     RoundedRectangle(cornerRadius: 32, style: .continuous)
-                        .fill(Color.white.opacity(0.95))
-                        .shadow(color: .black.opacity(0.1), radius: 10, x: 0, y: -5)
+                        // Adaptive background for light/dark mode drawer
+                        .fill(Color(UIColor.secondarySystemGroupedBackground).opacity(0.95))
+                        .shadow(color: Color(UIColor.label).opacity(0.1), radius: 10, x: 0, y: -5)
                 )
                 .ignoresSafeArea(edges: .bottom)
             }

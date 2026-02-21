@@ -162,6 +162,7 @@ class GrandmaSettings: ObservableObject {
     @AppStorage("earringStyle") var earringStyle: EarringStyle = .none
     @AppStorage("backgroundTheme") var backgroundTheme: BackgroundTheme = .gradient
     @AppStorage("facialExpression") var facialExpression: FacialExpression = .smile
+    @AppStorage("outfitPattern") var outfitPattern: OutfitPattern = .solid
     
     func randomize() {
         withAnimation {
@@ -174,6 +175,7 @@ class GrandmaSettings: ObservableObject {
             hatStyle = HatStyle.allCases.randomElement()!
             earringStyle = EarringStyle.allCases.randomElement()!
             facialExpression = FacialExpression.allCases.randomElement()!
+            outfitPattern = OutfitPattern.allCases.randomElement()!
         }
     }
     
@@ -190,6 +192,7 @@ class GrandmaSettings: ObservableObject {
             earringStyle = .none
             backgroundTheme = .gradient
             facialExpression = .smile
+            outfitPattern = .solid
         }
     }
 }
@@ -206,3 +209,4 @@ extension HatStyle: RawRepresentable { }
 extension EarringStyle: RawRepresentable { }
 extension BackgroundTheme: RawRepresentable { }
 extension FacialExpression: RawRepresentable { }
+extension OutfitPattern: RawRepresentable { }

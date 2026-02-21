@@ -367,9 +367,13 @@ struct GrandmaSceneView: UIViewRepresentable {
 
     // MARK: - Build 3D Model
     private func buildGrandma(_ root: SCNNode, settings: GrandmaSettings) {
+        // Body Texture
+        let outfitColor = UIColor(cgColor: settings.outfitColor.uiColor.cgColor)
+        let patternImage = TextureGenerator.shared.generateTexture(pattern: settings.outfitPattern, baseColor: outfitColor)
+        
         // Body
         let body = SCNNode(geometry: SCNCapsule(capRadius: 0.52, height: 1.8))
-        body.geometry?.materials = [mat(UIColor(cgColor: settings.outfitColor.uiColor.cgColor), rough: 0.85)]
+        body.geometry?.materials = [mat(image: patternImage, rough: 0.85)]
         body.name = "body"; body.position = SCNVector3(0, 0, 0)
         root.addChildNode(body)
         
@@ -509,13 +513,15 @@ struct GrandmaSceneView: UIViewRepresentable {
     }
     
     private func buildArms(_ body: SCNNode, settings: GrandmaSettings) {
-          let outfit = UIColor(cgColor: settings.outfitColor.uiColor.cgColor)
+          let outfitColor = UIColor(cgColor: settings.outfitColor.uiColor.cgColor)
+          let patternImage = TextureGenerator.shared.generateTexture(pattern: settings.outfitPattern, baseColor: outfitColor)
           let skin = UIColor(cgColor: settings.skinTone.uiColor.cgColor)
+          
           for (n, sv) in [("left", -1.0), ("right", 1.0)] {
              let x = Float(sv * 0.70)
              let sh = SCNNode(); sh.name = "\(n)Sh"; sh.position = SCNVector3(x, 0.52, 0); body.addChildNode(sh)
              let ua = SCNNode(geometry: SCNCapsule(capRadius: 0.09, height: 0.50))
-             ua.geometry?.materials = [mat(outfit)]; ua.position = SCNVector3(0, -0.23, 0); ua.eulerAngles = SCNVector3(0, 0, Float(sv) * 0.22); sh.addChildNode(ua)
+             ua.geometry?.materials = [mat(image: patternImage)]; ua.position = SCNVector3(0, -0.23, 0); ua.eulerAngles = SCNVector3(0, 0, Float(sv) * 0.22); sh.addChildNode(ua)
              let el = SCNNode(); el.name = "\(n)El"; el.position = SCNVector3(0, -0.28, 0); ua.addChildNode(el)
              let fa = SCNNode(geometry: SCNCapsule(capRadius: 0.07, height: 0.38))
              fa.geometry?.materials = [mat(skin)]; fa.position = SCNVector3(0, -0.19, 0); el.addChildNode(fa)
@@ -604,6 +610,18 @@ struct GrandmaSceneView: UIViewRepresentable {
     private func mat(_ c: UIColor, rough: CGFloat = 0.6, metal: CGFloat = 0.0) -> SCNMaterial {
         let m = SCNMaterial()
         m.diffuse.contents = c
+        m.roughness.contents = rough
+        return m
+    }
+    
+    // Overloaded to accept Image Textures for patterns
+    private func mat(image: UIImage, rough: CGFloat = 0.6) -> SCNMaterial {
+        let m = SCNMaterial()
+        m.diffuse.contents = image
+        // To make the pattern repeat correctly on capsules
+        m.diffuse.contentsTransform = SCNMatrix4MakeScale(2, 4, 1) // Tiling scale
+        m.diffuse.wrapS = .repeat
+        m.diffuse.wrapT = .repeat
         m.roughness.contents = rough
         return m
     }
