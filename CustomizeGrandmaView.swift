@@ -4,144 +4,219 @@ import SceneKit
 struct CustomizeGrandmaView: View {
     @StateObject private var settings = GrandmaSettings()
     @Environment(\.dismiss) private var dismiss
-    @State private var animate = true
-    @State private var waveTrigger = false // Dummy trigger for preview
+    @State private var showConfetti = false
     
     // Tab selection
     @State private var selectedTab = 0
-    let tabs = ["Hair", "Face", "Outfit", "Style", "Filter"]
-    let tabIcons = ["comb.fill", "face.smiling", "tshirt.fill", "sunglasses.fill", "camera.filters"]
+    let tabs = ["Hair", "Glasses", "Outfit", "Accessories", "Hats", "Earrings", "Face", "Backgrounds", "Filters"]
+    let tabIcons = ["comb.fill", "eyeglasses", "tshirt.fill", "sparkles", "graduationcap.fill", "circle.fill", "face.smiling", "photo.fill", "camera.filters"]
     
     var body: some View {
         ZStack {
-            // Background depends on filter
+            // Dynamic Background based on theme / filter
             if settings.filter == .noir {
                 Color.black.ignoresSafeArea()
             } else if settings.filter == .sepia {
                 Color(red: 0.95, green: 0.9, blue: 0.8).ignoresSafeArea()
             } else {
-                MeshGradientBackground().ignoresSafeArea()
+                backgroundForTheme(settings.backgroundTheme)
             }
             
+            // Subtle frosted overlay so the UI stays readable
+            Color.white.opacity(0.15)
+                .background(.ultraThinMaterial)
+                .ignoresSafeArea()
+            
             VStack(spacing: 0) {
-                // Header
-                HStack {
-                    Button(action: { dismiss() }) {
-                        Image(systemName: "xmark.circle.fill")
-                            .font(.granlyHeadline) // Title -> Headline
-                            .foregroundStyle(Color.themeText)
-                    }
-                    Spacer()
-                    Text("Grandma Makeover")
-                        .font(.granlyHeadline) // Title2 -> Headline
-                        .foregroundStyle(Color.themeText)
-                    Spacer()
+                // Header (Save & Reset)
+                HStack(alignment: .center) {
                     Button(action: {
-                        withAnimation {
-                            settings.randomize()
+                        let generator = UIImpactFeedbackGenerator(style: .medium)
+                        generator.impactOccurred()
+                        settings.reset()
+                    }) {
+                        Image(systemName: "arrow.counterclockwise.circle.fill")
+                            .font(.system(size: 28))
+                            .foregroundStyle(Color.themeText.opacity(0.7))
+                    }
+                    
+                    Spacer()
+                    
+                    Text("Grandma Makeover")
+                        .font(.granlyHeadline)
+                        .foregroundStyle(Color.themeText)
+                        .shadow(color: .white.opacity(0.5), radius: 2, x: 0, y: 1)
+                    
+                    Spacer()
+                    
+                    Button(action: {
+                        let generator = UINotificationFeedbackGenerator()
+                        generator.notificationOccurred(.success)
+                        showConfetti = true
+                        DispatchQueue.main.asyncAfter(deadline: .now() + 1.5) {
+                            showConfetti = false
                         }
                     }) {
-                        Image(systemName: "dice.fill")
-                            .font(.granlyHeadline) // Title -> Headline
-                            .foregroundStyle(Color.themeRose)
+                        Text("Save")
+                            .font(.granlyBodyBold)
+                            .foregroundStyle(.white)
+                            .padding(.horizontal, 16)
+                            .padding(.vertical, 8)
+                            .background(Color.themeRose)
+                            .clipShape(Capsule())
+                            .shadow(color: Color.themeRose.opacity(0.4), radius: 6, x: 0, y: 3)
                     }
                 }
-                .padding()
+                .padding(.horizontal, 20)
+                .padding(.top, 16)
+                .padding(.bottom, 8)
+                
+                Spacer()
                 
                 // 3D Preview (Live)
                 ZStack {
-                    if settings.filter == .noir {
-                        Color.gray.opacity(0.2)
-                    } else {
-                        Color.white.opacity(0.3)
-                    }
-                    
                     GrandmaSceneView(
                         action: .constant(.idle),
-                        expression: .constant(.happy),
+                        expression: .constant(.neutral),
                         isSpeaking: .constant(false),
                         settings: settings
                     )
-                        .scaleEffect(1.1)
-                        .offset(y: 20)
+                    .scaleEffect(1.2)
+                    .offset(y: 40) // Shove her down slightly so she fills the frame
+                    
+                    // Close button floating at top-left of the preview
+                    VStack {
+                        HStack {
+                            Button(action: { dismiss() }) {
+                                Image(systemName: "xmark.circle.fill")
+                                    .font(.system(size: 32))
+                                    .foregroundStyle(.white)
+                                    .shadow(radius: 4)
+                            }
+                            Spacer()
+                        }
+                        Spacer()
+                    }
+                    .padding(16)
+                    
+                    if showConfetti {
+                        ConfettiView()
+                            .allowsHitTesting(false)
+                    }
                 }
-                .frame(height: 240) // 300 -> 240
-                .clipShape(RoundedRectangle(cornerRadius: 24)) // 30 -> 24
-                .overlay(RoundedRectangle(cornerRadius: 24).stroke(Color.themeRose.opacity(0.3), lineWidth: 1)) // 30 -> 24
-                .padding(.horizontal)
-                .padding(.bottom, 20)
+                .frame(maxWidth: .infinity, maxHeight: .infinity)
+                .clipShape(RoundedRectangle(cornerRadius: 32, style: .continuous))
+                .shadow(color: .black.opacity(0.15), radius: 20, x: 0, y: 10)
+                .padding(.horizontal, 20)
+                .padding(.bottom, 24)
                 
-                // Customization Tabs
+                // Snapchat-style Bottom Dock
                 VStack(spacing: 0) {
-                    // Tab Bar
+                    // Category Icons (Horizontal Scroll)
                     ScrollView(.horizontal, showsIndicators: false) {
-                        HStack(spacing: 20) {
+                        HStack(spacing: 24) {
                             ForEach(0..<tabs.count, id: \.self) { index in
-                                Button(action: { selectedTab = index }) {
-                                    VStack(spacing: 4) { // 6 -> 4
-                                        Image(systemName: tabIcons[index])
-                                            .font(.granlySubheadline) // Headline -> Subheadline
-                                        Text(tabs[index].uppercased())
-                                            .font(.system(size: 10, weight: .bold, design: .rounded)) // Premium tag format
+                                Button(action: {
+                                    let haptic = UISelectionFeedbackGenerator()
+                                    haptic.selectionChanged()
+                                    withAnimation(.spring(response: 0.3, dampingFraction: 0.7)) {
+                                        selectedTab = index
                                     }
-                                    .padding(.vertical, 8)
-                                    .padding(.horizontal, 16)
-                                    .background(selectedTab == index ? Color.themeRose : Color.clear)
-                                    .foregroundStyle(selectedTab == index ? .white : Color.themeText)
-                                    .clipShape(Capsule())
+                                }) {
+                                    VStack(spacing: 6) {
+                                        Image(systemName: tabIcons[index])
+                                            .font(.system(size: 24, weight: selectedTab == index ? .bold : .regular))
+                                            .foregroundStyle(selectedTab == index ? Color.themeRose : Color.themeText.opacity(0.6))
+                                            .frame(width: 44, height: 44)
+                                            .background(
+                                                Circle()
+                                                    .fill(selectedTab == index ? Color.themeRose.opacity(0.15) : Color.white.opacity(0.8))
+                                            )
+                                            // Scale animation
+                                            .scaleEffect(selectedTab == index ? 1.15 : 1.0)
+                                            
+                                        Text(tabs[index])
+                                            .font(.system(size: 10, weight: selectedTab == index ? .bold : .semibold, design: .rounded))
+                                            .foregroundStyle(selectedTab == index ? Color.themeText : Color.themeText.opacity(0.6))
+                                            .lineLimit(1)
+                                    }
                                 }
+                                .padding(.vertical, 8)
                             }
                         }
-                        .padding(.horizontal)
+                        .padding(.horizontal, 24)
                     }
-                    .padding(.vertical, 12)
-                    .background(.ultraThinMaterial)
+                    .padding(.top, 12)
+                    .padding(.bottom, 8)
                     
-                    // Options Area
-                    ScrollView {
-                        VStack(spacing: 24) {
+                    // Options Area for the Selected Category
+                    ScrollView(.horizontal, showsIndicators: false) {
+                        HStack(spacing: 16) {
                             switch selectedTab {
                             case 0: // Hair
-                                OptionSection(title: "Hair Color") {
-                                    ColorGrid(options: HairColor.allCases, selected: $settings.hairColor)
-                                }
-                                OptionSection(title: "Hair Style") {
-                                    TextGrid(options: HairStyle.allCases, selected: $settings.hairStyle)
-                                }
-                                
-                            case 1: // Face
-                                OptionSection(title: "Skin Tone") {
-                                    SkinToneGrid(options: SkinTone.allCases, selected: $settings.skinTone)
-                                }
-                                OptionSection(title: "Glasses") {
-                                    TextGrid(options: GlassesStyle.allCases, selected: $settings.glassesStyle)
-                                }
-                                
+                                OptionGroup(title: "Style") { TextGrid(options: HairStyle.allCases, selected: $settings.hairStyle) }
+                                OptionGroup(title: "Color") { ColorGrid(options: HairColor.allCases, selected: $settings.hairColor) }
+                            case 1: // Glasses
+                                OptionGroup(title: "Frames") { TextGrid(options: GlassesStyle.allCases, selected: $settings.glassesStyle) }
                             case 2: // Outfit
-                                OptionSection(title: "Outfit Color") {
-                                    ColorGrid(options: OutfitColor.allCases, selected: $settings.outfitColor)
-                                }
-                                
-                            case 3: // Style/Accessories
-                                OptionSection(title: "Accessory") {
-                                    TextGrid(options: AccessoryType.allCases, selected: $settings.accessory)
-                                }
-                                
-                            case 4: // Filter
-                                OptionSection(title: "Camera Filter") {
-                                    TextGrid(options: CameraFilter.allCases, selected: $settings.filter)
-                                }
-                                
+                                OptionGroup(title: "Color") { ColorGrid(options: OutfitColor.allCases, selected: $settings.outfitColor) }
+                            case 3: // Accessories
+                                OptionGroup(title: "Necklace") { TextGrid(options: AccessoryType.allCases, selected: $settings.accessory) }
+                            case 4: // Hats
+                                OptionGroup(title: "Hat Style") { TextGrid(options: HatStyle.allCases, selected: $settings.hatStyle) }
+                            case 5: // Earrings
+                                OptionGroup(title: "Earrings") { TextGrid(options: EarringStyle.allCases, selected: $settings.earringStyle) }
+                            case 6: // Face
+                                OptionGroup(title: "Skin Tone") { SkinToneGrid(options: SkinTone.allCases, selected: $settings.skinTone) }
+                                OptionGroup(title: "Expression") { TextGrid(options: FacialExpression.allCases, selected: $settings.facialExpression) }
+                            case 7: // Backgrounds
+                                OptionGroup(title: "Theme") { TextGrid(options: BackgroundTheme.allCases, selected: $settings.backgroundTheme) }
+                            case 8: // Filters
+                                OptionGroup(title: "Camera Filter") { TextGrid(options: CameraFilter.allCases, selected: $settings.filter) }
                             default: EmptyView()
                             }
                         }
-                        .padding()
-                        .padding(.bottom, 40)
+                        .padding(.horizontal, 24)
+                        .padding(.bottom, 32) // Safe area padding
                     }
+                    .frame(height: 120) // Fixed height for the options tray to prevent jumping
                 }
-                .background(Color.white.opacity(0.5))
-                .clipShape(RoundedRectangle(cornerRadius: 24, style: .continuous)) // 30 -> 24
+                .background(
+                    RoundedRectangle(cornerRadius: 32, style: .continuous)
+                        .fill(Color.white.opacity(0.95))
+                        .shadow(color: .black.opacity(0.1), radius: 10, x: 0, y: -5)
+                )
                 .ignoresSafeArea(edges: .bottom)
+            }
+        }
+    }
+    
+    @ViewBuilder
+    private func backgroundForTheme(_ theme: BackgroundTheme) -> some View {
+        switch theme {
+        case .cozyRoom:
+            LinearGradient(colors: [Color(red: 0.9, green: 0.8, blue: 0.7), Color(red: 0.8, green: 0.6, blue: 0.5)], startPoint: .top, endPoint: .bottom).ignoresSafeArea()
+        case .garden:
+            LinearGradient(colors: [Color(red: 0.7, green: 0.9, blue: 0.7), Color(red: 0.4, green: 0.7, blue: 0.4)], startPoint: .top, endPoint: .bottom).ignoresSafeArea()
+        case .library:
+            LinearGradient(colors: [Color(red: 0.5, green: 0.4, blue: 0.3), Color(red: 0.3, green: 0.2, blue: 0.15)], startPoint: .top, endPoint: .bottom).ignoresSafeArea()
+        case .gradient:
+            MeshGradientBackground().ignoresSafeArea()
+        }
+    }
+}
+
+// Confetti Overlay
+struct ConfettiView: View {
+    var body: some View {
+        ZStack {
+            ForEach(0..<40, id: \.self) { i in
+                Rectangle()
+                    .fill([Color.red, .blue, .green, .yellow, .orange, .purple].randomElement()!)
+                    .frame(width: 8, height: 8)
+                    .rotationEffect(.degrees(Double.random(in: 0...360)))
+                    .offset(x: CGFloat.random(in: -150...150), y: CGFloat.random(in: -300...300))
+                    .animation(.easeOut(duration: 1).delay(Double.random(in: 0...0.2)), value: true)
             }
         }
     }
@@ -149,7 +224,7 @@ struct CustomizeGrandmaView: View {
 
 // MARK: - Components
 
-struct OptionSection<Content: View>: View {
+struct OptionGroup<Content: View>: View {
     let title: String
     let content: Content
     
@@ -159,12 +234,14 @@ struct OptionSection<Content: View>: View {
     }
     
     var body: some View {
-        VStack(alignment: .leading, spacing: 8) { // 12 -> 8
-            Text(title)
-                .font(.granlyBodyBold) // Headline -> BodyBold
+        VStack(spacing: 12) {
+            Text(title.uppercased())
+                .font(.system(size: 11, weight: .bold, design: .rounded))
                 .foregroundStyle(.secondary)
+            
             content
         }
+        .padding(.vertical, 8)
     }
 }
 
@@ -173,24 +250,29 @@ struct ColorGrid<T: Identifiable & RawRepresentable>: View where T.RawValue == S
     @Binding var selected: T
     
     var body: some View {
-        LazyVGrid(columns: [GridItem(.adaptive(minimum: 50))], spacing: 16) {
+        HStack(spacing: 16) {
             ForEach(options) { option in
-                Button(action: { selected = option }) {
+                Button(action: {
+                    let haptic = UISelectionFeedbackGenerator()
+                    haptic.selectionChanged()
+                    withAnimation(.easeInOut(duration: 0.2)) { selected = option }
+                }) {
                     ZStack {
                         Circle()
                             .fill(getColor(for: option))
-                            .frame(width: 50, height: 50)
-                            .shadow(radius: 2)
+                            .frame(width: 44, height: 44)
+                            .shadow(color: .black.opacity(0.1), radius: 3, x: 0, y: 2)
                         
                         if selected.id == option.id {
-                            Image(systemName: "checkmark")
-                                .foregroundStyle(.white)
-                                .shadow(radius: 2)
+                            Circle()
+                                .stroke(Color.themeRose, lineWidth: 3)
+                                .frame(width: 52, height: 52)
                         }
                     }
                 }
             }
         }
+        .padding(.horizontal, 8)
     }
     
     func getColor(for option: T) -> Color {
@@ -205,23 +287,29 @@ struct SkinToneGrid: View {
     @Binding var selected: SkinTone
     
     var body: some View {
-        LazyVGrid(columns: [GridItem(.adaptive(minimum: 50))], spacing: 16) {
+        HStack(spacing: 16) {
             ForEach(options) { option in
-                Button(action: { selected = option }) {
+                Button(action: {
+                    let haptic = UISelectionFeedbackGenerator()
+                    haptic.selectionChanged()
+                    withAnimation(.easeInOut(duration: 0.2)) { selected = option }
+                }) {
                     ZStack {
                         Circle()
                             .fill(Color(uiColor: option.uiColor))
-                            .frame(width: 50, height: 50)
-                            .shadow(radius: 2)
+                            .frame(width: 44, height: 44)
+                            .shadow(color: .black.opacity(0.1), radius: 3, x: 0, y: 2)
                         
                         if selected == option {
-                            Image(systemName: "checkmark")
-                                .foregroundStyle(.black.opacity(0.5))
+                            Circle()
+                                .stroke(Color.themeRose, lineWidth: 3)
+                                .frame(width: 52, height: 52)
                         }
                     }
                 }
             }
         }
+        .padding(.horizontal, 8)
     }
 }
 
@@ -230,19 +318,26 @@ struct TextGrid<T: Identifiable & RawRepresentable>: View where T.RawValue == St
     @Binding var selected: T
     
     var body: some View {
-        LazyVGrid(columns: [GridItem(.adaptive(minimum: 140))], spacing: 12) {
+        HStack(spacing: 12) {
             ForEach(options) { option in
-                Button(action: { selected = option }) {
+                Button(action: {
+                    let haptic = UISelectionFeedbackGenerator()
+                    haptic.selectionChanged()
+                    withAnimation(.easeInOut(duration: 0.2)) { selected = option }
+                }) {
                     Text(option.rawValue)
-                        .font(.granlySubheadline)
-                        .frame(maxWidth: .infinity)
+                        .font(.system(size: 14, weight: selected.id == option.id ? .bold : .medium, design: .rounded))
+                        .padding(.horizontal, 20)
                         .padding(.vertical, 12)
                         .background(selected.id == option.id ? Color.themeRose : Color.white)
                         .foregroundStyle(selected.id == option.id ? .white : Color.themeText)
-                        .clipShape(RoundedRectangle(cornerRadius: 12))
-                        .shadow(color: .black.opacity(0.1), radius: 4, x: 0, y: 2)
+                        .clipShape(Capsule())
+                        .shadow(color: selected.id == option.id ? Color.themeRose.opacity(0.3) : .black.opacity(0.05), radius: 4, x: 0, y: 2)
+                        // Slight scale on selection
+                        .scaleEffect(selected.id == option.id ? 1.05 : 1.0)
                 }
             }
         }
+        .padding(.horizontal, 4)
     }
 }
