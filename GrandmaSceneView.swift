@@ -80,14 +80,7 @@ struct GrandmaSceneView: UIViewRepresentable {
               let root = scene.rootNode.childNode(withName: "root", recursively: false) else { return }
         
         // 1. Update Appearance (Settings)
-        // Optimization: In a real app, track changes. Here we rebuild for simplicity if needed.
-        // For performance, we should only rebuild if settings changed. 
-        // We can check if materials match current settings, but let's just update materials for now.
-        // Actually, changing hair style requires rebuild. 
-        // Let's rebuild every time settings change (SwiftUI triggers updateUIView).
-        // To avoid flickering, we should check if settings changed.
-        // For now, let's just rebuild to be safe and simple as per instructions.
-        root.enumerateChildNodes { (node, stop) in node.removeFromParentNode() }
+        // Flagship Avatar Engine: Non-destructive layered updates!
         buildGrandma(root, settings: settings)
         
         // 2. Update Action (Body Language)
@@ -314,10 +307,19 @@ struct GrandmaSceneView: UIViewRepresentable {
              .rotateTo(x: 0, y: 0, z: -0.03, duration: 2.0)
          ])
          if let head = root.childNode(withName: "head", recursively: true) {
-             head.runAction(.repeatForever(tilt))
+             head.runAction(.repeatForever(tilt), forKey: "headTilt")
              
              // Start Blink Routine
              scheduleBlink(head)
+         }
+         
+         // Breathing
+         if let body = root.childNode(withName: "body", recursively: true) {
+             let breathe = SCNAction.sequence([
+                 .scale(to: 1.01, duration: 2.0),
+                 .scale(to: 1.0, duration: 2.0)
+             ])
+             body.runAction(.repeatForever(breathe), forKey: "breathing")
          }
     }
     
@@ -363,54 +365,116 @@ struct GrandmaSceneView: UIViewRepresentable {
 
     // MARK: - Build 3D Model
     private func buildGrandma(_ root: SCNNode, settings: GrandmaSettings) {
-        // Body Texture
+        let body: SCNNode
+        if let existing = root.childNode(withName: "body", recursively: false) {
+            body = existing
+        } else {
+            body = SCNNode(geometry: SCNCapsule(capRadius: 0.52, height: 1.8))
+            body.name = "body"; body.position = SCNVector3(0, 0, 0)
+            root.addChildNode(body)
+            
+            let head = SCNNode(geometry: SCNSphere(radius: 0.48))
+            head.name = "head"; head.position = SCNVector3(0, 1.35, 0)
+            body.addChildNode(head)
+            
+            // Add Non-Destructive Layer Containers
+            for c in ["faceLayer", "earLayer", "hairLayer", "hatLayer", "glassesLayer"] {
+                let n = SCNNode(); n.name = c; head.addChildNode(n)
+            }
+            for c in ["armLayer", "accessoryLayer", "outfitLayer"] {
+                let n = SCNNode(); n.name = c; body.addChildNode(n)
+            }
+        }
+        
+        let head = body.childNode(withName: "head", recursively: false)!
+        
+        // Update Global Body/Head Materials
         let outfitColor = UIColor(cgColor: settings.outfitColor.uiColor.cgColor)
-        let patternImage = TextureGenerator.shared.generateTexture(pattern: settings.outfitPattern, baseColor: outfitColor)
+        var patternImage = TextureGenerator.shared.generateTexture(pattern: settings.outfitPattern, baseColor: outfitColor)
         
-        // Body
-        let body = SCNNode(geometry: SCNCapsule(capRadius: 0.52, height: 1.8))
+        // Festive Override
+        if settings.outfitStyle == .festive {
+            patternImage = TextureGenerator.shared.generateTexture(pattern: .floral, baseColor: UIColor(red: 0.8, green: 0.2, blue: 0.2, alpha: 1))
+        }
+        
         body.geometry?.materials = [mat(image: patternImage, rough: 0.85)]
-        body.name = "body"; body.position = SCNVector3(0, 0, 0)
-        root.addChildNode(body)
-        
-        // HEAD
-        let head = SCNNode(geometry: SCNSphere(radius: 0.48))
         head.geometry?.materials = [mat(UIColor(cgColor: settings.skinTone.uiColor.cgColor), rough: 0.5)]
-        head.name = "head"; head.position = SCNVector3(0, 1.35, 0)
-        body.addChildNode(head)
         
-        buildFace(head, settings: settings)
-        buildEars(head, settings: settings)
-        buildHair(head, settings: settings)
-        // If there's a hat, it might cover the hair, but build Hats after Hair anyway
-        buildHats(head, settings: settings)
-        buildGlasses(head, settings: settings)
-        buildArms(body, settings: settings)
-        buildAccessories(body, settings: settings)
+        // Rebuild Individual Layers
+        rebuildLayer(head, layerName: "faceLayer") { buildFace($0, settings: settings) }
+        rebuildLayer(head, layerName: "earLayer") { buildEars($0, settings: settings) }
+        rebuildLayer(head, layerName: "hairLayer") { buildHair($0, settings: settings) }
+        rebuildLayer(head, layerName: "hatLayer") { buildHats($0, settings: settings) }
+        rebuildLayer(head, layerName: "glassesLayer") { buildGlasses($0, settings: settings) }
+        rebuildLayer(body, layerName: "armLayer") { buildArms($0, settings: settings) }
+        rebuildLayer(body, layerName: "accessoryLayer") { buildAccessories($0, settings: settings) }
+        rebuildLayer(body, layerName: "outfitLayer") { buildOutfitExtras($0, settings: settings) }
+    }
+    
+    private func rebuildLayer(_ parent: SCNNode, layerName: String, buildBlock: (SCNNode) -> Void) {
+        guard let layer = parent.childNode(withName: layerName, recursively: false) else { return }
+        layer.enumerateChildNodes { (node, _) in node.removeFromParentNode() }
+        buildBlock(layer)
+    }
+    
+    private func buildOutfitExtras(_ layer: SCNNode, settings: GrandmaSettings) {
+        if settings.outfitStyle == .saree {
+            let drape = SCNNode(geometry: SCNCylinder(radius: 0.54, height: 1.4))
+            let drapeColor = UIColor(cgColor: settings.outfitColor.uiColor.cgColor).withAlphaComponent(0.8)
+            drape.geometry?.materials = [mat(drapeColor, rough: 0.8)]
+            drape.position = SCNVector3(0.05, -0.2, 0.05)
+            drape.eulerAngles = SCNVector3(0, 0, 0.1)
+            layer.addChildNode(drape)
+        }
     }
     
     private func buildFace(_ h: SCNNode, settings: GrandmaSettings) {
         let skin = UIColor(cgColor: settings.skinTone.uiColor.cgColor)
+        
+        // Wrinkles Overlay
+        if settings.wrinkleIntensity > 0 {
+            let wColor = skin.blended(with: .black, weight: 0.2).withAlphaComponent(CGFloat(settings.wrinkleIntensity * 0.4))
+            for wy in [0.28, 0.32, 0.36] {
+                let w = SCNNode(geometry: SCNCapsule(capRadius: 0.004, height: 0.16))
+                w.geometry?.materials = [mat(wColor, rough: 0.9)]
+                w.position = SCNVector3(0, Float(wy), 0.42)
+                w.eulerAngles = SCNVector3(0, 0, Float.pi/2)
+                h.addChildNode(w)
+            }
+        }
+        
+        let greyInt = CGFloat(settings.greyIntensity)
+        let hairColor = UIColor(cgColor: settings.hairColor.uiColor.cgColor).blended(with: .lightGray, weight: greyInt)
+        
         for s: Float in [-1, 1] {
              let x = s * 0.16
              let sc = SCNNode(geometry: SCNSphere(radius: 0.10))
-             sc.geometry?.materials = [mat(.white)]
+             sc.geometry?.materials = [mat(.white, rough: 0.05, metal: 0.1)] // PBR Glossy Eye
              sc.position = SCNVector3(x, 0.08, 0.38)
              sc.name = "eye_\(s > 0 ? "R" : "L")"
              h.addChildNode(sc)
              let ir = SCNNode(geometry: SCNSphere(radius: 0.058))
-             ir.geometry?.materials = [mat(.green)]
+             ir.geometry?.materials = [mat(settings.eyeColor.uiColor, rough: 0.05, metal: 0.2)]
              ir.position = SCNVector3(0, 0, 0.06); sc.addChildNode(ir)
              let pu = SCNNode(geometry: SCNSphere(radius: 0.028))
-            pu.geometry?.materials = [mat(.black)]; pu.position = SCNVector3(0, 0, 0.04); ir.addChildNode(pu)
-            
-            // EYEBROWS
-             let brow = SCNNode(geometry: SCNCapsule(capRadius: 0.02, height: 0.14))
-             brow.geometry?.materials = [mat(UIColor(cgColor: settings.hairColor.uiColor.cgColor))]
+             pu.geometry?.materials = [mat(.black, rough: 0.05)]; pu.position = SCNVector3(0, 0, 0.04); ir.addChildNode(pu)
+             
+             // EYEBROWS
+             let thickness = CGFloat(0.01 + settings.browThickness * 0.02)
+             let brow = SCNNode(geometry: SCNCapsule(capRadius: thickness, height: 0.14))
+             brow.geometry?.materials = [mat(hairColor)]
              brow.position = SCNVector3(x, 0.22, 0.45)
              brow.eulerAngles = SCNVector3(0, 0, Float.pi/2)
              brow.name = "brow_\(s > 0 ? "R" : "L")"
              h.addChildNode(brow)
+             
+             // EYELASHES
+             if settings.hasLashes {
+                 let lash = SCNNode(geometry: SCNBox(width: 0.12, height: 0.012, length: 0.015, chamferRadius: 0.005))
+                 lash.geometry?.materials = [mat(.black)]
+                 lash.position = SCNVector3(x, 0.15, 0.45)
+                 h.addChildNode(lash)
+             }
         }
         let nose = SCNNode(geometry: SCNSphere(radius: 0.065))
         nose.geometry?.materials = [mat(skin)]
@@ -459,8 +523,9 @@ struct GrandmaSceneView: UIViewRepresentable {
     }
     
     private func buildHair(_ h: SCNNode, settings: GrandmaSettings) {
-         let hairColor = UIColor(cgColor: settings.hairColor.uiColor.cgColor)
-         let hm = mat(hairColor, rough: 0.7)
+         let greyInt = CGFloat(settings.greyIntensity)
+         let hairColor = UIColor(cgColor: settings.hairColor.uiColor.cgColor).blended(with: .lightGray, weight: greyInt)
+         let hm = mat(hairColor, rough: 0.5, metal: 0.1)
          let top = SCNNode(geometry: SCNSphere(radius: 0.49))
          top.geometry?.materials = [hm]
          top.position = SCNVector3(0, 0.1, -0.05)
@@ -590,13 +655,27 @@ struct GrandmaSceneView: UIViewRepresentable {
     }
     
     private func addLights(_ scene: SCNScene) {
+         // Cinematic 3-Point Lighting
          let ambient = SCNLight(); ambient.type = .ambient; ambient.intensity = 300
          let ambientNode = SCNNode(); ambientNode.light = ambient
          scene.rootNode.addChildNode(ambientNode)
          
-         let omni = SCNLight(); omni.type = .omni; omni.intensity = 800
-         let on = SCNNode(); on.light = omni; on.position = SCNVector3(2, 2, 5)
-         scene.rootNode.addChildNode(on)
+         let keyLight = SCNLight(); keyLight.type = .directional
+         keyLight.intensity = 800
+         keyLight.castsShadow = true
+         keyLight.shadowMode = .deferred
+         keyLight.shadowSampleCount = 8
+         keyLight.shadowRadius = 8.0
+         keyLight.shadowColor = UIColor.black.withAlphaComponent(0.4)
+         let keyNode = SCNNode(); keyNode.light = keyLight
+         keyNode.eulerAngles = SCNVector3(-Float.pi/4, -Float.pi/4, 0)
+         scene.rootNode.addChildNode(keyNode)
+         
+         let rimLight = SCNLight(); rimLight.type = .omni
+         rimLight.intensity = 550
+         let rimNode = SCNNode(); rimNode.light = rimLight
+         rimNode.position = SCNVector3(0, 2, -3)
+         scene.rootNode.addChildNode(rimNode)
     }
     
     private func addCamera(_ scene: SCNScene) {
@@ -605,20 +684,41 @@ struct GrandmaSceneView: UIViewRepresentable {
     
     private func mat(_ c: UIColor, rough: CGFloat = 0.6, metal: CGFloat = 0.0) -> SCNMaterial {
         let m = SCNMaterial()
+        m.lightingModel = .physicallyBased
         m.diffuse.contents = c
         m.roughness.contents = rough
+        m.metalness.contents = metal
+        // Fake SSS via slight emission
+        m.emission.contents = c.withAlphaComponent(0.1)
         return m
     }
     
     // Overloaded to accept Image Textures for patterns
     private func mat(image: UIImage, rough: CGFloat = 0.6) -> SCNMaterial {
         let m = SCNMaterial()
+        m.lightingModel = .physicallyBased
         m.diffuse.contents = image
         // To make the pattern repeat correctly on capsules
         m.diffuse.contentsTransform = SCNMatrix4MakeScale(2, 4, 1) // Tiling scale
         m.diffuse.wrapS = .repeat
         m.diffuse.wrapT = .repeat
         m.roughness.contents = rough
+        m.metalness.contents = 0.0
         return m
+    }
+}
+
+extension UIColor {
+    func blended(with color: UIColor, weight: CGFloat) -> UIColor {
+        var r1: CGFloat = 0, g1: CGFloat = 0, b1: CGFloat = 0, a1: CGFloat = 0
+        var r2: CGFloat = 0, g2: CGFloat = 0, b2: CGFloat = 0, a2: CGFloat = 0
+        self.getRed(&r1, green: &g1, blue: &b1, alpha: &a1)
+        color.getRed(&r2, green: &g2, blue: &b2, alpha: &a2)
+        return UIColor(
+            red: r1 + (r2 - r1) * weight,
+            green: g1 + (g2 - g1) * weight,
+            blue: b1 + (b2 - b1) * weight,
+            alpha: a1 + (a2 - a1) * weight
+        )
     }
 }

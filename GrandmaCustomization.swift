@@ -147,6 +147,31 @@ enum FacialExpression: String, CaseIterable, Identifiable {
     var id: String { rawValue }
 }
 
+enum EyeColor: String, CaseIterable, Identifiable {
+    case brown = "Brown"
+    case blue = "Blue"
+    case green = "Green"
+    case hazel = "Hazel"
+    var id: String { rawValue }
+    
+    var uiColor: UIColor {
+        switch self {
+        case .brown: return UIColor(red: 0.35, green: 0.20, blue: 0.10, alpha: 1.0)
+        case .blue: return UIColor(red: 0.2, green: 0.4, blue: 0.8, alpha: 1.0)
+        case .green: return UIColor(red: 0.2, green: 0.5, blue: 0.3, alpha: 1.0)
+        case .hazel: return UIColor(red: 0.6, green: 0.5, blue: 0.2, alpha: 1.0)
+        }
+    }
+}
+
+enum OutfitStyle: String, CaseIterable, Identifiable {
+    case casual = "Casual"
+    case saree = "Saree"
+    case nightwear = "Nightwear"
+    case festive = "Festive"
+    var id: String { rawValue }
+}
+
 struct MakeoverState: Equatable {
     var hairColor: HairColor
     var hairStyle: HairStyle
@@ -160,6 +185,14 @@ struct MakeoverState: Equatable {
     var backgroundTheme: BackgroundTheme
     var facialExpression: FacialExpression
     var outfitPattern: OutfitPattern
+    
+    // Phase 7 Avatar Engine
+    var eyeColor: EyeColor
+    var outfitStyle: OutfitStyle
+    var wrinkleIntensity: Double
+    var greyIntensity: Double
+    var browThickness: Double
+    var hasLashes: Bool
 }
 
 // MARK: - Settings Manager
@@ -179,6 +212,14 @@ class GrandmaSettings: ObservableObject {
     @AppStorage("facialExpression") var facialExpression: FacialExpression = .smile
     @AppStorage("outfitPattern") var outfitPattern: OutfitPattern = .solid
     
+    // Phase 7 Avatar Engine Properties
+    @AppStorage("eyeColor") var eyeColor: EyeColor = .brown
+    @AppStorage("outfitStyle") var outfitStyle: OutfitStyle = .casual
+    @AppStorage("wrinkleIntensity") var wrinkleIntensity: Double = 0.5
+    @AppStorage("greyIntensity") var greyIntensity: Double = 0.8
+    @AppStorage("browThickness") var browThickness: Double = 0.5
+    @AppStorage("hasLashes") var hasLashes: Bool = true
+    
     // Undo/Redo Stacks
     @Published var undoStack: [MakeoverState] = []
     @Published var redoStack: [MakeoverState] = []
@@ -192,7 +233,9 @@ class GrandmaSettings: ObservableObject {
             outfitColor: outfitColor, accessory: accessory, skinTone: skinTone,
             filter: filter, hatStyle: hatStyle, earringStyle: earringStyle,
             backgroundTheme: backgroundTheme, facialExpression: facialExpression,
-            outfitPattern: outfitPattern
+            outfitPattern: outfitPattern, eyeColor: eyeColor, outfitStyle: outfitStyle,
+            wrinkleIntensity: wrinkleIntensity, greyIntensity: greyIntensity,
+            browThickness: browThickness, hasLashes: hasLashes
         )
         // If the top of the stack is already this state, don't duplicate it.
         if undoStack.last != currentState {
@@ -209,7 +252,9 @@ class GrandmaSettings: ObservableObject {
             outfitColor: outfitColor, accessory: accessory, skinTone: skinTone,
             filter: filter, hatStyle: hatStyle, earringStyle: earringStyle,
             backgroundTheme: backgroundTheme, facialExpression: facialExpression,
-            outfitPattern: outfitPattern
+            outfitPattern: outfitPattern, eyeColor: eyeColor, outfitStyle: outfitStyle,
+            wrinkleIntensity: wrinkleIntensity, greyIntensity: greyIntensity,
+            browThickness: browThickness, hasLashes: hasLashes
         )
         
         if let previousState = undoStack.popLast() {
@@ -225,7 +270,9 @@ class GrandmaSettings: ObservableObject {
             outfitColor: outfitColor, accessory: accessory, skinTone: skinTone,
             filter: filter, hatStyle: hatStyle, earringStyle: earringStyle,
             backgroundTheme: backgroundTheme, facialExpression: facialExpression,
-            outfitPattern: outfitPattern
+            outfitPattern: outfitPattern, eyeColor: eyeColor, outfitStyle: outfitStyle,
+            wrinkleIntensity: wrinkleIntensity, greyIntensity: greyIntensity,
+            browThickness: browThickness, hasLashes: hasLashes
         )
         
         if let nextState = redoStack.popLast() {
@@ -248,6 +295,12 @@ class GrandmaSettings: ObservableObject {
             backgroundTheme = state.backgroundTheme
             facialExpression = state.facialExpression
             outfitPattern = state.outfitPattern
+            eyeColor = state.eyeColor
+            outfitStyle = state.outfitStyle
+            wrinkleIntensity = state.wrinkleIntensity
+            greyIntensity = state.greyIntensity
+            browThickness = state.browThickness
+            hasLashes = state.hasLashes
         }
     }
     
@@ -264,6 +317,12 @@ class GrandmaSettings: ObservableObject {
             earringStyle = EarringStyle.allCases.randomElement()!
             facialExpression = FacialExpression.allCases.randomElement()!
             outfitPattern = OutfitPattern.allCases.randomElement()!
+            eyeColor = EyeColor.allCases.randomElement()!
+            outfitStyle = OutfitStyle.allCases.randomElement()!
+            wrinkleIntensity = Double.random(in: 0...1.0)
+            greyIntensity = Double.random(in: 0...1.0)
+            browThickness = Double.random(in: 0...1.0)
+            hasLashes = Bool.random()
         }
     }
     
@@ -282,6 +341,12 @@ class GrandmaSettings: ObservableObject {
             backgroundTheme = .gradient
             facialExpression = .smile
             outfitPattern = .solid
+            eyeColor = .brown
+            outfitStyle = .casual
+            wrinkleIntensity = 0.5
+            greyIntensity = 0.8
+            browThickness = 0.5
+            hasLashes = true
         }
     }
 }
@@ -299,3 +364,5 @@ extension EarringStyle: RawRepresentable { }
 extension BackgroundTheme: RawRepresentable { }
 extension FacialExpression: RawRepresentable { }
 extension OutfitPattern: RawRepresentable { }
+extension EyeColor: RawRepresentable { }
+extension OutfitStyle: RawRepresentable { }

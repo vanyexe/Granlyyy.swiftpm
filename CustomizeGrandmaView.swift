@@ -5,6 +5,8 @@ struct CustomizeGrandmaView: View {
     @StateObject private var settings = GrandmaSettings()
     @Environment(\.dismiss) private var dismiss
     @State private var showConfetti = false
+    @State private var grandmaAction: GrandmaAction = .idle
+    @State private var grandmaExpression: GrandmaExpression = .neutral
     
     // Tab selection
     // Tab selection
@@ -78,8 +80,15 @@ struct CustomizeGrandmaView: View {
                         let generator = UINotificationFeedbackGenerator()
                         generator.notificationOccurred(.success)
                         showConfetti = true
-                        DispatchQueue.main.asyncAfter(deadline: .now() + 1.5) {
+                        
+                        // Share-ready Pose
+                        grandmaAction = .celebrate
+                        grandmaExpression = .happy
+                        
+                        DispatchQueue.main.asyncAfter(deadline: .now() + 2.5) {
                             showConfetti = false
+                            grandmaAction = .idle
+                            grandmaExpression = .neutral
                         }
                     }) {
                         Text("Save")
@@ -101,8 +110,8 @@ struct CustomizeGrandmaView: View {
                 // 3D Preview (Live)
                 ZStack {
                     GrandmaSceneView(
-                        action: .constant(.idle),
-                        expression: .constant(.neutral),
+                        action: $grandmaAction,
+                        expression: $grandmaExpression,
                         isSpeaking: .constant(false),
                         settings: settings
                     )
@@ -182,9 +191,11 @@ struct CustomizeGrandmaView: View {
                             case 0: // Hair
                                 OptionGroup(title: "Style") { TextGrid(options: HairStyle.allCases, selected: $settings.hairStyle, settings: settings) }
                                 OptionGroup(title: "Color") { ColorGrid(options: HairColor.allCases, selected: $settings.hairColor, settings: settings) }
+                                SnapshotSlider(title: "GREY INTENSITY", value: $settings.greyIntensity, settings: settings)
                             case 1: // Glasses
                                 OptionGroup(title: "Frames") { TextGrid(options: GlassesStyle.allCases, selected: $settings.glassesStyle, settings: settings) }
                             case 2: // Outfit
+                                OptionGroup(title: "Style") { TextGrid(options: OutfitStyle.allCases, selected: $settings.outfitStyle, settings: settings) }
                                 OptionGroup(title: "Color") { ColorGrid(options: OutfitColor.allCases, selected: $settings.outfitColor, settings: settings) }
                             case 3: // Pattern
                                 OptionGroup(title: "Pattern") { TextGrid(options: OutfitPattern.allCases, selected: $settings.outfitPattern, settings: settings) }
@@ -196,7 +207,11 @@ struct CustomizeGrandmaView: View {
                                 OptionGroup(title: "Earrings") { TextGrid(options: EarringStyle.allCases, selected: $settings.earringStyle, settings: settings) }
                             case 7: // Face
                                 OptionGroup(title: "Skin Tone") { SkinToneGrid(options: SkinTone.allCases, selected: $settings.skinTone, settings: settings) }
+                                OptionGroup(title: "Eye Color") { ColorGrid(options: EyeColor.allCases, selected: $settings.eyeColor, settings: settings) }
                                 OptionGroup(title: "Expression") { TextGrid(options: FacialExpression.allCases, selected: $settings.facialExpression, settings: settings) }
+                                SnapshotSlider(title: "WRINKLES", value: $settings.wrinkleIntensity, settings: settings)
+                                SnapshotSlider(title: "BROW THICKNESS", value: $settings.browThickness, settings: settings)
+                                OptionGroup(title: "Lashes") { SnapshotToggle(title: "Eyelashes", isOn: $settings.hasLashes, settings: settings) }
                             case 8: // Backgrounds
                                 OptionGroup(title: "Theme") { TextGrid(options: BackgroundTheme.allCases, selected: $settings.backgroundTheme, settings: settings) }
                             case 9: // Filters
@@ -309,6 +324,7 @@ struct ColorGrid<T: Identifiable & RawRepresentable>: View where T.RawValue == S
     func getColor(for option: T) -> Color {
         if let h = option as? HairColor { return Color(uiColor: h.uiColor) }
         if let o = option as? OutfitColor { return Color(uiColor: o.uiColor) }
+        if let e = option as? EyeColor { return Color(uiColor: e.uiColor) }
         return .gray
     }
 }
@@ -374,5 +390,63 @@ struct TextGrid<T: Identifiable & RawRepresentable>: View where T.RawValue == St
             }
         }
         .padding(.horizontal, 4)
+    }
+}
+
+struct SnapshotSlider: View {
+    let title: String
+    @Binding var value: Double
+    var settings: GrandmaSettings?
+    
+    var body: some View {
+        VStack(alignment: .leading, spacing: 5) {
+            Text(title)
+                .font(.system(size: 11, weight: .bold, design: .rounded))
+                .foregroundStyle(.secondary)
+                .padding(.leading, 4)
+            Slider(value: Binding(
+                get: { value },
+                set: { newValue in
+                    value = newValue
+                    let haptic = UISelectionFeedbackGenerator()
+                    haptic.selectionChanged()
+                }
+            ), in: 0...1) { editing in
+                if editing {
+                    settings?.saveState()
+                }
+            }
+            .tint(Color.themeRose)
+        }
+        .padding(.horizontal, 8)
+        .frame(width: 180)
+        // Center slider in OptionGroup height
+        .padding(.vertical, 8)
+    }
+}
+
+struct SnapshotToggle: View {
+    let title: String
+    @Binding var isOn: Bool
+    var settings: GrandmaSettings?
+    
+    var body: some View {
+        Toggle(title, isOn: Binding(
+            get: { isOn },
+            set: { newValue in
+                settings?.saveState()
+                let haptic = UISelectionFeedbackGenerator()
+                haptic.selectionChanged()
+                isOn = newValue
+            }
+        ))
+        .font(.system(size: 14, weight: .bold, design: .rounded))
+        .foregroundStyle(Color.themeText)
+        .tint(Color.themeRose)
+        .padding(.horizontal, 16)
+        .padding(.vertical, 8)
+        .background(Color.white)
+        .clipShape(Capsule())
+        .shadow(color: .black.opacity(0.05), radius: 4, x: 0, y: 2)
     }
 }
