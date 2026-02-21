@@ -5,7 +5,6 @@ struct CustomizeGrandmaView: View {
     @StateObject private var settings = GrandmaSettings()
     @Environment(\.dismiss) private var dismiss
     @State private var showConfetti = false
-    @State private var showFlash = false
     
     // Tab selection
     // Tab selection
@@ -75,8 +74,23 @@ struct CustomizeGrandmaView: View {
                     
                     Spacer()
                     
-                    // Invisible spacer to balance the `reset` button on the left without breaking layout
-                    Image(systemName: "circle").opacity(0).frame(width: 28)
+                    Button(action: {
+                        let generator = UINotificationFeedbackGenerator()
+                        generator.notificationOccurred(.success)
+                        showConfetti = true
+                        DispatchQueue.main.asyncAfter(deadline: .now() + 1.5) {
+                            showConfetti = false
+                        }
+                    }) {
+                        Text("Save")
+                            .font(.granlyBodyBold)
+                            .foregroundStyle(.white)
+                            .padding(.horizontal, 16)
+                            .padding(.vertical, 8)
+                            .background(Color.themeRose)
+                            .clipShape(Capsule())
+                            .shadow(color: Color.themeRose.opacity(0.4), radius: 6, x: 0, y: 3)
+                    }
                 }
                 .padding(.horizontal, 20)
                 .padding(.top, 16)
@@ -114,13 +128,6 @@ struct CustomizeGrandmaView: View {
                         ConfettiView()
                             .allowsHitTesting(false)
                     }
-                    
-                    // Camera Shutter Flash Effect
-                    if showFlash {
-                        Color.white
-                            .ignoresSafeArea()
-                            .allowsHitTesting(false)
-                    }
                 }
                 .frame(maxWidth: .infinity, maxHeight: .infinity)
                 .clipShape(RoundedRectangle(cornerRadius: 32, style: .continuous))
@@ -128,39 +135,8 @@ struct CustomizeGrandmaView: View {
                 .padding(.horizontal, 20)
                 .padding(.bottom, 24)
                 
-                // Snapchat-style Bottom Dock with Shutter
+                // Bottom Dock
                 VStack(spacing: 0) {
-                    
-                    // Camera Shutter Button
-                    Button(action: {
-                        let generator = UINotificationFeedbackGenerator()
-                        generator.notificationOccurred(.success)
-                        
-                        // Flash Animation
-                        showFlash = true
-                        withAnimation(.easeOut(duration: 0.5)) {
-                            showFlash = false
-                        }
-                        
-                        // Confetti
-                        showConfetti = true
-                        DispatchQueue.main.asyncAfter(deadline: .now() + 1.5) {
-                            showConfetti = false
-                        }
-                    }) {
-                        ZStack {
-                            Circle()
-                                .stroke(.white, lineWidth: 5)
-                                .frame(width: 72, height: 72)
-                                .shadow(color: .black.opacity(0.15), radius: 4, x: 0, y: 2)
-                            
-                            Circle()
-                                .fill(Color.white.opacity(0.85))
-                                .frame(width: 60, height: 60)
-                        }
-                    }
-                    .padding(.bottom, -8)
-                    .zIndex(1)
                     
                     // Category Icons (Horizontal Scroll)
                     ScrollView(.horizontal, showsIndicators: false) {
