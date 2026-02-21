@@ -35,7 +35,7 @@ struct SplashView: View {
                             startRadius: 10,
                             endRadius: 145
                         )
-                        .frame(width: 340, height: 340)
+                        .frame(width: 290, height: 290)
                         .scaleEffect(glowScale)
                         .opacity(glowOpacity)
 
@@ -43,11 +43,11 @@ struct SplashView: View {
                             .resizable()
                             .interpolation(.high)
                             .aspectRatio(contentMode: .fit)
-                            .frame(width: 310, height: 310)
+                            .frame(width: 270, height: 270)
                             .scaleEffect(avatarScale)
                             .opacity(avatarOpacity)
                     }
-                    .frame(width: 340, height: 340)
+                    .frame(width: 290, height: 290)
 
                     // ── "Granly" Script Title ──────────────────────────
                     Text("Granly")

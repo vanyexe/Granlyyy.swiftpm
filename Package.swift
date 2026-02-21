@@ -19,7 +19,7 @@ let package = Package(
             bundleIdentifier: "com.vany.Granly",
             displayVersion: "1.0",
             bundleVersion: "1",
-            appIcon: .placeholder(icon: .movieReel),
+            appIcon: .asset("AppIcon"),
             accentColor: .presetColor(.mint),
             supportedDeviceFamilies: [
                 .pad,
@@ -40,5 +40,5 @@ let package = Package(
             path: "."
         )
     ],
-    swiftLanguageModes: [.version("6")]
+    swiftLanguageVersions: [.version("6")]
 )
