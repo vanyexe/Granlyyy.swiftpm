@@ -46,6 +46,7 @@ struct SplashView: View {
                             .frame(width: 270, height: 270)
                             .scaleEffect(avatarScale)
                             .opacity(avatarOpacity)
+                            .blendMode(.multiply)
                     }
                     .frame(width: 290, height: 290)
 
