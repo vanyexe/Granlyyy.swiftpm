@@ -96,25 +96,47 @@ struct HomeView: View {
                                 selectedTab = .wisdom
                             }
                         
-                        // Featured Stories
-                        VStack(alignment: .leading, spacing: 12) {
-                            Text("Featured for You")
-                                .font(.granlyHeadline)
-                                .foregroundStyle(Color.themeText)
-                                .padding(.horizontal)
+                        // Featured Stories — Premium Hero Cards
+                        VStack(alignment: .leading, spacing: 14) {
+                            // Section Header
+                            HStack(alignment: .center, spacing: 8) {
+                                // Decorative accent
+                                RoundedRectangle(cornerRadius: 2)
+                                    .fill(
+                                        LinearGradient(colors: [Color.themeRose, Color.themeGold],
+                                                       startPoint: .top, endPoint: .bottom)
+                                    )
+                                    .frame(width: 4, height: 22)
+                                
+                                Text("Featured for You")
+                                    .font(.granlyHeadline)
+                                    .foregroundStyle(Color.themeText)
+                                
+                                Spacer()
+                                
+                                // "See All" pill
+                                Text("See All")
+                                    .font(.system(size: 12, weight: .bold, design: .rounded))
+                                    .foregroundStyle(Color.themeRose)
+                                    .padding(.horizontal, 10)
+                                    .padding(.vertical, 4)
+                                    .background(Color.themeRose.opacity(0.12))
+                                    .clipShape(Capsule())
+                            }
+                            .padding(.horizontal)
                             
                             ScrollView(.horizontal, showsIndicators: false) {
-                                HStack(spacing: 16) {
+                                HStack(spacing: 14) {
                                     ForEach(0..<4, id: \.self) { i in
                                         let mood = moods[i]
                                         let story = StoryManager.shared.getStory(for: mood)
                                         NavigationLink(destination: StoryView(mood: mood, storyToLoad: story)) {
-                                            FeaturedStoryCard(mood: mood, storyTitle: story.title)
+                                            FeaturedStoryCard(mood: mood, storyTitle: story.title, index: i)
                                         }
                                     }
                                 }
                                 .padding(.horizontal)
-                                .padding(.bottom, 4)
+                                .padding(.bottom, 6)
                             }
                         }
                         
@@ -246,39 +268,103 @@ struct MoodCard: View {
 struct FeaturedStoryCard: View {
     let mood: Mood
     let storyTitle: String
+    let index: Int
+    
+    // Each card gets a unique gradient personality
+    private var cardGradient: [Color] {
+        switch index % 4 {
+        case 0: return [Color(red: 0.85, green: 0.35, blue: 0.45), Color(red: 0.55, green: 0.15, blue: 0.35)]
+        case 1: return [Color(red: 0.30, green: 0.55, blue: 0.75), Color(red: 0.15, green: 0.25, blue: 0.55)]
+        case 2: return [Color(red: 0.45, green: 0.70, blue: 0.45), Color(red: 0.20, green: 0.45, blue: 0.30)]
+        default: return [Color(red: 0.70, green: 0.50, blue: 0.25), Color(red: 0.45, green: 0.25, blue: 0.10)]
+        }
+    }
+    
+    @State private var appear = false
     
     var body: some View {
-        VStack(alignment: .leading, spacing: 10) { // Tighter spacing
-            HStack {
-                Image(systemName: mood.icon)
-                    .font(.system(size: 14)) // Explicit small icon
-                    .foregroundStyle(.white)
-                    .padding(6) // 8 -> 6
-                    .background(mood.baseColor.opacity(0.8))
-                    .clipShape(Circle())
-                Spacer()
-                Text("3 min")
-                    .font(.system(size: 10, weight: .bold, design: .rounded)) // Crisp tiny rounded
+        ZStack(alignment: .bottomLeading) {
+            // Rich gradient background
+            LinearGradient(
+                colors: cardGradient,
+                startPoint: .topLeading,
+                endPoint: .bottomTrailing
+            )
+            
+            // Decorative circle (top-right corner accent)
+            Circle()
+                .fill(.white.opacity(0.08))
+                .frame(width: 120, height: 120)
+                .offset(x: 70, y: -55)
+            Circle()
+                .fill(.white.opacity(0.05))
+                .frame(width: 70, height: 70)
+                .offset(x: 20, y: -85)
+            
+            // Content overlay
+            VStack(alignment: .leading, spacing: 0) {
+                // Top Row: icon + reading time badge
+                HStack(alignment: .top) {
+                    // Mood icon in frosted bubble
+                    ZStack {
+                        Circle()
+                            .fill(.white.opacity(0.22))
+                            .frame(width: 36, height: 36)
+                        Image(systemName: mood.icon)
+                            .font(.system(size: 16, weight: .semibold))
+                            .foregroundStyle(.white)
+                    }
+                    
+                    Spacer()
+                    
+                    // Reading time pill
+                    HStack(spacing: 3) {
+                        Image(systemName: "clock")
+                            .font(.system(size: 9, weight: .bold))
+                        Text("3 min")
+                            .font(.system(size: 10, weight: .bold, design: .rounded))
+                    }
+                    .foregroundStyle(.white.opacity(0.9))
                     .padding(.horizontal, 8)
                     .padding(.vertical, 4)
-                    .background(.ultraThinMaterial)
+                    .background(.white.opacity(0.18))
                     .clipShape(Capsule())
+                }
+                
+                Spacer()
+                
+                // Bottom: mood tag + title
+                VStack(alignment: .leading, spacing: 5) {
+                    // Mood label — distinct capsule tag
+                    Text(mood.name.uppercased())
+                        .font(.system(size: 9, weight: .black, design: .rounded))
+                        .tracking(1.5)
+                        .foregroundStyle(.white.opacity(0.75))
+                        .padding(.horizontal, 8)
+                        .padding(.vertical, 3)
+                        .background(.white.opacity(0.15))
+                        .clipShape(Capsule())
+                    
+                    // Story title
+                    Text(storyTitle)
+                        .font(.system(size: 15, weight: .bold, design: .rounded))
+                        .foregroundStyle(.white)
+                        .lineLimit(2)
+                        .multilineTextAlignment(.leading)
+                        .shadow(color: .black.opacity(0.25), radius: 2, x: 0, y: 1)
+                }
             }
-            
-            Spacer()
-            
-            Text(storyTitle)
-                .font(.granlyBodyBold) // Headline -> BodyBold
-                .foregroundStyle(Color.themeText)
-                .lineLimit(2)
-            
-            Text(mood.name.uppercased())
-                .font(.system(size: 10, weight: .bold, design: .rounded))
-                .tracking(1) // Premium letter spacing
-                .foregroundStyle(mood.baseColor)
+            .padding(14)
         }
-        .padding(14) // 16 -> 14
-        .frame(width: 140, height: 160) // 160x180 -> 140x160 (more compact horizontal scroll)
-        .glassCard(cornerRadius: 16) // 20 -> 16
+        .frame(width: 170, height: 200)
+        .clipShape(RoundedRectangle(cornerRadius: 20, style: .continuous))
+        // Rich layered shadow for depth
+        .shadow(color: cardGradient[1].opacity(0.45), radius: 14, x: 0, y: 8)
+        .shadow(color: .black.opacity(0.08), radius: 4, x: 0, y: 2)
+        // Subtle scale on appear
+        .scaleEffect(appear ? 1.0 : 0.92)
+        .opacity(appear ? 1 : 0)
+        .animation(.spring(response: 0.5, dampingFraction: 0.7).delay(Double(index) * 0.08), value: appear)
+        .onAppear { appear = true }
     }
 }
