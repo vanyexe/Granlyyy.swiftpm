@@ -175,7 +175,6 @@ enum OutfitStyle: String, CaseIterable, Identifiable {
 // MARK: - Preset Looks
 struct PresetLook {
     let name: String
-    let emoji: String
     let hairColor: HairColor
     let hairStyle: HairStyle
     let glassesStyle: GlassesStyle
@@ -193,53 +192,102 @@ struct PresetLook {
     let backgroundTheme: BackgroundTheme
     
     static let all: [PresetLook] = [
-        PresetLook(name: "Classic Gran", emoji: "👵",
+        PresetLook(name: "Classic Gran",
             hairColor: .gray, hairStyle: .bun, glassesStyle: .round,
             outfitColor: .lavender, outfitPattern: .solid, outfitStyle: .casual,
             hatStyle: .none, earringStyle: .pearl, eyeColor: .brown, skinTone: .light,
             hasLashes: true, greyIntensity: 0.9, wrinkleIntensity: 0.5, browThickness: 0.4,
             backgroundTheme: .cozyRoom),
         
-        PresetLook(name: "Bollywood Diva", emoji: "🌺",
+        PresetLook(name: "Bollywood Diva",
             hairColor: .black, hairStyle: .bun, glassesStyle: .none,
             outfitColor: .rose, outfitPattern: .floral, outfitStyle: .saree,
             hatStyle: .none, earringStyle: .goldHoop, eyeColor: .brown, skinTone: .medium,
             hasLashes: true, greyIntensity: 0.1, wrinkleIntensity: 0.2, browThickness: 0.8,
             backgroundTheme: .garden),
         
-        PresetLook(name: "Cozy Baker", emoji: "🍪",
+        PresetLook(name: "Cozy Baker",
             hairColor: .white, hairStyle: .bob, glassesStyle: .square,
             outfitColor: .floral, outfitPattern: .stripes, outfitStyle: .casual,
             hatStyle: .sunHat, earringStyle: .none, eyeColor: .hazel, skinTone: .olive,
             hasLashes: true, greyIntensity: 1.0, wrinkleIntensity: 0.7, browThickness: 0.3,
             backgroundTheme: .cozyRoom),
         
-        PresetLook(name: "Garden Party", emoji: "🌸",
+        PresetLook(name: "Garden Party",
             hairColor: .blonde, hairStyle: .long, glassesStyle: .catEye,
             outfitColor: .teal, outfitPattern: .polkaDots, outfitStyle: .casual,
             hatStyle: .sunHat, earringStyle: .diamond, eyeColor: .blue, skinTone: .light,
             hasLashes: true, greyIntensity: 0.3, wrinkleIntensity: 0.3, browThickness: 0.6,
             backgroundTheme: .garden),
         
-        PresetLook(name: "Midnight Glam", emoji: "✨",
+        PresetLook(name: "Midnight Glam",
             hairColor: .black, hairStyle: .pixie, glassesStyle: .catEye,
             outfitColor: .navy, outfitPattern: .plaid, outfitStyle: .festive,
             hatStyle: .none, earringStyle: .diamond, eyeColor: .green, skinTone: .deep,
             hasLashes: true, greyIntensity: 0.0, wrinkleIntensity: 0.1, browThickness: 0.9,
             backgroundTheme: .library),
         
-        PresetLook(name: "Festival Queen", emoji: "🎉",
+        PresetLook(name: "Festival Queen",
             hairColor: .red, hairStyle: .bun, glassesStyle: .round,
             outfitColor: .rose, outfitPattern: .floral, outfitStyle: .festive,
             hatStyle: .beret, earringStyle: .goldHoop, eyeColor: .hazel, skinTone: .medium,
             hasLashes: true, greyIntensity: 0.0, wrinkleIntensity: 0.4, browThickness: 0.7,
             backgroundTheme: .gradient),
         
-        PresetLook(name: "Wise Elder", emoji: "🦉",
+        PresetLook(name: "Wise Elder",
             hairColor: .white, hairStyle: .bun, glassesStyle: .square,
             outfitColor: .navy, outfitPattern: .solid, outfitStyle: .casual,
             hatStyle: .none, earringStyle: .pearl, eyeColor: .brown, skinTone: .tan,
             hasLashes: false, greyIntensity: 1.0, wrinkleIntensity: 0.9, browThickness: 0.3,
+            backgroundTheme: .library),
+        
+        PresetLook(name: "Autumn Stroll",
+            hairColor: .red, hairStyle: .long, glassesStyle: .round,
+            outfitColor: .floral, outfitPattern: .plaid, outfitStyle: .casual,
+            hatStyle: .beret, earringStyle: .pearl, eyeColor: .hazel, skinTone: .tan,
+            hasLashes: true, greyIntensity: 0.2, wrinkleIntensity: 0.4, browThickness: 0.5,
+            backgroundTheme: .library),
+        
+        PresetLook(name: "Rose Garden",
+            hairColor: .gray, hairStyle: .long, glassesStyle: .catEye,
+            outfitColor: .rose, outfitPattern: .floral, outfitStyle: .casual,
+            hatStyle: .sunHat, earringStyle: .diamond, eyeColor: .blue, skinTone: .light,
+            hasLashes: true, greyIntensity: 0.7, wrinkleIntensity: 0.3, browThickness: 0.5,
+            backgroundTheme: .garden),
+        
+        PresetLook(name: "Ocean Breeze",
+            hairColor: .white, hairStyle: .pixie, glassesStyle: .none,
+            outfitColor: .teal, outfitPattern: .stripes, outfitStyle: .casual,
+            hatStyle: .none, earringStyle: .goldHoop, eyeColor: .blue, skinTone: .medium,
+            hasLashes: true, greyIntensity: 0.95, wrinkleIntensity: 0.6, browThickness: 0.35,
+            backgroundTheme: .gradient),
+        
+        PresetLook(name: "Nightwear Comfy",
+            hairColor: .gray, hairStyle: .bob, glassesStyle: .square,
+            outfitColor: .lavender, outfitPattern: .polkaDots, outfitStyle: .nightwear,
+            hatStyle: .none, earringStyle: .none, eyeColor: .brown, skinTone: .light,
+            hasLashes: false, greyIntensity: 0.85, wrinkleIntensity: 0.6, browThickness: 0.3,
+            backgroundTheme: .cozyRoom),
+        
+        PresetLook(name: "Golden Years",
+            hairColor: .blonde, hairStyle: .bun, glassesStyle: .round,
+            outfitColor: .floral, outfitPattern: .solid, outfitStyle: .casual,
+            hatStyle: .none, earringStyle: .diamond, eyeColor: .hazel, skinTone: .light,
+            hasLashes: true, greyIntensity: 0.5, wrinkleIntensity: 0.5, browThickness: 0.55,
+            backgroundTheme: .gradient),
+        
+        PresetLook(name: "Heritage Chic",
+            hairColor: .brown, hairStyle: .bun, glassesStyle: .none,
+            outfitColor: .rose, outfitPattern: .solid, outfitStyle: .saree,
+            hatStyle: .none, earringStyle: .pearl, eyeColor: .brown, skinTone: .deep,
+            hasLashes: true, greyIntensity: 0.15, wrinkleIntensity: 0.3, browThickness: 0.65,
+            backgroundTheme: .garden),
+        
+        PresetLook(name: "Winter Warmth",
+            hairColor: .white, hairStyle: .bob, glassesStyle: .square,
+            outfitColor: .navy, outfitPattern: .plaid, outfitStyle: .casual,
+            hatStyle: .beanie, earringStyle: .pearl, eyeColor: .brown, skinTone: .light,
+            hasLashes: true, greyIntensity: 1.0, wrinkleIntensity: 0.7, browThickness: 0.4,
             backgroundTheme: .library),
     ]
 }
@@ -302,7 +350,6 @@ class GrandmaSettings: ObservableObject {
     
     // The name of the currently active preset (for display in the wand badge)
     var currentPresetName: String { PresetLook.all[currentPresetIndex % PresetLook.all.count].name }
-    var currentPresetEmoji: String { PresetLook.all[currentPresetIndex % PresetLook.all.count].emoji }
     
     func applyPreset() {
         saveState() // allow undo

@@ -7,9 +7,7 @@ struct CustomizeGrandmaView: View {
     @State private var showConfetti = false
     @State private var grandmaAction: GrandmaAction = .idle
     @State private var grandmaExpression: GrandmaExpression = .neutral
-    @State private var wandAngle: Double = 0
     @State private var showPresetToast = false
-    @State private var wandScale: CGFloat = 1.0
     
     // Tab selection
     // Tab selection
@@ -138,9 +136,9 @@ struct CustomizeGrandmaView: View {
                         HStack {
                             Spacer()
                             VStack(spacing: 6) {
-                                // Preset name toast
+                                // Preset name toast (no emoji, fades in then out)
                                 if showPresetToast {
-                                    Text("\(settings.currentPresetEmoji) \(settings.currentPresetName)")
+                                    Text(settings.currentPresetName)
                                         .font(.system(size: 13, weight: .bold, design: .rounded))
                                         .foregroundStyle(.white)
                                         .padding(.horizontal, 12)
@@ -151,29 +149,21 @@ struct CustomizeGrandmaView: View {
                                                 .overlay(Capsule().stroke(Color.themeRose.opacity(0.6), lineWidth: 1))
                                         )
                                         .shadow(color: Color.themeRose.opacity(0.4), radius: 8)
-                                        .transition(.opacity.combined(with: .scale(scale: 0.8, anchor: .bottom)))
+                                        .transition(.opacity.combined(with: .scale(scale: 0.85, anchor: .bottom)))
                                 }
                                 
                                 Button(action: {
                                     UIImpactFeedbackGenerator(style: .heavy).impactOccurred()
-                                    withAnimation(.spring(response: 0.3, dampingFraction: 0.5)) {
-                                        wandScale = 1.25
-                                        wandAngle += 30
-                                    }
-                                    withAnimation(.spring(response: 0.5, dampingFraction: 0.6).delay(0.15)) {
-                                        wandScale = 1.0
-                                    }
                                     settings.applyPreset()
                                     withAnimation(.easeInOut(duration: 0.2)) {
                                         showPresetToast = true
                                     }
-                                    // Dismiss toast after 1.8s
                                     DispatchQueue.main.asyncAfter(deadline: .now() + 1.8) {
                                         withAnimation { showPresetToast = false }
                                     }
                                 }) {
                                     ZStack {
-                                        // Animated glow ring
+                                        // Static glow ring (no animation tied to tap)
                                         Circle()
                                             .fill(
                                                 RadialGradient(
@@ -182,9 +172,8 @@ struct CustomizeGrandmaView: View {
                                                 )
                                             )
                                             .frame(width: 62, height: 62)
-                                            .scaleEffect(wandScale)
                                         
-                                        // Button pill
+                                        // Button circle
                                         Circle()
                                             .fill(
                                                 LinearGradient(
@@ -195,13 +184,12 @@ struct CustomizeGrandmaView: View {
                                             .frame(width: 54, height: 54)
                                             .shadow(color: Color.themeRose.opacity(0.55), radius: 12, x: 0, y: 5)
                                         
+                                        // Wand icon — fixed, never rotates or scales
                                         Image(systemName: "wand.and.stars")
                                             .font(.system(size: 24, weight: .bold))
                                             .foregroundStyle(.white)
-                                            .rotationEffect(.degrees(wandAngle))
                                     }
                                 }
-                                .scaleEffect(wandScale)
                             }
                         }
                     }
