@@ -172,6 +172,78 @@ enum OutfitStyle: String, CaseIterable, Identifiable {
     var id: String { rawValue }
 }
 
+// MARK: - Preset Looks
+struct PresetLook {
+    let name: String
+    let emoji: String
+    let hairColor: HairColor
+    let hairStyle: HairStyle
+    let glassesStyle: GlassesStyle
+    let outfitColor: OutfitColor
+    let outfitPattern: OutfitPattern
+    let outfitStyle: OutfitStyle
+    let hatStyle: HatStyle
+    let earringStyle: EarringStyle
+    let eyeColor: EyeColor
+    let skinTone: SkinTone
+    let hasLashes: Bool
+    let greyIntensity: Double
+    let wrinkleIntensity: Double
+    let browThickness: Double
+    let backgroundTheme: BackgroundTheme
+    
+    static let all: [PresetLook] = [
+        PresetLook(name: "Classic Gran", emoji: "👵",
+            hairColor: .gray, hairStyle: .bun, glassesStyle: .round,
+            outfitColor: .lavender, outfitPattern: .solid, outfitStyle: .casual,
+            hatStyle: .none, earringStyle: .pearl, eyeColor: .brown, skinTone: .light,
+            hasLashes: true, greyIntensity: 0.9, wrinkleIntensity: 0.5, browThickness: 0.4,
+            backgroundTheme: .cozyRoom),
+        
+        PresetLook(name: "Bollywood Diva", emoji: "🌺",
+            hairColor: .black, hairStyle: .bun, glassesStyle: .none,
+            outfitColor: .rose, outfitPattern: .floral, outfitStyle: .saree,
+            hatStyle: .none, earringStyle: .goldHoop, eyeColor: .brown, skinTone: .medium,
+            hasLashes: true, greyIntensity: 0.1, wrinkleIntensity: 0.2, browThickness: 0.8,
+            backgroundTheme: .garden),
+        
+        PresetLook(name: "Cozy Baker", emoji: "🍪",
+            hairColor: .white, hairStyle: .bob, glassesStyle: .square,
+            outfitColor: .floral, outfitPattern: .stripes, outfitStyle: .casual,
+            hatStyle: .sunHat, earringStyle: .none, eyeColor: .hazel, skinTone: .olive,
+            hasLashes: true, greyIntensity: 1.0, wrinkleIntensity: 0.7, browThickness: 0.3,
+            backgroundTheme: .cozyRoom),
+        
+        PresetLook(name: "Garden Party", emoji: "🌸",
+            hairColor: .blonde, hairStyle: .long, glassesStyle: .catEye,
+            outfitColor: .teal, outfitPattern: .polkaDots, outfitStyle: .casual,
+            hatStyle: .sunHat, earringStyle: .diamond, eyeColor: .blue, skinTone: .light,
+            hasLashes: true, greyIntensity: 0.3, wrinkleIntensity: 0.3, browThickness: 0.6,
+            backgroundTheme: .garden),
+        
+        PresetLook(name: "Midnight Glam", emoji: "✨",
+            hairColor: .black, hairStyle: .pixie, glassesStyle: .catEye,
+            outfitColor: .navy, outfitPattern: .plaid, outfitStyle: .festive,
+            hatStyle: .none, earringStyle: .diamond, eyeColor: .green, skinTone: .deep,
+            hasLashes: true, greyIntensity: 0.0, wrinkleIntensity: 0.1, browThickness: 0.9,
+            backgroundTheme: .library),
+        
+        PresetLook(name: "Festival Queen", emoji: "🎉",
+            hairColor: .red, hairStyle: .bun, glassesStyle: .round,
+            outfitColor: .rose, outfitPattern: .floral, outfitStyle: .festive,
+            hatStyle: .beret, earringStyle: .goldHoop, eyeColor: .hazel, skinTone: .medium,
+            hasLashes: true, greyIntensity: 0.0, wrinkleIntensity: 0.4, browThickness: 0.7,
+            backgroundTheme: .gradient),
+        
+        PresetLook(name: "Wise Elder", emoji: "🦉",
+            hairColor: .white, hairStyle: .bun, glassesStyle: .square,
+            outfitColor: .navy, outfitPattern: .solid, outfitStyle: .casual,
+            hatStyle: .none, earringStyle: .pearl, eyeColor: .brown, skinTone: .tan,
+            hasLashes: false, greyIntensity: 1.0, wrinkleIntensity: 0.9, browThickness: 0.3,
+            backgroundTheme: .library),
+    ]
+}
+
 struct MakeoverState: Equatable {
     var hairColor: HairColor
     var hairStyle: HairStyle
@@ -223,9 +295,37 @@ class GrandmaSettings: ObservableObject {
     // Undo/Redo Stacks
     @Published var undoStack: [MakeoverState] = []
     @Published var redoStack: [MakeoverState] = []
+    @Published var currentPresetIndex: Int = 0
     
     var canUndo: Bool { !undoStack.isEmpty }
     var canRedo: Bool { !redoStack.isEmpty }
+    
+    // The name of the currently active preset (for display in the wand badge)
+    var currentPresetName: String { PresetLook.all[currentPresetIndex % PresetLook.all.count].name }
+    var currentPresetEmoji: String { PresetLook.all[currentPresetIndex % PresetLook.all.count].emoji }
+    
+    func applyPreset() {
+        saveState() // allow undo
+        let look = PresetLook.all[currentPresetIndex % PresetLook.all.count]
+        withAnimation(.easeInOut(duration: 0.3)) {
+            hairColor      = look.hairColor
+            hairStyle      = look.hairStyle
+            glassesStyle   = look.glassesStyle
+            outfitColor    = look.outfitColor
+            outfitPattern  = look.outfitPattern
+            outfitStyle    = look.outfitStyle
+            hatStyle       = look.hatStyle
+            earringStyle   = look.earringStyle
+            eyeColor       = look.eyeColor
+            skinTone       = look.skinTone
+            hasLashes      = look.hasLashes
+            greyIntensity  = look.greyIntensity
+            wrinkleIntensity = look.wrinkleIntensity
+            browThickness  = look.browThickness
+            backgroundTheme = look.backgroundTheme
+        }
+        currentPresetIndex = (currentPresetIndex + 1) % PresetLook.all.count
+    }
     
     func saveState() {
         let currentState = MakeoverState(

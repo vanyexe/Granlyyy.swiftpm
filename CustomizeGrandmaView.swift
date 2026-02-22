@@ -7,6 +7,9 @@ struct CustomizeGrandmaView: View {
     @State private var showConfetti = false
     @State private var grandmaAction: GrandmaAction = .idle
     @State private var grandmaExpression: GrandmaExpression = .neutral
+    @State private var wandAngle: Double = 0
+    @State private var showPresetToast = false
+    @State private var wandScale: CGFloat = 1.0
     
     // Tab selection
     // Tab selection
@@ -118,7 +121,7 @@ struct CustomizeGrandmaView: View {
                     .scaleEffect(1.2)
                     .offset(y: 40) // Shove her down slightly so she fills the frame
                     
-                    // Close button floating at top-left of the preview
+                    // Close button at top-left, Wand button at bottom-right
                     VStack {
                         HStack {
                             Button(action: { dismiss() }) {
@@ -130,6 +133,77 @@ struct CustomizeGrandmaView: View {
                             Spacer()
                         }
                         Spacer()
+                        
+                        // ── Magic Wand Preset Cycler ──────────────────
+                        HStack {
+                            Spacer()
+                            VStack(spacing: 6) {
+                                // Preset name toast
+                                if showPresetToast {
+                                    Text("\(settings.currentPresetEmoji) \(settings.currentPresetName)")
+                                        .font(.system(size: 13, weight: .bold, design: .rounded))
+                                        .foregroundStyle(.white)
+                                        .padding(.horizontal, 12)
+                                        .padding(.vertical, 6)
+                                        .background(
+                                            Capsule()
+                                                .fill(.ultraThinMaterial)
+                                                .overlay(Capsule().stroke(Color.themeRose.opacity(0.6), lineWidth: 1))
+                                        )
+                                        .shadow(color: Color.themeRose.opacity(0.4), radius: 8)
+                                        .transition(.opacity.combined(with: .scale(scale: 0.8, anchor: .bottom)))
+                                }
+                                
+                                Button(action: {
+                                    UIImpactFeedbackGenerator(style: .heavy).impactOccurred()
+                                    withAnimation(.spring(response: 0.3, dampingFraction: 0.5)) {
+                                        wandScale = 1.25
+                                        wandAngle += 30
+                                    }
+                                    withAnimation(.spring(response: 0.5, dampingFraction: 0.6).delay(0.15)) {
+                                        wandScale = 1.0
+                                    }
+                                    settings.applyPreset()
+                                    withAnimation(.easeInOut(duration: 0.2)) {
+                                        showPresetToast = true
+                                    }
+                                    // Dismiss toast after 1.8s
+                                    DispatchQueue.main.asyncAfter(deadline: .now() + 1.8) {
+                                        withAnimation { showPresetToast = false }
+                                    }
+                                }) {
+                                    ZStack {
+                                        // Animated glow ring
+                                        Circle()
+                                            .fill(
+                                                RadialGradient(
+                                                    colors: [Color.themeRose.opacity(0.5), Color.clear],
+                                                    center: .center, startRadius: 4, endRadius: 34
+                                                )
+                                            )
+                                            .frame(width: 62, height: 62)
+                                            .scaleEffect(wandScale)
+                                        
+                                        // Button pill
+                                        Circle()
+                                            .fill(
+                                                LinearGradient(
+                                                    colors: [Color.themeRose, Color.themeWarm.opacity(0.85)],
+                                                    startPoint: .topLeading, endPoint: .bottomTrailing
+                                                )
+                                            )
+                                            .frame(width: 54, height: 54)
+                                            .shadow(color: Color.themeRose.opacity(0.55), radius: 12, x: 0, y: 5)
+                                        
+                                        Image(systemName: "wand.and.stars")
+                                            .font(.system(size: 24, weight: .bold))
+                                            .foregroundStyle(.white)
+                                            .rotationEffect(.degrees(wandAngle))
+                                    }
+                                }
+                                .scaleEffect(wandScale)
+                            }
+                        }
                     }
                     .padding(16)
                     
