@@ -191,6 +191,7 @@ struct HomeView: View {
 
 // MARK: - Components
 struct DailyQuoteCard: View {
+    @EnvironmentObject var lang: LanguageManager
     var body: some View {
         HStack {
             VStack(alignment: .leading, spacing: 8) {
@@ -220,6 +221,7 @@ struct QuickActionButton: View {
     let title: String
     let color: Color
     let action: () -> Void
+    @EnvironmentObject var lang: LanguageManager
     
     var body: some View {
         Button(action: action) {
