@@ -2,7 +2,11 @@ import SwiftUI
 
 struct UniversalQuotesView: View {
     @State private var currentIndex = 0
-    let quotes = UniversalQuotesData.quotes
+    @AppStorage("selectedLanguage") private var selectedLanguage: String = AppLanguage.english.rawValue
+    
+    private var quotes: [UniversalQuote] {
+        UniversalQuotesData.quotes(for: AppLanguage(rawValue: selectedLanguage) ?? .english)
+    }
     
     var body: some View {
         ZStack {
@@ -12,10 +16,10 @@ struct UniversalQuotesView: View {
             VStack(spacing: 0) {
                 // Header
                 VStack(alignment: .leading, spacing: 4) {
-                    Text("Universal Wisdom")
+                    Text(L10n.t(.universalWisdom))
                         .font(.granlyTitle2) // Title -> Title2
                         .foregroundStyle(Color.themeText)
-                    Text("Timeless truths connecting us all.")
+                    Text(L10n.t(.timelessTruthsSubtitle))
                         .font(.granlySubheadline)
                         .foregroundStyle(.secondary)
                 }
@@ -88,7 +92,7 @@ struct QuoteDetailCard: View {
                     HStack {
                         Image(systemName: "globe")
                             .foregroundStyle(Color.themeRose)
-                        Text("Simple Meaning")
+                        Text(L10n.t(.simpleMeaning))
                             .font(.granlyBodyBold) // Headline -> BodyBold
                             .foregroundStyle(Color.themeText)
                     }
@@ -107,7 +111,7 @@ struct QuoteDetailCard: View {
                     HStack {
                         Image(systemName: "heart.fill")
                             .foregroundStyle(Color.themeWarm)
-                        Text("Grandma Says...")
+                        Text(L10n.t(.grandmaSaysTitle))
                             .font(.granlyHeadline)
                             .foregroundStyle(Color.themeText)
                     }
@@ -126,7 +130,7 @@ struct QuoteDetailCard: View {
                     HStack {
                         Image(systemName: "leaf.fill")
                             .foregroundStyle(Color.themeGreen)
-                        Text("Daily Practice")
+                        Text(L10n.t(.dailyPractice))
                             .font(.granlyBodyBold) // Headline -> BodyBold
                             .foregroundStyle(Color.themeText)
                     }
@@ -142,7 +146,7 @@ struct QuoteDetailCard: View {
                 
                 // Next Steps Linking
                 VStack(spacing: 12) {
-                    Text("Continue Your Journey")
+                    Text(L10n.t(.continueAction))
                         .font(.granlyHeadline)
                         .foregroundStyle(Color.themeText)
                         .padding(.top, 10)

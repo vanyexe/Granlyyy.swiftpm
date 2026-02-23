@@ -24,15 +24,15 @@ final class FavoritesManager: ObservableObject {
     }
     
     func toggleHistoricalStory(_ story: HistoricalStory) {
-        if favoriteHistoricalStoryIDs.contains(story.title) {
-            favoriteHistoricalStoryIDs.remove(story.title)
+        if favoriteHistoricalStoryIDs.contains(story.iconName) {
+            favoriteHistoricalStoryIDs.remove(story.iconName)
         } else {
-            favoriteHistoricalStoryIDs.insert(story.title)
+            favoriteHistoricalStoryIDs.insert(story.iconName)
         }
         saveFavorites()
     }
     
     func isFavorite(_ story: HistoricalStory) -> Bool {
-        favoriteHistoricalStoryIDs.contains(story.title)
+        favoriteHistoricalStoryIDs.contains(story.iconName) || favoriteHistoricalStoryIDs.contains(story.title)
     }
 }

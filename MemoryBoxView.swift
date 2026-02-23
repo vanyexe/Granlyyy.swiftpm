@@ -3,6 +3,11 @@ import SwiftUI
 struct MemoryBoxView: View {
     @ObservedObject var favoritesManager = FavoritesManager.shared
     @ObservedObject var storyManager = StoryManager.shared
+    @AppStorage("selectedLanguage") private var selectedLanguage: String = AppLanguage.english.rawValue
+    
+    private var historicalStories: [HistoricalStory] {
+        HistoricalStoriesData.top10Stories(for: AppLanguage(rawValue: selectedLanguage) ?? .english)
+    }
     
     var body: some View {
         NavigationStack {
@@ -24,7 +29,7 @@ struct MemoryBoxView: View {
                                     .foregroundStyle(.white)
                                     .shadow(color: .black.opacity(0.2), radius: 5, y: 5)
                                 
-                                Text("Grandma's Memory Box")
+                                Text(L10n.t(.grandmasMemoryBox))
                                     .font(.granlyTitle2) // Title -> Title2
                                     .foregroundStyle(.white)
                                     .padding(.top, 4) // 8 -> 4
@@ -38,10 +43,10 @@ struct MemoryBoxView: View {
                                 Image(systemName: "heart.slash")
                                     .font(.system(size: 48)) // Title2 -> 48
                                     .foregroundStyle(Color.themeRose.opacity(0.5))
-                                Text("Your Memory Box is empty.")
+                                Text(L10n.t(.emptyMemoryBox))
                                     .font(.granlyTitle2) // BodyBold -> Title2
                                     .foregroundStyle(Color.themeText.opacity(0.8))
-                                Text("Tap the heart icon on your favorite stories and quotes to keep them safe in here.")
+                                Text(L10n.t(.emptyMemoryBoxHint))
                                     .font(.granlyCaption) // Subheadline -> Caption
                                     .foregroundStyle(Color.themeText.opacity(0.6))
                                     .multilineTextAlignment(.center)
@@ -53,7 +58,7 @@ struct MemoryBoxView: View {
                             
                             // 1. Digital Grandma Mood Stories
                             if !storyManager.likedStoryIDs.isEmpty {
-                                SectionHeaderTitle(title: "Bedtime Stories", icon: "moon.stars.fill", color: .themeRose)
+                                SectionHeaderTitle(title: L10n.t(.savedStories), icon: "moon.stars.fill", color: .themeRose)
                                 
                                 // Fetch stories from IDs
                                 let likedStories = storyManager.likedStoryIDs.compactMap { id in
@@ -75,11 +80,11 @@ struct MemoryBoxView: View {
                             
                             // 2. Historical Real-World Stories
                             if !favoritesManager.favoriteHistoricalStoryIDs.isEmpty {
-                                SectionHeaderTitle(title: "World History", icon: "globe.americas.fill", color: .themeGreen)
+                                SectionHeaderTitle(title: L10n.t(.historicalStories), icon: "globe.americas.fill", color: .themeGreen)
                                 
                                 VStack(spacing: 12) {
                                     ForEach(Array(favoritesManager.favoriteHistoricalStoryIDs), id: \.self) { id in
-                                        if let story = HistoricalStoriesData.top10Stories.first(where: { $0.title == id }) {
+                                        if let story = historicalStories.first(where: { $0.iconName == id || $0.title == id }) {
                                             NavigationLink(destination: HistoricalStoryDetailView(story: story)) {
                                                 SavedHistoricalRow(story: story)
                                             }
@@ -93,7 +98,7 @@ struct MemoryBoxView: View {
                     .padding(.bottom, 100)
                 }
             }
-            .navigationTitle("Memory Box")
+            .navigationTitle(L10n.t(.memories))
             .navigationBarTitleDisplayMode(.inline)
         }
     }

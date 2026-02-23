@@ -1,7 +1,11 @@
 import SwiftUI
 
 struct RecipeListView: View {
-    let recipes = RecipeData.comfortRecipes
+    @AppStorage("selectedLanguage") private var selectedLanguage: String = AppLanguage.english.rawValue
+    
+    private var recipes: [Recipe] {
+        RecipeData.comfortRecipes(for: AppLanguage(rawValue: selectedLanguage) ?? .english)
+    }
     
     var body: some View {
         NavigationStack {
@@ -12,11 +16,11 @@ struct RecipeListView: View {
                     VStack(alignment: .leading, spacing: 24) {
                         // Header
                         VStack(alignment: .leading, spacing: 8) {
-                            Text("Grandma's Kitchen")
+                            Text(L10n.t(.grandmasKitchen))
                                 .font(.granlyTitle)
                                 .foregroundStyle(Color.themeText)
                             
-                            Text("Comfort food for the soul.")
+                            Text(L10n.t(.comfortFoodSubtitle))
                                 .font(.granlyHeadline)
                                 .foregroundStyle(Color.themeRose)
                         }
@@ -122,7 +126,7 @@ struct RecipeDetailView: View {
                         Image(systemName: "quote.opening")
                             .font(.granlyTitle2)
                             .foregroundStyle(recipe.color)
-                        Text("Grandma Says...")
+                        Text(L10n.t(.grandmaSaysTitle))
                             .font(.granlyHeadline)
                             .foregroundStyle(Color.themeText)
                     }
@@ -139,7 +143,7 @@ struct RecipeDetailView: View {
                 
                 // Ingredients
                 VStack(alignment: .leading, spacing: 12) {
-                    Text("Ingredients")
+                    Text(L10n.t(.ingredients))
                         .font(.granlyTitle2)
                         .foregroundStyle(Color.themeText)
                     
@@ -165,7 +169,7 @@ struct RecipeDetailView: View {
                 
                 // Instructions
                 VStack(alignment: .leading, spacing: 16) {
-                    Text("Instructions")
+                    Text(L10n.t(.instructions))
                         .font(.granlyTitle2)
                         .foregroundStyle(Color.themeText)
                     

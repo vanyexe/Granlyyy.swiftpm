@@ -225,6 +225,6 @@ private struct DetailActionRow: View {
 
 #Preview {
     NavigationView {
-        HistoricalStoryDetailView(story: HistoricalStoriesData.top10Stories[0])
+        HistoricalStoryDetailView(story: HistoricalStoriesData.top10Stories(for: .english)[0])
     }
 }

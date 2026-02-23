@@ -2,6 +2,11 @@ import SwiftUI
 
 struct HistoricalStoryListView: View {
     @State private var selectedStory: HistoricalStory?
+    @AppStorage("selectedLanguage") private var selectedLanguage: String = AppLanguage.english.rawValue
+    
+    private var stories: [HistoricalStory] {
+        HistoricalStoriesData.top10Stories(for: AppLanguage(rawValue: selectedLanguage) ?? .english)
+    }
     
     var body: some View {
         if #available(iOS 17.0, *) {
@@ -19,7 +24,7 @@ struct HistoricalStoryListView: View {
                         .padding(.horizontal)
                     
                     LazyVStack(spacing: 16) {
-                        ForEach(HistoricalStoriesData.top10Stories) { story in
+                        ForEach(stories) { story in
                             Button(action: {
                                 selectedStory = story
                             }) {

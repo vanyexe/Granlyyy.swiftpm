@@ -4,12 +4,10 @@ import Combine
 // MARK: - AppLanguage
 enum AppLanguage: String, CaseIterable, Identifiable {
     case english  = "en-US"
+    case mandarin = "zh-CN"
     case hindi    = "hi-IN"
     case spanish  = "es-ES"
     case french   = "fr-FR"
-    case german   = "de-DE"
-    case gujarati = "gu-IN"
-    case marathi  = "mr-IN"
 
     var id: String { rawValue }
 
@@ -17,12 +15,10 @@ enum AppLanguage: String, CaseIterable, Identifiable {
     var displayName: String {
         switch self {
         case .english:  return "English"
+        case .mandarin: return "中文"
         case .hindi:    return "हिन्दी"
         case .spanish:  return "Español"
         case .french:   return "Français"
-        case .german:   return "Deutsch"
-        case .gujarati: return "ગુજરાતી"
-        case .marathi:  return "मराठी"
         }
     }
 
@@ -33,21 +29,16 @@ enum AppLanguage: String, CaseIterable, Identifiable {
     var icon: String {
         switch self {
         case .english:  return "character.book.closed"
+        case .mandarin: return "character.bubble.zh"
         case .hindi:    return "character"
         case .spanish:  return "character.bubble"
         case .french:   return "text.book.closed"
-        case .german:   return "text.bubble"
-        case .gujarati: return "character.cursor.ibeam"
-        case .marathi:  return "pencil.and.outline"
         }
     }
 
     /// True when full translation + TTS is shipped; others show "Coming Soon"
     var isFullySupported: Bool {
-        switch self {
-        case .english, .hindi, .spanish, .french, .german: return true
-        case .gujarati, .marathi: return false
-        }
+        return true
     }
 }
 

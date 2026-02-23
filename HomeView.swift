@@ -197,7 +197,7 @@ struct DailyQuoteCard: View {
                 Text(L10n.t(.dailyInspiration))
                     .font(.granlyCaption)
                     .foregroundStyle(.white.opacity(0.8))
-                Text("\"Keep your face always toward the sunshine and shadows will fall behind you.\"")
+                Text(L10n.t(.dailyQuoteText))
                     .font(.granlyHeadline)
                     .foregroundStyle(.white)
             }
@@ -320,7 +320,7 @@ struct FeaturedStoryCard: View {
                     HStack(spacing: 3) {
                         Image(systemName: "clock")
                             .font(.system(size: 9, weight: .bold))
-                        Text("3 min")
+                        Text("3 " + L10n.t(.readMin))
                             .font(.system(size: 10, weight: .bold, design: .rounded))
                     }
                     .foregroundStyle(.white.opacity(0.9))

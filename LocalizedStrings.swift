@@ -65,7 +65,17 @@ enum L10nKey: String {
     case historicalStories, inspiredBy, readStory
 
     // MARK: Recipes
-    case recipes, prepTime, ingredients, steps, difficulty
+    // MARK: Recipes
+    case recipes, prepTime, ingredients, steps, difficulty, grandmasKitchen, comfortFoodSubtitle, instructions
+
+    // MARK: Universal Quotes
+    case universalWisdom, timelessTruthsSubtitle, simpleMeaning, grandmaSaysTitle
+
+    // MARK: Memory Box
+    case grandmasMemoryBox, emptyMemoryBox, emptyMemoryBoxHint, savedStories, savedRecipes, savedQuotes
+
+    // MARK: Home View
+    case dailyQuoteText
 }
 
 // MARK: - L10n Lookup Engine
@@ -151,7 +161,17 @@ struct L10n {
             .historicalStories: "Historical Stories", .inspiredBy: "Inspired by",
             .readStory: "Read Story",
             .recipes: "Recipes", .prepTime: "Prep Time", .ingredients: "Ingredients",
-            .steps: "Steps", .difficulty: "Difficulty",
+            .steps: "Steps", .difficulty: "Difficulty", .grandmasKitchen: "Grandma's Kitchen", 
+            .comfortFoodSubtitle: "Comfort food for the soul.", .instructions: "Instructions",
+
+            .universalWisdom: "Universal Wisdom", .timelessTruthsSubtitle: "Timeless truths connecting us all.", 
+            .simpleMeaning: "Simple Meaning", .grandmaSaysTitle: "Grandma Says...",
+
+            .grandmasMemoryBox: "Grandma's Memory Box", .emptyMemoryBox: "Your Memory Box is empty.", 
+            .emptyMemoryBoxHint: "Tap the heart icon on your favorite stories and quotes to keep them safe in here.", 
+            .savedStories: "Saved Stories", .savedRecipes: "Saved Recipes", .savedQuotes: "Saved Quotes",
+
+            .dailyQuoteText: "\"Keep your face always toward the sunshine and shadows will fall behind you.\""
         ],
 
         // ─────────────────────────── HINDI ──────────────────────────────
@@ -225,80 +245,100 @@ struct L10n {
             .historicalStories: "ऐतिहासिक कहानियाँ", .inspiredBy: "से प्रेरित",
             .readStory: "कहानी पढ़ें",
             .recipes: "व्यंजन", .prepTime: "तैयारी का समय", .ingredients: "सामग्री",
-            .steps: "चरण", .difficulty: "कठिनाई",
+            .steps: "चरण", .difficulty: "कठिनाई", .grandmasKitchen: "दादी की रसोई",
+            .comfortFoodSubtitle: "आत्मा के लिए सुकून का खाना।", .instructions: "निर्देश",
+
+            .universalWisdom: "सार्वभौमिक ज्ञान", .timelessTruthsSubtitle: "कालातीत सत्य जो हम सभी को जोड़ते हैं।",
+            .simpleMeaning: "सरल अर्थ", .grandmaSaysTitle: "दादी कहती हैं...",
+
+            .grandmasMemoryBox: "दादी का मेमोरी बॉक्स", .emptyMemoryBox: "आपका मेमोरी बॉक्स खाली है।",
+            .emptyMemoryBoxHint: "अपनी पसंदीदा कहानियों और विचारों को यहां सुरक्षित रखने के लिए उनके दिल के आइकन पर टैप करें।",
+            .savedStories: "सहेजी गई कहानियाँ", .savedRecipes: "सहेजे गए व्यंजन", .savedQuotes: "सहेजे गए विचार",
+
+            .dailyQuoteText: "\"अपना चेहरा हमेशा धूप की ओर रखें और परछाइयाँ आपके पीछे पड़ेंगी।\""
         ],
 
-        // ─────────────────────────── SPANISH – fallback to English content strings ────────────────
+        // ─────────────────────────── SPANISH ─────────────────────────────
         .spanish: [
             .appName: "Granly",
             .cancel: "Cancelar", .save: "Guardar", .ok: "Aceptar", .done: "Hecho",
             .skip: "Omitir", .reset: "Restablecer", .close: "Cerrar",
             .continueAction: "Continuar", .getStarted: "Empezar",
-            .seeAll: "Ver Todo", .of: "de", .comingSoon: "Próximamente",
+            .seeAll: "Ver todo", .of: "de", .comingSoon: "Próximamente",
             .version: "Versión",
 
-            .onboarding1Title: "Bienvenida a Granly",
-            .onboarding1Description: "Tu rincón acogedor para historias entrañables y la sabiduría de la abuela.",
-            .onboarding2Title: "Historias para Cada Estado",
-            .onboarding2Description: "¿Feliz, triste, o solo necesitas un abrazo? Granly tiene una historia para ti.",
-            .onboarding3Title: "Sabiduría Diaria",
-            .onboarding3Description: "Comienza tu día con consejos gentiles y lecciones de vida atemporales.",
-            .onboarding4Title: "Siempre Aquí Para Ti",
-            .onboarding4Description: "Un lugar seguro para sentirte amado, apoyado y comprendido.",
+            .onboarding1Title: "Bienvenido a Granly",
+            .onboarding1Description: "Tu rincón acogedor para historias conmovedoras y la sabiduría de la abuela.",
+            .onboarding2Title: "Historias para cada estado de ánimo",
+            .onboarding2Description: "¿Feliz, triste o solo necesitas un abrazo? Granly tiene una historia para ti.",
+            .onboarding3Title: "Sabiduría diaria",
+            .onboarding3Description: "Comienza tu día con dulces consejos y lecciones de vida atemporales.",
+            .onboarding4Title: "Siempre aquí para ti",
+            .onboarding4Description: "Un espacio seguro para sentirte amado, apoyado y comprendido.",
 
-            .chooseLanguage: "Elige Tu Idioma",
+            .chooseLanguage: "Elige tu idioma",
             .chooseLanguageSubtitle: "Selecciona un idioma para comenzar tu viaje con Granly",
 
-            .greetingMorning: "Buenos Días,",
-            .greetingAfternoon: "Buenas Tardes,",
-            .greetingEvening: "Buenas Noches,",
-            .myDear: "Mi Querido",
+            .greetingMorning: "Buenos días,",
+            .greetingAfternoon: "Buenas tardes,",
+            .greetingEvening: "Buenas noches,",
+            .myDear: "Mi querido",
 
-            .featuredForYou: "Destacado Para Ti",
+            .featuredForYou: "Destacado para ti",
             .howAreYouFeeling: "¿Cómo te sientes?",
-            .surpriseMe: "Sorpréndeme", .favorites: "Favoritos", .dailyWisdom: "Sabiduría Diaria",
-            .dailyInspiration: "Inspiración Diaria",
+            .surpriseMe: "Sorpréndeme", .favorites: "Favoritos", .dailyWisdom: "Sabiduría diaria",
+            .dailyInspiration: "Inspiración diaria",
 
             .tellingFrom: "CONTANDO DESDE", .readMin: "min de lectura",
-            .shuffle: "Mezclar", .story: "Historia", .loading: "Cargando...",
+            .shuffle: "Aleatorio", .story: "Historia", .loading: "Cargando...",
 
-            .toastHehe: "¡Jeje!", .toastILoveYou: "¡Te quiero, querido!",
-            .toastYoureDoing: "¡Lo estás haciendo muy bien!", .toastAlwaysHere: "Siempre aquí para ti",
-            .toastOhMy: "¡Oh, qué dulce!",
+            .toastHehe: "¡Jeje!", .toastILoveYou: "¡Te quiero mucho!",
+            .toastYoureDoing: "¡Lo estás haciendo genial!", .toastAlwaysHere: "Aquí estaré siempre",
+            .toastOhMy: "¡Oh, qué tiernura!",
 
             .moodHappy: "Feliz", .moodSad: "Triste", .moodAnxious: "Ansioso",
             .moodLonely: "Solo", .moodTired: "Cansado", .moodAngry: "Enojado",
             .moodGrateful: "Agradecido", .moodExcited: "Emocionado",
 
             .profile: "Perfil", .personal: "Personal", .preferences: "Preferencias", .support: "Soporte",
-            .grandmasName: "Nombre de la Abuela", .grandmaMakeover: "Maquillaje de la Abuela",
-            .language: "Idioma", .darkMode: "Modo Oscuro", .dailyReminders: "Recordatorios Diarios",
-            .aboutGrantly: "Sobre Granly", .viewOnboarding: "Ver Introducción",
-            .rateGrantly: "Califica Granly", .shareWithFriends: "Compartir con Amigos",
-            .resetAllData: "Restablecer Todo", .storiesRead: "Historias Leídas",
-            .renameGrandma: "Renombrar Abuela",
-            .resetDataQuestion: "¿Restablecer Datos?",
-            .resetDataMessage: "Esto borrará tu historial de lectura, historias favoritas y configuraciones. No se puede deshacer.",
-            .resetDataConfirm: "Restablecer", .rateMessage: "Califica Granly",
-            .thankYouForLove: "¡Gracias por tu amor!",
+            .grandmasName: "Nombre de la abuela", .grandmaMakeover: "Cambio de look",
+            .language: "Idioma", .darkMode: "Modo oscuro", .dailyReminders: "Recordatorios diarios",
+            .aboutGrantly: "Acerca de Granly", .viewOnboarding: "Ver introducción",
+            .rateGrantly: "Calificar Granly", .shareWithFriends: "Compartir con amigos",
+            .resetAllData: "Borrar todos los datos", .storiesRead: "Historias leídas",
+            .renameGrandma: "Renombrar a la abuela",
+            .resetDataQuestion: "¿Restablecer datos?",
+            .resetDataMessage: "Esto borrará tu historial de lectura, historias favoritas y personalización. No se puede deshacer.",
+            .resetDataConfirm: "Restablecer", .rateMessage: "Calificar Granly",
+            .thankYouForLove: "¡Gracias por tu cariño!",
 
-            .makeover: "Maquillaje", .hair: "Cabello", .glasses: "Gafas", .outfit: "Ropa",
+            .makeover: "Cambio de look", .hair: "Cabello", .glasses: "Gafas", .outfit: "Atuendo",
             .pattern: "Patrón", .accessories: "Accesorios", .hats: "Sombreros",
-            .earrings: "Aretes", .face: "Cara", .backgrounds: "Fondos", .filters: "Filtros",
-            .wrinkleIntensity: "Intensidad de Arrugas", .greyIntensity: "Intensidad de Canas",
-            .browThickness: "Grosor de Cejas", .eyelashes: "Pestañas",
+            .earrings: "Pendientes", .face: "Rostro", .backgrounds: "Fondos", .filters: "Filtros",
+            .wrinkleIntensity: "Intensidad de arrugas", .greyIntensity: "Intensidad de canas",
+            .browThickness: "Grosor de cejas", .eyelashes: "Pestañas",
 
-            .wisdom: "Sabiduría", .takeAction: "Práctica de Hoy",
-            .modernExplanation: "Significado Moderno", .grandmaAdvice: "La Abuela Dice",
-            .dailyPractice: "Práctica Diaria",
+            .wisdom: "Sabiduría", .takeAction: "Práctica de hoy",
+            .modernExplanation: "Significado moderno", .grandmaAdvice: "La abuela dice",
+            .dailyPractice: "Práctica diaria",
 
-            .memories: "Recuerdos", .addMemory: "Añadir Recuerdo", .noMemoriesYet: "Sin recuerdos aún.",
-            .askGrandma: "Pregunta a la Abuela", .typeYourFeeling: "Escribe cómo te sientes...",
+            .memories: "Recuerdos", .addMemory: "Añadir recuerdo", .noMemoriesYet: "Aún no hay recuerdos.",
+            .askGrandma: "Pregúntale a la abuela", .typeYourFeeling: "Escribe cómo te sientes...",
             .sendMessage: "Enviar",
-            .historicalStories: "Historias Históricas", .inspiredBy: "Inspirado en",
-            .readStory: "Leer Historia",
-            .recipes: "Recetas", .prepTime: "Tiempo de Prep.", .ingredients: "Ingredientes",
-            .steps: "Pasos", .difficulty: "Dificultad",
+            .historicalStories: "Historias históricas", .inspiredBy: "Inspirado en",
+            .readStory: "Leer historia",
+            .recipes: "Recetas", .prepTime: "Tiempo de prep.", .ingredients: "Ingredientes",
+            .steps: "Pasos", .difficulty: "Dificultad", .grandmasKitchen: "La Cocina de la Abuela",
+            .comfortFoodSubtitle: "Comida reconfortante para el alma.", .instructions: "Instrucciones",
+
+            .universalWisdom: "Sabiduría Universal", .timelessTruthsSubtitle: "Verdades eternas que nos conectan a todos.",
+            .simpleMeaning: "Significado Simple", .grandmaSaysTitle: "La Abuela Dice...",
+
+            .grandmasMemoryBox: "La Caja de Recuerdos de la Abuela", .emptyMemoryBox: "Tu Caja de Recuerdos está vacía.",
+            .emptyMemoryBoxHint: "Toca el ícono del corazón en tus historias y citas favoritas para guardarlas aquí.",
+            .savedStories: "Historias Guardadas", .savedRecipes: "Recetas Guardadas", .savedQuotes: "Citas Guardadas",
+
+            .dailyQuoteText: "\"Mantén siempre tu rostro hacia la luz del sol y las sombras caerán detrás de ti.\""
         ],
 
         // ─────────────────────────── FRENCH ─────────────────────────────
@@ -371,80 +411,100 @@ struct L10n {
             .historicalStories: "Histoires Historiques", .inspiredBy: "Inspiré de",
             .readStory: "Lire l'Histoire",
             .recipes: "Recettes", .prepTime: "Temps de Préparation", .ingredients: "Ingrédients",
-            .steps: "Étapes", .difficulty: "Difficulté",
+            .steps: "Étapes", .difficulty: "Difficulté", .grandmasKitchen: "La Cuisine de Grand-mère",
+            .comfortFoodSubtitle: "Une cuisine réconfortante pour l'âme.", .instructions: "Instructions",
+
+            .universalWisdom: "Sagesse Universelle", .timelessTruthsSubtitle: "Des vérités intemporelles qui nous relient tous.",
+            .simpleMeaning: "Signification Simple", .grandmaSaysTitle: "Grand-mère Dit...",
+
+            .grandmasMemoryBox: "La Boîte à Souvenirs de Grand-mère", .emptyMemoryBox: "Votre Boîte à Souvenirs est vide.",
+            .emptyMemoryBoxHint: "Appuyez sur l'icône en forme de cœur de vos histoires et citations préférées pour les conserver ici en toute sécurité.",
+            .savedStories: "Histoires Enregistrées", .savedRecipes: "Recettes Enregistrées", .savedQuotes: "Citations Enregistrées",
+
+            .dailyQuoteText: "\"Gardez toujours votre visage tourné vers le soleil et les ombres tomberont derrière vous.\""
         ],
 
-        // ─────────────────────────── GERMAN ─────────────────────────────
-        .german: [
+        // ─────────────────────────── MANDARIN (zh-CN) ───────────────────────────
+        .mandarin: [
             .appName: "Granly",
-            .cancel: "Abbrechen", .save: "Speichern", .ok: "OK", .done: "Fertig",
-            .skip: "Überspringen", .reset: "Zurücksetzen", .close: "Schließen",
-            .continueAction: "Weiter", .getStarted: "Loslegen",
-            .seeAll: "Alle Anzeigen", .of: "von", .comingSoon: "Demnächst",
-            .version: "Version",
+            .cancel: "取消", .save: "保存", .ok: "确定", .done: "完成",
+            .skip: "跳过", .reset: "重置", .close: "关闭",
+            .continueAction: "继续", .getStarted: "开始",
+            .seeAll: "查看全部", .of: "/", .comingSoon: "敬请期待",
+            .version: "版本",
 
-            .onboarding1Title: "Willkommen bei Granly",
-            .onboarding1Description: "Deine gemütliche Ecke für herzerwärmende Geschichten und Omas Weisheit.",
-            .onboarding2Title: "Geschichten für Jede Stimmung",
-            .onboarding2Description: "Glücklich, traurig oder brauchst du einfach eine Umarmung? Granly hat eine Geschichte für dich.",
-            .onboarding3Title: "Tägliche Weisheit",
-            .onboarding3Description: "Beginne deinen Tag mit sanften Ratschlägen und zeitlosen Lebensweisheiten.",
-            .onboarding4Title: "Immer Für Dich Da",
-            .onboarding4Description: "Ein sicherer Ort, um sich geliebt, unterstützt und verstanden zu fühlen.",
+            .onboarding1Title: "欢迎来到 Granly",
+            .onboarding1Description: "一个充满温馨故事和奶奶智慧的舒适角落。",
+            .onboarding2Title: "适合各种心情的故事",
+            .onboarding2Description: "开心、难过、还是只需要一个拥抱？Granly 都有适合你的故事。",
+            .onboarding3Title: "每日智慧",
+            .onboarding3Description: "用温柔的建议和永恒的人生哲理开始你的一天。",
+            .onboarding4Title: "永远在这里陪伴你",
+            .onboarding4Description: "一个让你感到被爱、支持和理解的安全空间。",
 
-            .chooseLanguage: "Sprache Wählen",
-            .chooseLanguageSubtitle: "Wähle eine Sprache, um deine Reise mit Granly zu beginnen",
+            .chooseLanguage: "选择您的语言",
+            .chooseLanguageSubtitle: "选择一种语言，开始您的 Granly 之旅",
 
-            .greetingMorning: "Guten Morgen,",
-            .greetingAfternoon: "Guten Tag,",
-            .greetingEvening: "Guten Abend,",
-            .myDear: "Mein Liebling",
+            .greetingMorning: "早上好，",
+            .greetingAfternoon: "下午好，",
+            .greetingEvening: "晚上好，",
+            .myDear: "亲爱的",
 
-            .featuredForYou: "Für Dich Ausgewählt",
-            .howAreYouFeeling: "Wie fühlst du dich?",
-            .surpriseMe: "Überrasche Mich", .favorites: "Favoriten", .dailyWisdom: "Tägliche Weisheit",
-            .dailyInspiration: "Tägliche Inspiration",
+            .featuredForYou: "为您推荐",
+            .howAreYouFeeling: "您现在感觉如何？",
+            .surpriseMe: "给我惊喜", .favorites: "收藏", .dailyWisdom: "每日智慧",
+            .dailyInspiration: "每日灵感",
 
-            .tellingFrom: "ERZÄHLT AUS", .readMin: "Min. Lesezeit",
-            .shuffle: "Mischen", .story: "Geschichte", .loading: "Laden...",
+            .tellingFrom: "倾听源自", .readMin: "分钟阅读",
+            .shuffle: "随机", .story: "故事", .loading: "加载中...",
 
-            .toastHehe: "Hehe!", .toastILoveYou: "Ich liebe dich!",
-            .toastYoureDoing: "Du machst das großartig!", .toastAlwaysHere: "Immer für dich da",
-            .toastOhMy: "Oh mein! Wie süß",
+            .toastHehe: "呵呵！", .toastILoveYou: "我爱你，亲爱的！",
+            .toastYoureDoing: "你做得很棒！", .toastAlwaysHere: "永远在这里陪伴你",
+            .toastOhMy: "天啊！真贴心",
 
-            .moodHappy: "Glücklich", .moodSad: "Traurig", .moodAnxious: "Ängstlich",
-            .moodLonely: "Einsam", .moodTired: "Müde", .moodAngry: "Wütend",
-            .moodGrateful: "Dankbar", .moodExcited: "Aufgeregt",
+            .moodHappy: "开心", .moodSad: "难过", .moodAnxious: "焦虑",
+            .moodLonely: "孤独", .moodTired: "疲倦", .moodAngry: "生气",
+            .moodGrateful: "感恩", .moodExcited: "兴奋",
 
-            .profile: "Profil", .personal: "Persönlich", .preferences: "Einstellungen", .support: "Support",
-            .grandmasName: "Omas Name", .grandmaMakeover: "Omas Makeover",
-            .language: "Sprache", .darkMode: "Dunkelmodus", .dailyReminders: "Tägliche Erinnerungen",
-            .aboutGrantly: "Über Granly", .viewOnboarding: "Einführung Anzeigen",
-            .rateGrantly: "Granly Bewerten", .shareWithFriends: "Mit Freunden Teilen",
-            .resetAllData: "Alle Daten Zurücksetzen", .storiesRead: "Gelesene Geschichten",
-            .renameGrandma: "Oma Umbenennen",
-            .resetDataQuestion: "Daten Zurücksetzen?",
-            .resetDataMessage: "Verlauf, Favoriten und Einstellungen werden gelöscht. Dies kann nicht rückgängig gemacht werden.",
-            .resetDataConfirm: "Zurücksetzen", .rateMessage: "Granly Bewerten",
-            .thankYouForLove: "Danke für deine Liebe!",
+            .profile: "个人资料", .personal: "个人", .preferences: "偏好设置", .support: "支持",
+            .grandmasName: "奶奶的名字", .grandmaMakeover: "给奶奶打扮",
+            .language: "语言", .darkMode: "深色模式", .dailyReminders: "每日提醒",
+            .aboutGrantly: "关于 Granly", .viewOnboarding: "查看引导",
+            .rateGrantly: "评价 Granly", .shareWithFriends: "分享给朋友",
+            .resetAllData: "重置所有数据", .storiesRead: "阅读的故事",
+            .renameGrandma: "重命名奶奶",
+            .resetDataQuestion: "重置数据?",
+            .resetDataMessage: "这将清除您的阅读历史、收藏库和个性化设置。此操作无法撤销。",
+            .resetDataConfirm: "重置", .rateMessage: "评价 Granly",
+            .thankYouForLove: "感谢您的喜爱！",
 
-            .makeover: "Makeover", .hair: "Haare", .glasses: "Brille", .outfit: "Outfit",
-            .pattern: "Muster", .accessories: "Accessoires", .hats: "Hüte",
-            .earrings: "Ohrringe", .face: "Gesicht", .backgrounds: "Hintergründe", .filters: "Filter",
-            .wrinkleIntensity: "Faltenintensität", .greyIntensity: "Grauintensität",
-            .browThickness: "Brauenstärke", .eyelashes: "Wimpern",
+            .makeover: "装扮", .hair: "发型", .glasses: "眼镜", .outfit: "服装",
+            .pattern: "图案", .accessories: "配饰", .hats: "帽子",
+            .earrings: "耳环", .face: "脸型", .backgrounds: "背景", .filters: "滤镜",
+            .wrinkleIntensity: "皱纹深浅", .greyIntensity: "白发程度",
+            .browThickness: "眉毛浓密度", .eyelashes: "睫毛",
 
-            .wisdom: "Weisheit", .takeAction: "Heutige Praxis",
-            .modernExplanation: "Moderne Bedeutung", .grandmaAdvice: "Oma Sagt",
-            .dailyPractice: "Tägliche Praxis",
+            .wisdom: "智慧", .takeAction: "今日实践",
+            .modernExplanation: "现代启示", .grandmaAdvice: "奶奶说",
+            .dailyPractice: "日常练习",
 
-            .memories: "Erinnerungen", .addMemory: "Erinnerung Hinzufügen", .noMemoriesYet: "Noch keine Erinnerungen.",
-            .askGrandma: "Oma Fragen", .typeYourFeeling: "Wie fühlst du dich...",
-            .sendMessage: "Senden",
-            .historicalStories: "Historische Geschichten", .inspiredBy: "Inspiriert von",
-            .readStory: "Geschichte Lesen",
-            .recipes: "Rezepte", .prepTime: "Zubereitungszeit", .ingredients: "Zutaten",
-            .steps: "Schritte", .difficulty: "Schwierigkeit",
+            .memories: "回忆", .addMemory: "添加回忆", .noMemoriesYet: "暂无回忆。",
+            .askGrandma: "问问奶奶", .typeYourFeeling: "写下您的感受...",
+            .sendMessage: "发送",
+            .historicalStories: "历史故事", .inspiredBy: "灵感来源",
+            .readStory: "阅读故事",
+            .recipes: "食谱", .prepTime: "准备时间", .ingredients: "食材",
+            .steps: "步骤", .difficulty: "难度", .grandmasKitchen: "奶奶的厨房",
+            .comfortFoodSubtitle: "温暖灵魂的疗愈美食。", .instructions: "制作步骤",
+
+            .universalWisdom: "普世智慧", .timelessTruthsSubtitle: "连接我们所有人的永恒真理。",
+            .simpleMeaning: "简单含义", .grandmaSaysTitle: "奶奶说...",
+
+            .grandmasMemoryBox: "奶奶的记忆宝盒", .emptyMemoryBox: "你的记忆宝盒是空的。",
+            .emptyMemoryBoxHint: "点击你最喜欢的故事和句子上的小爱心图标，把它们安全地保存在这里。",
+            .savedStories: "保存的故事", .savedRecipes: "保存的食谱", .savedQuotes: "保存的句子",
+
+            .dailyQuoteText: "\"将你的脸永远朝向阳光，阴影就会落在你的身后。\""
         ],
     ]
 }
