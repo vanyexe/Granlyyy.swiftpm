@@ -315,6 +315,8 @@ struct ControlsView: View {
                 
                 // Play/Pause
                 Button(action: {
+                    if speechManager.isPreparingAudio { return } // Prevent double clicks during TTS render
+                    
                     if speechManager.isSpeaking {
                         speechManager.pause()
                         animateAvatar = false
@@ -397,6 +399,8 @@ class SpeechManager: NSObject, ObservableObject, AVAudioPlayerDelegate, @uncheck
     private var audioPlayer: AVAudioPlayer?
     private var progressTimer: Timer?
     private var isScrubbing = false
+    private var writeTimer: Timer?
+    private var generatedAudioFile: AVAudioFile?
     
     @Published var isSpeaking = false
     @Published var selectedRange: NSRange?
@@ -440,36 +444,27 @@ class SpeechManager: NSObject, ObservableObject, AVAudioPlayerDelegate, @uncheck
         
         // Render speech to an audio file
         let fileManager = FileManager.default
-        let url = fileManager.temporaryDirectory.appendingPathComponent(UUID().uuidString + ".wav")
+        let url = fileManager.temporaryDirectory.appendingPathComponent(UUID().uuidString + ".caf")
         
         synthesizer.write(utterance) { [weak self] (buffer: AVAudioBuffer) in
             guard let self = self, let pcmBuffer = buffer as? AVAudioPCMBuffer else { return }
             
-            // Append buffer to file
-            let audioFile: AVAudioFile
             do {
-                if !fileManager.fileExists(atPath: url.path) {
-                    audioFile = try AVAudioFile(forWriting: url, settings: pcmBuffer.format.settings, commonFormat: .pcmFormatInt16, interleaved: false)
-                } else {
-                    audioFile = try AVAudioFile(forWriting: url, settings: pcmBuffer.format.settings, commonFormat: .pcmFormatInt16, interleaved: false)
+                if self.generatedAudioFile == nil {
+                    self.generatedAudioFile = try AVAudioFile(forWriting: url, settings: pcmBuffer.format.settings, commonFormat: .pcmFormatInt16, interleaved: false)
                 }
-                try audioFile.write(from: pcmBuffer)
+                try self.generatedAudioFile?.write(from: pcmBuffer)
             } catch {
                 print("Error writing buffer: \(error)")
             }
-        }
-        
-        // Note: write(utterance:) is asynchronous but doesn't have a completion handler.
-        // For accurate scrubbing, we poll until the synthesizer is done writing.
-        DispatchQueue.global(qos: .userInitiated).async { [weak self] in
-            guard let self = self else { return }
-            while self.synthesizer.isSpeaking {
-                Thread.sleep(forTimeInterval: 0.1)
-            }
             
             DispatchQueue.main.async {
-                self.setupAudioPlayer(url: url)
-                self.isPreparingAudio = false
+                self.writeTimer?.invalidate()
+                self.writeTimer = Timer.scheduledTimer(withTimeInterval: 0.25, repeats: false) { _ in
+                    self.generatedAudioFile = nil // Close the file to allow reading
+                    self.setupAudioPlayer(url: url)
+                    self.isPreparingAudio = false
+                }
             }
         }
     }
@@ -505,10 +500,13 @@ class SpeechManager: NSObject, ObservableObject, AVAudioPlayerDelegate, @uncheck
         audioPlayer?.stop()
         audioPlayer = nil
         isSpeaking = false
+        isPreparingAudio = false
         currentTime = 0
         duration = 0
         stopProgressTimer()
-        // Clean up temp files if needed
+        writeTimer?.invalidate()
+        writeTimer = nil
+        generatedAudioFile = nil
     }
     
     // MARK: - Scrubbing
@@ -520,12 +518,14 @@ class SpeechManager: NSObject, ObservableObject, AVAudioPlayerDelegate, @uncheck
     
     func scrubbingStarted() {
         isScrubbing = true
-        pause()
+        audioPlayer?.pause()
     }
     
     func scrubbingEnded() {
         isScrubbing = false
-        resume()
+        if isSpeaking {
+            audioPlayer?.play()
+        }
     }
     
     // MARK: - Timer
