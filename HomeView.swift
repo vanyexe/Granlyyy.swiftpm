@@ -12,6 +12,7 @@ struct HomeView: View {
     @State private var selectedTab: Tab = .stories
     @State private var scrollOffset: CGFloat = 0
     @Namespace private var animation
+    @EnvironmentObject var lang: LanguageManager
     
     // For Navigation
     @State private var showWisdomSheet = false
@@ -66,7 +67,7 @@ struct HomeView: View {
                         Text(greeting)
                             .font(.granlySubheadline)
                             .foregroundStyle(.secondary)
-                        Text("My Dear") // Ideally fetch from Profile
+                        Text(L10n.t(.myDear))
                             .font(.granlyTitle2)
                             .foregroundStyle(Color.themeText)
                     }
@@ -92,9 +93,7 @@ struct HomeView: View {
                         // Daily Quote Card
                         DailyQuoteCard()
                             .padding(.horizontal)
-                            .onTapGesture {
-                                selectedTab = .wisdom
-                            }
+                            .onTapGesture { selectedTab = .wisdom }
                         
                         // Featured Stories — Premium Hero Cards
                         VStack(alignment: .leading, spacing: 14) {
@@ -108,14 +107,14 @@ struct HomeView: View {
                                     )
                                     .frame(width: 4, height: 22)
                                 
-                                Text("Featured for You")
+                                Text(L10n.t(.featuredForYou))
                                     .font(.granlyHeadline)
                                     .foregroundStyle(Color.themeText)
                                 
                                 Spacer()
                                 
                                 // "See All" pill
-                                Text("See All")
+                                Text(L10n.t(.seeAll))
                                     .font(.system(size: 12, weight: .bold, design: .rounded))
                                     .foregroundStyle(Color.themeRose)
                                     .padding(.horizontal, 10)
@@ -142,17 +141,16 @@ struct HomeView: View {
                         
                         // Quick Actions
                         HStack(spacing: 12) {
-                            QuickActionButton(icon: "sparkles", title: "Surprise Me", color: .purple) {
-                                // Pick random story from random mood
+                            QuickActionButton(icon: "sparkles", title: L10n.t(.surpriseMe), color: .purple) {
                                 if let randomMood = Mood.allMoods.randomElement() {
                                     surpriseStory = StoryManager.shared.getRandomStory(for: randomMood)
                                     showSurpriseStory = true
                                 }
                             }
-                            QuickActionButton(icon: "heart.fill", title: "Favorites", color: .red) {
+                            QuickActionButton(icon: "heart.fill", title: L10n.t(.favorites), color: .red) {
                                 selectedTab = .memories
                             }
-                            QuickActionButton(icon: "lightbulb.fill", title: "Daily Wisdom", color: .yellow) {
+                            QuickActionButton(icon: "lightbulb.fill", title: L10n.t(.dailyWisdom), color: .yellow) {
                                 selectedTab = .wisdom
                             }
                         }
@@ -160,7 +158,7 @@ struct HomeView: View {
                         
                         // Mood Grid
                         VStack(alignment: .leading, spacing: 16) {
-                            Text("How are you feeling?")
+                            Text(L10n.t(.howAreYouFeeling))
                                 .font(.granlyHeadline)
                                 .foregroundStyle(Color.themeText)
                                 .padding(.horizontal)
@@ -185,9 +183,9 @@ struct HomeView: View {
     // Time-aware greeting
     private var greeting: String {
         let hour = Calendar.current.component(.hour, from: Date())
-        if hour < 12 { return "Good Morning," }
-        if hour < 18 { return "Good Afternoon," }
-        return "Good Evening,"
+        if hour < 12 { return L10n.t(.greetingMorning) }
+        if hour < 18 { return L10n.t(.greetingAfternoon) }
+        return L10n.t(.greetingEvening)
     }
 }
 
@@ -196,7 +194,7 @@ struct DailyQuoteCard: View {
     var body: some View {
         HStack {
             VStack(alignment: .leading, spacing: 8) {
-                Text("Daily Inspiration")
+                Text(L10n.t(.dailyInspiration))
                     .font(.granlyCaption)
                     .foregroundStyle(.white.opacity(0.8))
                 Text("\"Keep your face always toward the sunshine and shadows will fall behind you.\"")
@@ -248,20 +246,21 @@ struct QuickActionButton: View {
 
 struct MoodCard: View {
     let mood: Mood
+    @EnvironmentObject var lang: LanguageManager
     
     var body: some View {
         VStack(spacing: 12) {
             Image(systemName: mood.icon)
-                .font(.system(size: 28)) // 32 -> 28
+                .font(.system(size: 28))
                 .foregroundStyle(mood.baseColor)
             
-            Text(mood.name)
-                .font(.granlyBodyBold) // Headline -> BodyBold
+            Text(mood.localizedName(for: lang.selectedLanguage))
+                .font(.granlyBodyBold)
                 .foregroundStyle(Color.themeText)
         }
         .frame(maxWidth: .infinity)
-        .padding(.vertical, 20) // 24 -> 20
-        .glassCard(cornerRadius: 16) // 20 -> 16
+        .padding(.vertical, 20)
+        .glassCard(cornerRadius: 16)
     }
 }
 

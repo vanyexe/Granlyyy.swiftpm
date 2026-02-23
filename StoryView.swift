@@ -1,6 +1,7 @@
 import SwiftUI
 import AVFoundation
 @preconcurrency import SceneKit
+// SpeechManager & StoryView use LanguageManager for real-time TTS language switching
 
 struct StoryView: View {
     let mood: Mood
@@ -88,11 +89,11 @@ struct StoryView: View {
                     }
                     Spacer()
                     VStack(spacing: 2) {
-                        Text("TELLING FROM")
+                        Text(L10n.t(.tellingFrom))
                             .font(.granlyCaption)
                             .kerning(1)
                             .opacity(0.7)
-                        Text(mood.name.uppercased())
+                        Text(mood.localizedName(for: LanguageManager.shared.selectedLanguage).uppercased())
                             .font(.granlyCaption)
                     }
                     Spacer()
@@ -225,7 +226,7 @@ struct StoryView: View {
     
     // MARK: - Tap Handler
     private func handleGrandmaTap() {
-        let messages = ["Hehe!", "I love you, dear!", "You're doing great!", "Always here for you", "Oh my! How sweet"]
+        let messages = [L10n.t(.toastHehe), L10n.t(.toastILoveYou), L10n.t(.toastYoureDoing), L10n.t(.toastAlwaysHere), L10n.t(.toastOhMy)]
         toastMessage = messages.randomElement()!
         
         // Haptics
@@ -439,10 +440,25 @@ class SpeechManager: NSObject, ObservableObject, AVSpeechSynthesizerDelegate, @u
     func speak(text: String) {
         stop()
         let utterance = AVSpeechUtterance(string: text)
-        utterance.voice = AVSpeechSynthesisVoice(language: "en-US")
-        utterance.rate = 0.45
-        utterance.pitchMultiplier = 1.1
-        utterance.volume = 1.0
+        // Read language from UserDefaults (nonisolated — SpeechManager is not @MainActor)
+        let code = UserDefaults.standard.string(forKey: "selectedLanguage") ?? AppLanguage.english.rawValue
+        let bcp47 = AppLanguage(rawValue: code)?.bcp47 ?? "en-US"
+        let allVoices = AVSpeechSynthesisVoice.speechVoices()
+        let langPrefix = String(bcp47.prefix(2))
+        var voice: AVSpeechSynthesisVoice?
+        if #available(iOS 16.0, *) {
+            voice = allVoices.first(where: { $0.language.starts(with: langPrefix) && $0.gender == .female && $0.quality == .premium })
+                ?? allVoices.first(where: { $0.language.starts(with: langPrefix) && $0.gender == .female && $0.quality == .enhanced })
+        }
+        voice = voice
+            ?? allVoices.first(where: { $0.language.starts(with: langPrefix) && $0.gender == .female })
+            ?? AVSpeechSynthesisVoice(language: bcp47)
+        utterance.voice = voice
+        // Warm Grandma narration parameters
+        utterance.rate = AVSpeechUtteranceDefaultSpeechRate * 0.78
+        utterance.pitchMultiplier = 1.08
+        utterance.volume = 0.95
+        utterance.preUtteranceDelay = 0.55
         
         synthesizer.speak(utterance)
         isSpeaking = true

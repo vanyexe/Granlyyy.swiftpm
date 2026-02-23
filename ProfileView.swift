@@ -1,7 +1,8 @@
 import SwiftUI
 
 struct ProfileView: View {
-    @StateObject private var languageManager = LanguageManager()
+    @StateObject private var languageManager = LanguageManager.shared
+    @EnvironmentObject var lang: LanguageManager
     @AppStorage("grandmaName") private var grandmaName = "Granly"
     @AppStorage("userName") private var userName = "My Dear"
     @AppStorage("notificationsEnabled") private var notificationsEnabled = true
@@ -43,9 +44,9 @@ struct ProfileView: View {
                             
                             VStack(spacing: 4) {
                                 Text(userName)
-                                    .font(.granlyHeadline) // Title2 -> Headline
+                                    .font(.granlyHeadline)
                                     .foregroundStyle(Color.themeText)
-                                Text("Stories Read: \(storiesRead)")
+                                Text("\(L10n.t(.storiesRead)): \(storiesRead)")
                                     .font(.granlySubheadline)
                                     .foregroundStyle(.secondary)
                                     .padding(.horizontal, 12)
@@ -58,16 +59,14 @@ struct ProfileView: View {
                         
                         // Personal Section (New)
                         VStack(spacing: 16) {
-                            SectionHeader(title: "Personal")
+                            SectionHeader(title: L10n.t(.personal))
                             
-                            // Grandma Name
-                            SettingsRow(icon: "person.text.rectangle", color: .blue, title: "Grandma's Name", value: grandmaName) {
+                            SettingsRow(icon: "person.text.rectangle", color: .blue, title: L10n.t(.grandmasName), value: grandmaName) {
                                 tempName = grandmaName
                                 showNameEditAlert = true
                             }
                             
-                            // Grandma Makeover Link
-                            SettingsActionRow(icon: "sparkles.rectangle.stack.fill", color: .pink, title: "Grandma Makeover") {
+                            SettingsActionRow(icon: "sparkles.rectangle.stack.fill", color: .pink, title: L10n.t(.grandmaMakeover)) {
                                 showMakeover = true
                             }
                         }
@@ -77,18 +76,15 @@ struct ProfileView: View {
                         
                         // Settings Section
                         VStack(spacing: 16) {
-                            SectionHeader(title: "Preferences")
+                            SectionHeader(title: L10n.t(.preferences))
                             
-                            // Language
-                            SettingsRow(icon: "globe", color: .green, title: "Language", value: languageManager.selectedLanguage.displayName) {
+                            SettingsRow(icon: "globe", color: .green, title: L10n.t(.language), value: languageManager.selectedLanguage.displayName) {
                                 showLanguageSheet = true
                             }
                             
-                            // Dark Mode
-                            ToggleRow(icon: "moon.fill", color: .purple, title: "Dark Mode", isOn: $darkMode)
+                            ToggleRow(icon: "moon.fill", color: .purple, title: L10n.t(.darkMode), isOn: $darkMode)
                             
-                            // Notifications
-                            ToggleRow(icon: "bell.fill", color: .orange, title: "Daily Reminders", isOn: $notificationsEnabled)
+                            ToggleRow(icon: "bell.fill", color: .orange, title: L10n.t(.dailyReminders), isOn: $notificationsEnabled)
                         }
                         .padding(16) // 20 -> 16
                         .glassCard(cornerRadius: 16)
@@ -96,49 +92,29 @@ struct ProfileView: View {
                         
                         // Support Section
                         VStack(spacing: 16) {
-                            SectionHeader(title: "Support")
+                            SectionHeader(title: L10n.t(.support))
                             
                             NavigationLink(destination: AboutView()) {
                                 HStack {
-                                    Image(systemName: "info.circle")
-                                        .foregroundStyle(.blue)
-                                        .font(.system(size: 18))
-                                        .frame(width: 24)
-                                    Text("About Granly")
-                                        .font(.granlyBodyBold)
-                                        .foregroundStyle(Color.themeText)
+                                    Image(systemName: "info.circle").foregroundStyle(.blue).font(.system(size: 18)).frame(width: 24)
+                                    Text(L10n.t(.aboutGrantly)).font(.granlyBodyBold).foregroundStyle(Color.themeText)
                                     Spacer()
-                                    Text("Version 2.0")
-                                        .font(.granlySubheadline)
-                                        .foregroundStyle(.secondary)
-                                    Image(systemName: "chevron.right")
-                                        .font(.system(size: 12, weight: .semibold))
-                                        .foregroundStyle(.secondary)
+                                    Text("\(L10n.t(.version)) 2.0").font(.granlySubheadline).foregroundStyle(.secondary)
+                                    Image(systemName: "chevron.right").font(.system(size: 12, weight: .semibold)).foregroundStyle(.secondary)
                                 }
-                                .padding(.vertical, 6)
-                                .contentShape(Rectangle())
+                                .padding(.vertical, 6).contentShape(Rectangle())
                             }
                             .buttonStyle(.plain)
                             
-                            SettingsActionRow(icon: "sparkles", color: .purple, title: "View Onboarding") {
-                                showOnboarding = true
-                            }
-                            
-                            SettingsActionRow(icon: "star.fill", color: .yellow, title: "Rate Granly") {
-                                showRateAlert = true
-                            }
+                            SettingsActionRow(icon: "sparkles", color: .purple, title: L10n.t(.viewOnboarding)) { showOnboarding = true }
+                            SettingsActionRow(icon: "star.fill", color: .yellow, title: L10n.t(.rateGrantly)) { showRateAlert = true }
                             
                             ShareLink(item: "Check out Granly! It's the sweetest storytelling app ever.") {
                                 HStack {
-                                    Image(systemName: "square.and.arrow.up")
-                                        .foregroundStyle(.pink)
-                                        .frame(width: 30)
-                                    Text("Share with Friends")
-                                        .foregroundStyle(Color.themeText)
+                                    Image(systemName: "square.and.arrow.up").foregroundStyle(.pink).frame(width: 30)
+                                    Text(L10n.t(.shareWithFriends)).foregroundStyle(Color.themeText)
                                     Spacer()
-                                    Image(systemName: "chevron.right")
-                                        .font(.granlyCaption)
-                                        .foregroundStyle(.secondary)
+                                    Image(systemName: "chevron.right").font(.granlyCaption).foregroundStyle(.secondary)
                                 }
                                 .padding(.vertical, 8)
                             }
@@ -149,7 +125,7 @@ struct ProfileView: View {
                         
                         // Danger Zone
                         Button(action: { showResetAlert = true }) {
-                            Text("Reset All Data")
+                            Text(L10n.t(.resetAllData))
                                 .font(.granlySubheadline)
                                 .foregroundStyle(.red.opacity(0.8))
                                 .padding()
@@ -172,19 +148,19 @@ struct ProfileView: View {
             .sheet(isPresented: $showLanguageSheet) {
                 LanguageSelectionView(hasSelectedLanguage: .constant(true))
             }
-            .alert("Rename Grandma", isPresented: $showNameEditAlert) {
-                TextField("Name", text: $tempName)
-                Button("Cancel", role: .cancel) { }
-                Button("Save") { grandmaName = tempName }
+            .alert(L10n.t(.renameGrandma), isPresented: $showNameEditAlert) {
+                TextField(L10n.t(.grandmasName), text: $tempName)
+                Button(L10n.t(.cancel), role: .cancel) { }
+                Button(L10n.t(.save)) { grandmaName = tempName }
             }
-            .alert("Rate Granly", isPresented: $showRateAlert) {
-                Button("OK", role: .cancel) { }
+            .alert(L10n.t(.rateMessage), isPresented: $showRateAlert) {
+                Button(L10n.t(.ok), role: .cancel) { }
             } message: {
-                Text("Thank you for your love!")
+                Text(L10n.t(.thankYouForLove))
             }
-            .alert("Reset Data?", isPresented: $showResetAlert) {
-                Button("Cancel", role: .cancel) { }
-                Button("Reset", role: .destructive) {
+            .alert(L10n.t(.resetDataQuestion), isPresented: $showResetAlert) {
+                Button(L10n.t(.cancel), role: .cancel) { }
+                Button(L10n.t(.resetDataConfirm), role: .destructive) {
                     storiesRead = 0
                     grandmaName = "Granly"
                     likedStoryIDsRaw = ""
@@ -194,7 +170,7 @@ struct ProfileView: View {
                     }
                 }
             } message: {
-                Text("This will clear your read history, favorite stories, and customization settings. This cannot be undone.")
+                Text(L10n.t(.resetDataMessage))
             }
         }
     }

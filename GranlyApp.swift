@@ -8,8 +8,7 @@ struct GranlyApp: App {
         WindowGroup {
             ContentView()
                 .preferredColorScheme(darkMode ? .dark : .light)
+                .environmentObject(LanguageManager.shared)
         }
     }
 }
-
-

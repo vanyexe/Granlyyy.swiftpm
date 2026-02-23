@@ -2,34 +2,17 @@ import SwiftUI
 
 struct OnboardingView: View {
     @Binding var hasCompletedOnboarding: Bool
+    @EnvironmentObject var lang: LanguageManager
     @State private var currentPage = 0
     
-    let slides: [OnboardingSlide] = [
-        OnboardingSlide(
-            title: "Welcome to Granly",
-            description: "Your cozy corner for heartwarming stories and grandma's wisdom.",
-            icon: "hand.wave.fill",
-            color: .themeRose
-        ),
-        OnboardingSlide(
-            title: "Stories for Every Mood",
-            description: "Feeling happy, sad, or just need a hug? Granly has a story for you.",
-            icon: "book.closed.fill",
-            color: .themeGold
-        ),
-        OnboardingSlide(
-            title: "Daily Wisdom",
-            description: "Start your day with gentle advice and timeless life lessons.",
-            icon: "sparkles",
-            color: .themeGreen
-        ),
-        OnboardingSlide(
-            title: "Always Here For You",
-            description: "A safe space to feel loved, supported, and understood.",
-            icon: "heart.fill",
-            color: .themeWarm
-        )
-    ]
+    var slides: [OnboardingSlide] {
+        [
+            OnboardingSlide(title: L10n.t(.onboarding1Title), description: L10n.t(.onboarding1Description), icon: "hand.wave.fill", color: .themeRose),
+            OnboardingSlide(title: L10n.t(.onboarding2Title), description: L10n.t(.onboarding2Description), icon: "book.closed.fill", color: .themeGold),
+            OnboardingSlide(title: L10n.t(.onboarding3Title), description: L10n.t(.onboarding3Description), icon: "sparkles", color: .themeGreen),
+            OnboardingSlide(title: L10n.t(.onboarding4Title), description: L10n.t(.onboarding4Description), icon: "heart.fill", color: .themeWarm)
+        ]
+    }
     
     var body: some View {
         ZStack {
@@ -39,7 +22,7 @@ struct OnboardingView: View {
                 // Header (Skip button)
                 HStack {
                     Spacer()
-                    Button("Skip") {
+                    Button(L10n.t(.skip)) {
                         withAnimation { hasCompletedOnboarding = true }
                     }
                     .font(.subheadline.weight(.medium))
@@ -103,7 +86,7 @@ struct OnboardingView: View {
                             withAnimation(.easeInOut) { hasCompletedOnboarding = true }
                         }
                     }) {
-                        Text(currentPage == slides.count - 1 ? "Get Started" : "Continue")
+                        Text(currentPage == slides.count - 1 ? L10n.t(.getStarted) : L10n.t(.continueAction))
                             .font(.granlyBodyBold) // Reduced from Headline to BodyBold
                             .foregroundStyle(.white)
                             .frame(maxWidth: .infinity)
