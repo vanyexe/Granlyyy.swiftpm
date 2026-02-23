@@ -2,6 +2,7 @@ import SwiftUI
 
 struct DigitalGrandmaWisdomView: View {
     @State private var scrolledOffsets: CGFloat = 0
+    @EnvironmentObject var lang: LanguageManager
     
     var body: some View {
         ZStack {

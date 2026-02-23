@@ -12,6 +12,7 @@ struct StoryView: View {
     @ObservedObject private var storyManager = StoryManager.shared
     @StateObject private var settings = GrandmaSettings() // Use settings
     @Environment(\.dismiss) private var dismiss
+    @EnvironmentObject var lang: LanguageManager
     
     // Tap Interaction
     @State private var showHeartToast = false

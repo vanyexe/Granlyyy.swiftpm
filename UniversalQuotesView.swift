@@ -3,6 +3,7 @@ import SwiftUI
 struct UniversalQuotesView: View {
     @State private var currentIndex = 0
     @AppStorage("selectedLanguage") private var selectedLanguage: String = AppLanguage.english.rawValue
+    @EnvironmentObject var lang: LanguageManager
     
     private var quotes: [UniversalQuote] {
         UniversalQuotesData.quotes(for: AppLanguage(rawValue: selectedLanguage) ?? .english)

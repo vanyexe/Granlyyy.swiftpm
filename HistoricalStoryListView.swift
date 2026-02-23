@@ -3,6 +3,7 @@ import SwiftUI
 struct HistoricalStoryListView: View {
     @State private var selectedStory: HistoricalStory?
     @AppStorage("selectedLanguage") private var selectedLanguage: String = AppLanguage.english.rawValue
+    @EnvironmentObject var lang: LanguageManager
     
     private var stories: [HistoricalStory] {
         HistoricalStoriesData.top10Stories(for: AppLanguage(rawValue: selectedLanguage) ?? .english)

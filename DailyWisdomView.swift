@@ -6,6 +6,7 @@ struct DailyWisdomView: View {
     @State private var showShareSheet = false
     @State private var animateCard = false
     @State private var savedQuotes: Set<String> = [] // Simple in-memory save for now
+    @EnvironmentObject var lang: LanguageManager
     
     // Expanded Categories
     let categories = ["Life Lessons", "Love & Family", "Resilience", "Simple Joys", "Happiness", "Patience"]

@@ -4,6 +4,7 @@ struct GrowthPathView: View {
     @StateObject private var tracker = GrowthTrackerManager()
     @State private var showCompletionAlert = false
     @State private var activeNode: GrowthNode?
+    @EnvironmentObject var lang: LanguageManager
     
     var body: some View {
         ZStack {

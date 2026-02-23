@@ -4,6 +4,7 @@ struct MemoryBoxView: View {
     @ObservedObject var favoritesManager = FavoritesManager.shared
     @ObservedObject var storyManager = StoryManager.shared
     @AppStorage("selectedLanguage") private var selectedLanguage: String = AppLanguage.english.rawValue
+    @EnvironmentObject var lang: LanguageManager
     
     private var historicalStories: [HistoricalStory] {
         HistoricalStoriesData.top10Stories(for: AppLanguage(rawValue: selectedLanguage) ?? .english)

@@ -3,6 +3,7 @@ import SwiftUI
 public struct MemoriesView: View {
     public init() {}
     @ObservedObject var storyManager = StoryManager.shared
+    @EnvironmentObject var lang: LanguageManager
     
     var savedStories: [Story] {
         storyManager.likedStoryIDs.compactMap { id in

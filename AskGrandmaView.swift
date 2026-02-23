@@ -13,6 +13,7 @@ struct AskGrandmaView: View {
         ChatMessage(text: "Hello my dear! What's on your heart today? You can tell me anything.", isUser: false)
     ]
     @State private var isThinking = false
+    @EnvironmentObject var lang: LanguageManager
     
     // ML sentiment analysis and keyword matching
     private func generateGrandmaResponse(to input: String) -> String {

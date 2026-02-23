@@ -6,6 +6,7 @@ struct HistoricalStoryDetailView: View {
     @Environment(\.dismiss) private var dismiss
     @ObservedObject private var audioService = AudioService.shared
     @ObservedObject private var favoritesManager = FavoritesManager.shared
+    @EnvironmentObject var lang: LanguageManager
     
     var body: some View {
         ScrollView {

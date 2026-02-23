@@ -75,7 +75,7 @@ enum L10nKey: String {
     case grandmasMemoryBox, emptyMemoryBox, emptyMemoryBoxHint, savedStories, savedRecipes, savedQuotes
 
     // MARK: Home View
-    case dailyQuoteText
+    case dailyQuoteText, home
 }
 
 // MARK: - L10n Lookup Engine
@@ -171,7 +171,8 @@ struct L10n {
             .emptyMemoryBoxHint: "Tap the heart icon on your favorite stories and quotes to keep them safe in here.", 
             .savedStories: "Saved Stories", .savedRecipes: "Saved Recipes", .savedQuotes: "Saved Quotes",
 
-            .dailyQuoteText: "\"Keep your face always toward the sunshine and shadows will fall behind you.\""
+            .dailyQuoteText: "\"Keep your face always toward the sunshine and shadows will fall behind you.\"",
+            .home: "Home"
         ],
 
         // ─────────────────────────── HINDI ──────────────────────────────
@@ -255,7 +256,8 @@ struct L10n {
             .emptyMemoryBoxHint: "अपनी पसंदीदा कहानियों और विचारों को यहां सुरक्षित रखने के लिए उनके दिल के आइकन पर टैप करें।",
             .savedStories: "सहेजी गई कहानियाँ", .savedRecipes: "सहेजे गए व्यंजन", .savedQuotes: "सहेजे गए विचार",
 
-            .dailyQuoteText: "\"अपना चेहरा हमेशा धूप की ओर रखें और परछाइयाँ आपके पीछे पड़ेंगी।\""
+            .dailyQuoteText: "\"अपना चेहरा हमेशा धूप की ओर रखें और परछाइयाँ आपके पीछे पड़ेंगी।\"",
+            .home: "मुख्य पृष्ठ"
         ],
 
         // ─────────────────────────── SPANISH ─────────────────────────────
@@ -338,7 +340,8 @@ struct L10n {
             .emptyMemoryBoxHint: "Toca el ícono del corazón en tus historias y citas favoritas para guardarlas aquí.",
             .savedStories: "Historias Guardadas", .savedRecipes: "Recetas Guardadas", .savedQuotes: "Citas Guardadas",
 
-            .dailyQuoteText: "\"Mantén siempre tu rostro hacia la luz del sol y las sombras caerán detrás de ti.\""
+            .dailyQuoteText: "\"Mantén siempre tu rostro hacia la luz del sol y las sombras caerán detrás de ti.\"",
+            .home: "Inicio"
         ],
 
         // ─────────────────────────── FRENCH ─────────────────────────────
@@ -421,7 +424,8 @@ struct L10n {
             .emptyMemoryBoxHint: "Appuyez sur l'icône en forme de cœur de vos histoires et citations préférées pour les conserver ici en toute sécurité.",
             .savedStories: "Histoires Enregistrées", .savedRecipes: "Recettes Enregistrées", .savedQuotes: "Citations Enregistrées",
 
-            .dailyQuoteText: "\"Gardez toujours votre visage tourné vers le soleil et les ombres tomberont derrière vous.\""
+            .dailyQuoteText: "\"Gardez toujours votre visage tourné vers le soleil et les ombres tomberont derrière vous.\"",
+            .home: "Accueil"
         ],
 
         // ─────────────────────────── MANDARIN (zh-CN) ───────────────────────────
@@ -504,7 +508,8 @@ struct L10n {
             .emptyMemoryBoxHint: "点击你最喜欢的故事和句子上的小爱心图标，把它们安全地保存在这里。",
             .savedStories: "保存的故事", .savedRecipes: "保存的食谱", .savedQuotes: "保存的句子",
 
-            .dailyQuoteText: "\"将你的脸永远朝向阳光，阴影就会落在你的身后。\""
+            .dailyQuoteText: "\"将你的脸永远朝向阳光，阴影就会落在你的身后。\"",
+            .home: "首页"
         ],
     ]
 }

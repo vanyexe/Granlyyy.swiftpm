@@ -4,6 +4,7 @@ struct StoryListView: View {
     let mood: Mood
     @ObservedObject var storyManager = StoryManager.shared
     @Environment(\.dismiss) private var dismiss
+    @EnvironmentObject var lang: LanguageManager
     
     // Filter by Category
     @State private var selectedCategory: String = "All"

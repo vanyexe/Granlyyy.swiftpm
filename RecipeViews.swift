@@ -2,6 +2,7 @@ import SwiftUI
 
 struct RecipeListView: View {
     @AppStorage("selectedLanguage") private var selectedLanguage: String = AppLanguage.english.rawValue
+    @EnvironmentObject var lang: LanguageManager
     
     private var recipes: [Recipe] {
         RecipeData.comfortRecipes(for: AppLanguage(rawValue: selectedLanguage) ?? .english)
@@ -89,6 +90,7 @@ struct RecipeCard: View {
 struct RecipeDetailView: View {
     let recipe: Recipe
     @Environment(\.dismiss) private var dismiss
+    @EnvironmentObject var lang: LanguageManager
     
     var body: some View {
         ScrollView {

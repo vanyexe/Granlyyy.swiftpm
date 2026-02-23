@@ -28,23 +28,23 @@ struct HomeView: View {
                 // Shared background applied to the Home Tab content
                 homeContent
                     .tag(Tab.stories)
-                    .tabItem { Label("Home", systemImage: "house.fill") }
+                    .tabItem { Label(L10n.t(.home), systemImage: "house.fill") }
                 
                 MemoryBoxView()
                     .tag(Tab.memories)
-                    .tabItem { Label("Memories", systemImage: "heart.fill") }
+                    .tabItem { Label(L10n.t(.memories), systemImage: "heart.fill") }
                     
                 RecipeListView()
                     .tag(Tab.recipes)
-                    .tabItem { Label("Recipes", systemImage: "fork.knife") }
+                    .tabItem { Label(L10n.t(.recipes), systemImage: "fork.knife") }
                 
                 DigitalGrandmaWisdomView()
                     .tag(Tab.wisdom)
-                    .tabItem { Label("Wisdom", systemImage: "leaf.fill") }
+                    .tabItem { Label(L10n.t(.wisdom), systemImage: "leaf.fill") }
                 
                 ProfileView()
                     .tag(Tab.profile)
-                    .tabItem { Label("Profile", systemImage: "person.circle.fill") }
+                    .tabItem { Label(L10n.t(.profile), systemImage: "person.circle.fill") }
             }
             .tint(Color.themeRose)
             .navigationDestination(isPresented: $showSurpriseStory) {
