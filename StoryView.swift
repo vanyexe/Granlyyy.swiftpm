@@ -156,47 +156,32 @@ struct StoryView: View {
                 .frame(height: 160) // 220 -> 160 (Much more compact header area)
                 .padding(.vertical, 8) // 16 -> 8
                 
-                // Story Content and Controls (Same as before)
-                ScrollViewReader { proxy in
-                    ScrollView(showsIndicators: false) {
-                        VStack(alignment: .leading, spacing: 18) {
-                            if let story = story {
-                                let lines = splitToLines(story.content)
-                                
-                                Text(story.title)
-                                    .font(.granlyTitle2) // Title -> Title2 (Compact headers)
-                                    .foregroundStyle(.white)
-                                    .padding(.bottom, 8) // 16 -> 8
+                // Story Content and Controls
+                ScrollView(showsIndicators: false) {
+                    VStack(alignment: .leading, spacing: 18) {
+                        if let story = story {
+                            let lines = splitToLines(story.content)
+                            
+                            Text(story.title)
+                                .font(.granlyTitle2) // Title -> Title2 (Compact headers)
+                                .foregroundStyle(.white)
+                                .padding(.bottom, 8) // 16 -> 8
+                                .padding(.horizontal, 24) // 16 -> 24
+                            
+                            ForEach(Array(lines.enumerated()), id: \.offset) { index, line in
+                                Text(line)
+                                    .font(.granlyHeadline) // 24pt custom -> Headline (Much sleeker reading size)
+                                    .foregroundStyle(.white.opacity(0.85)) // Clean non-active look
                                     .padding(.horizontal, 24) // 16 -> 24
-                                
-                                ForEach(Array(lines.enumerated()), id: \.offset) { index, line in
-                                    let isActive = isLineActive(index: index, lines: lines)
-                                    
-                                    Text(line)
-                                        .font(.granlyHeadline) // 24pt custom -> Headline (Much sleeker reading size)
-                                        .foregroundStyle(isActive ? .white : .white.opacity(0.40)) // 0.3 -> 0.4 (Better low contrast legibility)
-                                        .padding(.horizontal, 24) // 16 -> 24
-                                        .multilineTextAlignment(.leading)
-                                        .scaleEffect(isActive ? 1.01 : 1.0, anchor: .leading)
-                                        .id(index)
-                                        .animation(.spring(response: 0.3, dampingFraction: 0.7), value: isActive)
-                                        .lineSpacing(4) // Add tighter line spacing for the body lines
-                                }
-                            } else {
-                                ProgressView().tint(.white)
+                                    .multilineTextAlignment(.leading)
+                                    .id(index)
+                                    .lineSpacing(4) // Add tighter line spacing for the body lines
                             }
-                        }
-                        .padding(.bottom, 40)
-                    }
-                    .onChange(of: speechManager.spokenRange) { range in
-                        guard let range = range, let story = story else { return }
-                        let lines = splitToLines(story.content)
-                        if let index = activeLineIndex(for: range, in: lines) {
-                            withAnimation(.spring(response: 0.5, dampingFraction: 0.8)) {
-                                proxy.scrollTo(index, anchor: .center)
-                            }
+                        } else {
+                            ProgressView().tint(.white)
                         }
                     }
+                    .padding(.bottom, 40)
                 }
                 
                 // Controls View
@@ -252,25 +237,6 @@ struct StoryView: View {
             .map { $0.trimmingCharacters(in: .whitespacesAndNewlines) }
             .filter { !$0.isEmpty }
     }
-    
-    private func activeLineIndex(for range: NSRange, in lines: [String]) -> Int? {
-        guard let story = story else { return nil }
-        var currentOffset = 0
-        for (index, line) in lines.enumerated() {
-            if let lineRange = story.content.range(of: line, range: story.content.index(story.content.startIndex, offsetBy: currentOffset)..<story.content.endIndex) {
-                let start = story.content.distance(from: story.content.startIndex, to: lineRange.lowerBound)
-                let end = story.content.distance(from: story.content.startIndex, to: lineRange.upperBound)
-                if range.location >= start && range.location <= end { return index }
-                currentOffset = end
-            }
-        }
-        return nil
-    }
-    
-    private func isLineActive(index: Int, lines: [String]) -> Bool {
-        guard let range = speechManager.spokenRange else { return false }
-        return activeLineIndex(for: range, in: lines) == index
-    }
 }
 
 struct ControlsView: View {
@@ -282,21 +248,29 @@ struct ControlsView: View {
     
     var body: some View {
         VStack(spacing: 18) {
-            // Progress Bar
+            // Scrubber
             VStack(spacing: 8) {
-                ZStack(alignment: .leading) {
-                    Capsule()
-                        .fill(.white.opacity(0.2))
-                        .frame(height: 4)
-                    Capsule()
-                        .fill(
-                            LinearGradient(
-                                colors: [Color.themeRose, Color.themeWarm],
-                                startPoint: .leading,
-                                endPoint: .trailing
-                            )
-                        )
-                        .frame(width: progressWidth(totalWidth: UIScreen.main.bounds.width - 40), height: 4)
+                if speechManager.isPreparingAudio {
+                    ProgressView()
+                        .tint(Color.themeRose)
+                } else {
+                    Slider(
+                        value: Binding(
+                            get: { speechManager.currentTime },
+                            set: { newValue in
+                                speechManager.scrub(to: newValue)
+                            }
+                        ),
+                        in: 0...max(speechManager.duration, 0.1),
+                        onEditingChanged: { editing in
+                            if editing {
+                                speechManager.scrubbingStarted()
+                            } else {
+                                speechManager.scrubbingEnded()
+                            }
+                        }
+                    )
+                    .tint(Color.themeRose)
                 }
                 
                 HStack {
@@ -345,9 +319,14 @@ struct ControlsView: View {
                         speechManager.pause()
                         animateAvatar = false
                     } else {
-                        if let c = story?.content {
-                            speechManager.speak(text: c)
-                            animateAvatar = true
+                        if speechManager.duration > 0 && speechManager.currentTime < speechManager.duration {
+                           speechManager.resume()
+                           animateAvatar = true
+                        } else {
+                           if let c = story?.content {
+                               speechManager.speak(text: c)
+                               animateAvatar = true
+                           }
                         }
                     }
                 }) {
@@ -398,20 +377,13 @@ struct ControlsView: View {
         )
     }
     
-    private func progressWidth(totalWidth: CGFloat) -> CGFloat {
-        guard let range = speechManager.spokenRange, let total = story?.content.count, total > 0 else { return 0 }
-        return CGFloat(range.location) / CGFloat(total) * totalWidth
-    }
-    
     private func formatProgress() -> String {
-        guard let range = speechManager.spokenRange else { return "0:00" }
-        let seconds = range.location / 15
+        let seconds = Int(speechManager.currentTime)
         return String(format: "%d:%02d", seconds / 60, seconds % 60)
     }
     
     private func formatDuration() -> String {
-        guard let total = story?.content.count else { return "0:00" }
-        let seconds = total / 15
+        let seconds = Int(speechManager.duration)
         return String(format: "%d:%02d", seconds / 60, seconds % 60)
     }
 }
@@ -420,16 +392,20 @@ struct ControlsView: View {
 
 
 // MARK: - Speech Manager
-class SpeechManager: NSObject, ObservableObject, AVSpeechSynthesizerDelegate, @unchecked Sendable {
+class SpeechManager: NSObject, ObservableObject, AVAudioPlayerDelegate, @unchecked Sendable {
     private var synthesizer = AVSpeechSynthesizer()
+    private var audioPlayer: AVAudioPlayer?
+    private var progressTimer: Timer?
+    private var isScrubbing = false
+    
     @Published var isSpeaking = false
-    @Published var spokenRange: NSRange?
+    @Published var selectedRange: NSRange?
+    @Published var currentTime: TimeInterval = 0
+    @Published var duration: TimeInterval = 0
+    @Published var isPreparingAudio = false
     
     override init() {
         super.init()
-        synthesizer.delegate = self
-        
-        // Configure audio session
         do {
             try AVAudioSession.sharedInstance().setCategory(.playback, mode: .spokenAudio, options: .duckOthers)
             try AVAudioSession.sharedInstance().setActive(true)
@@ -440,12 +416,14 @@ class SpeechManager: NSObject, ObservableObject, AVSpeechSynthesizerDelegate, @u
     
     func speak(text: String) {
         stop()
+        isPreparingAudio = true
+        
         let utterance = AVSpeechUtterance(string: text)
-        // Read language from UserDefaults (nonisolated — SpeechManager is not @MainActor)
         let code = UserDefaults.standard.string(forKey: "selectedLanguage") ?? AppLanguage.english.rawValue
         let bcp47 = AppLanguage(rawValue: code)?.bcp47 ?? "en-US"
         let allVoices = AVSpeechSynthesisVoice.speechVoices()
         let langPrefix = String(bcp47.prefix(2))
+        
         var voice: AVSpeechSynthesisVoice?
         if #available(iOS 16.0, *) {
             voice = allVoices.first(where: { $0.language.starts(with: langPrefix) && $0.gender == .female && $0.quality == .premium })
@@ -454,42 +432,124 @@ class SpeechManager: NSObject, ObservableObject, AVSpeechSynthesizerDelegate, @u
         voice = voice
             ?? allVoices.first(where: { $0.language.starts(with: langPrefix) && $0.gender == .female })
             ?? AVSpeechSynthesisVoice(language: bcp47)
+            
         utterance.voice = voice
-        // Warm Grandma narration parameters
         utterance.rate = AVSpeechUtteranceDefaultSpeechRate * 0.78
         utterance.pitchMultiplier = 1.08
         utterance.volume = 0.95
-        utterance.preUtteranceDelay = 0.55
         
-        synthesizer.speak(utterance)
-        isSpeaking = true
+        // Render speech to an audio file
+        let fileManager = FileManager.default
+        let url = fileManager.temporaryDirectory.appendingPathComponent(UUID().uuidString + ".wav")
+        
+        synthesizer.write(utterance) { [weak self] (buffer: AVAudioBuffer) in
+            guard let self = self, let pcmBuffer = buffer as? AVAudioPCMBuffer else { return }
+            
+            // Append buffer to file
+            let audioFile: AVAudioFile
+            do {
+                if !fileManager.fileExists(atPath: url.path) {
+                    audioFile = try AVAudioFile(forWriting: url, settings: pcmBuffer.format.settings, commonFormat: .pcmFormatInt16, interleaved: false)
+                } else {
+                    audioFile = try AVAudioFile(forWriting: url, settings: pcmBuffer.format.settings, commonFormat: .pcmFormatInt16, interleaved: false)
+                }
+                try audioFile.write(from: pcmBuffer)
+            } catch {
+                print("Error writing buffer: \(error)")
+            }
+        }
+        
+        // Note: write(utterance:) is asynchronous but doesn't have a completion handler.
+        // For accurate scrubbing, we poll until the synthesizer is done writing.
+        DispatchQueue.global(qos: .userInitiated).async { [weak self] in
+            guard let self = self else { return }
+            while self.synthesizer.isSpeaking {
+                Thread.sleep(forTimeInterval: 0.1)
+            }
+            
+            DispatchQueue.main.async {
+                self.setupAudioPlayer(url: url)
+                self.isPreparingAudio = false
+            }
+        }
+    }
+    
+    private func setupAudioPlayer(url: URL) {
+        do {
+            audioPlayer = try AVAudioPlayer(contentsOf: url)
+            audioPlayer?.delegate = self
+            audioPlayer?.prepareToPlay()
+            duration = audioPlayer?.duration ?? 0
+            audioPlayer?.play()
+            isSpeaking = true
+            startProgressTimer()
+        } catch {
+            print("Audio player error: \(error)")
+        }
     }
     
     func pause() {
-        if synthesizer.isSpeaking {
-            synthesizer.pauseSpeaking(at: .immediate)
-            isSpeaking = false
-        }
+        audioPlayer?.pause()
+        isSpeaking = false
+        stopProgressTimer()
+    }
+    
+    func resume() {
+        audioPlayer?.play()
+        isSpeaking = true
+        startProgressTimer()
     }
     
     func stop() {
-        if synthesizer.isSpeaking {
-            synthesizer.stopSpeaking(at: .immediate)
+        synthesizer.stopSpeaking(at: .immediate)
+        audioPlayer?.stop()
+        audioPlayer = nil
+        isSpeaking = false
+        currentTime = 0
+        duration = 0
+        stopProgressTimer()
+        // Clean up temp files if needed
+    }
+    
+    // MARK: - Scrubbing
+    
+    func scrub(to time: TimeInterval) {
+        currentTime = max(0, min(time, duration))
+        audioPlayer?.currentTime = currentTime
+    }
+    
+    func scrubbingStarted() {
+        isScrubbing = true
+        pause()
+    }
+    
+    func scrubbingEnded() {
+        isScrubbing = false
+        resume()
+    }
+    
+    // MARK: - Timer
+    
+    private func startProgressTimer() {
+        stopProgressTimer()
+        progressTimer = Timer.scheduledTimer(withTimeInterval: 0.1, repeats: true) { [weak self] _ in
+            guard let self = self, !self.isScrubbing, let player = self.audioPlayer else { return }
+            self.currentTime = player.currentTime
         }
-        isSpeaking = false
-        spokenRange = nil
     }
     
-    func speechSynthesizer(_ synthesizer: AVSpeechSynthesizer, didStart utterance: AVSpeechUtterance) {
-        isSpeaking = true
+    private func stopProgressTimer() {
+        progressTimer?.invalidate()
+        progressTimer = nil
     }
     
-    func speechSynthesizer(_ synthesizer: AVSpeechSynthesizer, didFinish utterance: AVSpeechUtterance) {
-        isSpeaking = false
-        spokenRange = nil
-    }
+    // MARK: - AVAudioPlayerDelegate
     
-    func speechSynthesizer(_ synthesizer: AVSpeechSynthesizer, willSpeakRangeOfSpeechString characterRange: NSRange, utterance: AVSpeechUtterance) {
-        spokenRange = characterRange
+    func audioPlayerDidFinishPlaying(_ player: AVAudioPlayer, successfully flag: Bool) {
+        DispatchQueue.main.async {
+            self.isSpeaking = false
+            self.currentTime = self.duration
+            self.stopProgressTimer()
+        }
     }
 }
