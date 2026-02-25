@@ -57,7 +57,7 @@ struct GlassCard: ViewModifier {
 }
 
 extension View {
-    func glassCard(cornerRadius: CGFloat = 24) -> some View {
+    nonisolated func glassCard(cornerRadius: CGFloat = 24) -> some View {
         modifier(GlassCard(cornerRadius: cornerRadius))
     }
 }

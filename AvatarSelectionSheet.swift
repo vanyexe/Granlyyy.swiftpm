@@ -37,14 +37,12 @@ struct AvatarSelectionSheet: View {
                         // ── Selection Options ───────────────────────────────
                         VStack(spacing: 20) {
                             
-                            // 1. Gallery Picker
                             PhotosPicker(selection: $selectedItem, matching: .images) {
-                                galleryPickerLabel
+                                galleryPickerLabel()
                             }
                             .onChange(of: selectedItem) { newItem in
                                 Task { @MainActor in
                                     if let data = try? await newItem?.loadTransferable(type: Data.self) {
-                                        // Resize if possible or just store
                                         customImageData = data
                                         avatarType = "gallery"
                                         dismiss()
@@ -85,7 +83,7 @@ struct AvatarSelectionSheet: View {
                                     .padding()
                                     .frame(maxWidth: .infinity)
                                     .background(.ultraThinMaterial)
-                                    .clipShape(Capsule())
+                                    .clipShape(RoundedRectangle(cornerRadius: 24))
                             }
                         }
                         .padding(.horizontal)
@@ -106,7 +104,7 @@ struct AvatarSelectionSheet: View {
     // ── Helper View Builders for Isolation ──────────────────────────────────
     
     @ViewBuilder
-    private var galleryPickerLabel: some View {
+    nonisolated private func galleryPickerLabel() -> some View {
         HStack {
             Image(systemName: "photo.on.rectangle")
                 .foregroundStyle(.blue)
