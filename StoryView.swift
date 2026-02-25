@@ -139,13 +139,13 @@ struct StoryView: View {
                     .padding(.top, 12)
 
                     // ── Avatar Card ──────────────────────────────────────
-                    let width = geo.size.width
-                    let cardSize: CGFloat = (width.isFinite && width > 110) ? min(width - 110, 230) : 0
                     ZStack {
-                        // Outer soft glow ring
+
+                        // Outer glow
                         Circle()
                             .fill(primaryColor.opacity(artworkPulse ? 0.20 : 0.09))
-                            .frame(width: cardSize + 76, height: cardSize + 76)
+                            .frame(maxWidth: 300)
+                            .aspectRatio(1, contentMode: .fit)
                             .blur(radius: 32)
                             .scaleEffect(artworkPulse ? 1.08 : 1.00)
                             .animation(.easeInOut(duration: 2.0).repeatForever(autoreverses: true), value: artworkPulse)
@@ -153,7 +153,8 @@ struct StoryView: View {
                         // Inner bloom
                         Circle()
                             .fill(primaryColor.opacity(artworkPulse ? 0.42 : 0.22))
-                            .frame(width: cardSize + 28, height: cardSize + 28)
+                            .frame(maxWidth: 240)
+                            .aspectRatio(1, contentMode: .fit)
                             .blur(radius: 48)
                             .scaleEffect(artworkPulse ? 1.13 : 1.00)
                             .animation(.easeInOut(duration: 1.6).repeatForever(autoreverses: true), value: artworkPulse)
@@ -165,7 +166,8 @@ struct StoryView: View {
                             isSpeaking: $speechManager.isSpeaking,
                             settings:   settings
                         )
-                        .frame(width: cardSize, height: cardSize)
+                        .frame(maxWidth: 200)
+                        .aspectRatio(1, contentMode: .fit)
                         .clipShape(Circle())
                         .overlay(Circle().stroke(.white.opacity(0.16), lineWidth: 1.5))
                         .shadow(color: primaryColor.opacity(0.50), radius: 30, x: 0, y: 12)
@@ -177,21 +179,22 @@ struct StoryView: View {
                         // Heart toast
                         if showHeartToast {
                             HStack(spacing: 5) {
-                                Text(toastMessage).font(.system(size: 12, weight: .medium))
+                                Text(toastMessage)
+                                    .font(.system(size: 12, weight: .medium))
                                 Image(systemName: "heart.fill")
                                     .font(.system(size: 11))
                                     .foregroundStyle(Color.themeRose)
                             }
                             .foregroundStyle(Color.black.opacity(0.80))
-                            .padding(.horizontal, 14).padding(.vertical, 8)
+                            .padding(.horizontal, 14)
+                            .padding(.vertical, 8)
                             .background(.white.opacity(0.93), in: Capsule())
                             .shadow(color: .black.opacity(0.15), radius: 10, x: 0, y: 4)
                             .transition(.scale.combined(with: .opacity))
-                            .offset(y: -(cardSize * 0.60))
+                            .offset(y: -120)
                         }
                     }
                     .padding(.top, 22)
-
                     // ── Story Title & Mood Pill ──────────────────────────
                     VStack(spacing: 9) {
                         if let story = story {
@@ -393,7 +396,7 @@ struct ControlsView: View {
                                     .frame(width: 14, height: 14)
                                     .shadow(color: accentColor.opacity(0.55), radius: 6)
                                     .shadow(color: .black.opacity(0.18), radius: 2, x: 0, y: 1)
-                                    .offset(x: max(0, filled - 7))
+                                    .offset(x: filled.isFinite ? max(0, filled - 7) : 0)
                             }
                             .contentShape(Rectangle())
                             .gesture(
@@ -524,10 +527,22 @@ struct ControlsView: View {
     }
 
     private func progressWidth(totalWidth: CGFloat) -> CGFloat {
-        guard speechManager.duration > 0 else { return 0 }
-        return totalWidth * CGFloat(speechManager.currentTime / speechManager.duration)
-    }
+        guard
+            totalWidth.isFinite,
+            totalWidth > 0,
+            speechManager.duration.isFinite,
+            speechManager.duration > 0,
+            speechManager.currentTime.isFinite
+        else {
+            return 0
+        }
 
+        let progress = speechManager.currentTime / speechManager.duration
+        let clampedProgress = max(0, min(1, progress))
+
+        return totalWidth * CGFloat(clampedProgress)
+    }
+    
     private func fmt(_ t: TimeInterval) -> String {
         let s = Int(t); return String(format: "%d:%02d", s / 60, s % 60)
     }
