@@ -25,7 +25,6 @@ struct StoryView: View {
 
     // UI state
     @State private var artworkPulse  = false   // card breathes while speaking
-    @State private var showStoryText = false   // collapsible text panel
 
     // MARK: Color helpers
     private var primaryColor: Color  { mood.baseColor }
@@ -188,43 +187,17 @@ struct StoryView: View {
                     }
                     .padding(.top, 16)
 
-                    // ── Collapsible story text ───────────────────────────
-                    if story != nil {
-                        Button {
-                            withAnimation(.easeInOut(duration: 0.28)) {
-                                showStoryText.toggle()
-                            }
-                        } label: {
-                            HStack(spacing: 5) {
-                                Image(systemName: "text.alignleft")
-                                    .font(.system(size: 11))
-                                Text(showStoryText ? "Hide Story" : "Read Story")
-                                    .font(.system(size: 12, weight: .semibold))
-                                Image(systemName: showStoryText ? "chevron.up" : "chevron.down")
-                                    .font(.system(size: 10, weight: .medium))
-                            }
-                            .foregroundStyle(.white.opacity(0.65))
-                            .padding(.horizontal, 14).padding(.vertical, 7)
-                            .background(.white.opacity(0.10), in: Capsule())
-                        }
-                        .padding(.top, 10)
-                    }
-
-                    if showStoryText, let story = story {
-                        ScrollView(showsIndicators: false) {
-                            Text(story.content)
-                                .font(.system(size: 14, weight: .regular))
-                                .foregroundStyle(textColor.opacity(0.87))
-                                .lineSpacing(6)
-                                .padding(.horizontal, 20)
-                                .padding(.vertical, 14)
-                                .multilineTextAlignment(.leading)
-                        }
-                        .frame(maxHeight: 170)
-                        .background(.black.opacity(0.20), in: RoundedRectangle(cornerRadius: 16, style: .continuous))
+                    // ── Story Text — always visible, karaoke-style highlight ──────
+                    if let story = story {
+                        ProgressHighlightTextView(
+                            text: story.content,
+                            speakingRange: speechManager.speakingRange,
+                            accentColor: primaryColor
+                        )
+                        .frame(maxHeight: 200)
+                        .background(.black.opacity(0.18), in: RoundedRectangle(cornerRadius: 16, style: .continuous))
                         .padding(.horizontal, 20)
-                        .padding(.top, 6)
-                        .transition(.opacity.combined(with: .move(edge: .top)))
+                        .padding(.top, 10)
                     }
 
                     Spacer(minLength: 0)
@@ -512,6 +485,78 @@ struct ControlsView: View {
     }
 }
 
+// MARK: - Karaoke-style cumulative progress highlight
+/// Renders the story text with all already-spoken characters highlighted.
+/// Spoken = full white/accent. Current word = glow. Remaining = dim.
+@MainActor
+struct ProgressHighlightTextView: View {
+    let text: String
+    let speakingRange: NSRange?
+    let accentColor: Color
+
+    // The character position up to which text has been spoken
+    private var spokenUpTo: Int {
+        guard let range = speakingRange else { return 0 }
+        return range.location + range.length
+    }
+
+    var body: some View {
+        ScrollViewReader { proxy in
+            ScrollView(showsIndicators: false) {
+                // We use a Text built from AttributedString for smooth rendering
+                Text(buildAttributedString())
+                    .font(.system(size: 16, weight: .regular, design: .rounded))
+                    .lineSpacing(7)
+                    .multilineTextAlignment(.leading)
+                    .padding(.horizontal, 18)
+                    .padding(.vertical, 14)
+                    .id("storyText")
+                    .animation(.easeInOut(duration: 0.18), value: spokenUpTo)
+            }
+            .onChange(of: spokenUpTo) { _ in
+                withAnimation(.easeInOut(duration: 0.25)) {
+                    proxy.scrollTo("storyText", anchor: .bottom)
+                }
+            }
+        }
+    }
+
+    private func buildAttributedString() -> AttributedString {
+        var attributed = AttributedString(text)
+        let nsString = text as NSString
+        let totalLength = nsString.length
+        let upTo = min(spokenUpTo, totalLength)
+
+        // ── Past / spoken segment: bright, readable ──────────────────
+        if upTo > 0 {
+            let pastEnd = attributed.index(attributed.startIndex, offsetByCharacters: upTo)
+            let pastRange = attributed.startIndex ..< pastEnd
+            attributed[pastRange].foregroundColor = UIColor.white
+        }
+
+        // ── Current word: accent-colored glow ────────────────────────
+        if let speaking = speakingRange {
+            let wordStart = min(speaking.location, totalLength)
+            let wordEnd   = min(speaking.location + speaking.length, totalLength)
+            if wordStart < wordEnd {
+                let si = attributed.index(attributed.startIndex, offsetByCharacters: wordStart)
+                let ei = attributed.index(attributed.startIndex, offsetByCharacters: wordEnd)
+                let wordRange = si ..< ei
+                attributed[wordRange].foregroundColor = UIColor(accentColor)
+            }
+        }
+
+        // ── Remaining / upcoming: dimmed ─────────────────────────────
+        if upTo < totalLength {
+            let futureStart = attributed.index(attributed.startIndex, offsetByCharacters: upTo)
+            let futureRange = futureStart ..< attributed.endIndex
+            attributed[futureRange].foregroundColor = UIColor.white.withAlphaComponent(0.35)
+        }
+
+        return attributed
+    }
+}
+
 // MARK: - Thin UIKit blur wrapper  (avoids heavy background modifier)
 struct VisualEffectBlur: UIViewRepresentable {
     var blurStyle: UIBlurEffect.Style
@@ -531,6 +576,7 @@ class SpeechManager: NSObject, ObservableObject, AVSpeechSynthesizerDelegate, @u
     @Published var isPreparingAudio: Bool         = false   // kept for ControlsView compatibility
     @Published var currentTime:      TimeInterval = 0
     @Published var duration:         TimeInterval = 0
+    @Published var speakingRange:    NSRange?     = nil
 
     // MARK: Internals
     private let synthesizer = AVSpeechSynthesizer()
@@ -613,6 +659,7 @@ class SpeechManager: NSObject, ObservableObject, AVSpeechSynthesizerDelegate, @u
 
     func speak(text: String, languageBCP47: String? = nil) {
         stop()
+        speakingRange    = nil
         let bcp47        = languageBCP47 ?? resolvedBCP47()
         currentText      = text
         totalCharCount   = text.count
@@ -654,6 +701,7 @@ class SpeechManager: NSObject, ObservableObject, AVSpeechSynthesizerDelegate, @u
         isPreparingAudio = false
         currentTime      = 0
         duration         = 0
+        speakingRange    = nil
         stopProgressTimer()
     }
 
@@ -706,6 +754,7 @@ class SpeechManager: NSObject, ObservableObject, AVSpeechSynthesizerDelegate, @u
         DispatchQueue.main.async { [weak self] in
             guard let self else { return }
             self.currentTime = self.duration * ratio
+            self.speakingRange = characterRange
         }
     }
 
@@ -714,6 +763,7 @@ class SpeechManager: NSObject, ObservableObject, AVSpeechSynthesizerDelegate, @u
             guard let self else { return }
             self.isSpeaking  = false
             self.currentTime = self.duration
+            self.speakingRange = nil
             self.stopProgressTimer()
         }
     }
@@ -731,8 +781,10 @@ class SpeechManager: NSObject, ObservableObject, AVSpeechSynthesizerDelegate, @u
 
     func speechSynthesizer(_ synthesizer: AVSpeechSynthesizer, didCancel utterance: AVSpeechUtterance) {
         DispatchQueue.main.async { [weak self] in
-            self?.isSpeaking = false
-            self?.stopProgressTimer()
+            guard let self else { return }
+            self.isSpeaking  = false
+            self.speakingRange = nil
+            self.stopProgressTimer()
         }
     }
 
