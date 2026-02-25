@@ -139,7 +139,7 @@ struct StoryView: View {
                     .padding(.top, 12)
 
                     // ── Avatar Card ──────────────────────────────────────
-                    let cardSize: CGFloat = min(geo.size.width - 110, 230)
+                    let cardSize: CGFloat = max(0, min(geo.size.width - 110, 230))
                     ZStack {
                         // Outer soft glow ring
                         Circle()

@@ -117,6 +117,9 @@ enum L10nKey: String {
     // MARK: Recipes
     // MARK: Recipes
     case recipes, prepTime, ingredients, steps, difficulty, grandmasKitchen, comfortFoodSubtitle, instructions
+    
+    // MARK: Cozy Activities
+    case cozyActivities, cozyActivitiesSubtitle, grandmasHeart, guidedMoment
 
     // MARK: Universal Quotes
     case universalWisdom, timelessTruthsSubtitle, simpleMeaning, grandmaSaysTitle
@@ -228,6 +231,10 @@ struct L10n {
             .allCategory: "All", .shortCategory: "Short", .moralCategory: "Moral",
             .bedtimeCategory: "Bedtime", .funnyCategory: "Funny", .natureCategory: "Nature", .comfortCategory: "Comfort",
             .storiesLabel: "Stories", .minRead: "min read",
+            
+            .cozyActivities: "Cozy Activities",
+            .cozyActivitiesSubtitle: "Comforting moments for your soul.",
+            .grandmasHeart: "Grandma's Heart", .guidedMoment: "Guided Moment",
 
             .discussThisQuote: "Discuss this quote",
             .updateGrowthPath: "Update your Growth Path",
@@ -431,6 +438,10 @@ struct L10n {
             .steps: "चरण", .difficulty: "कठिनाई", .grandmasKitchen: "दादी की रसोई",
             .comfortFoodSubtitle: "आत्मा के लिए सुकून का खाना।", .instructions: "निर्देश",
 
+            .cozyActivities: "आरामदायक गतिविधियाँ",
+            .cozyActivitiesSubtitle: "आपकी आत्मा के लिए सुखद क्षण।",
+            .grandmasHeart: "दादी का हृदय", .guidedMoment: "मार्गदर्शित क्षण",
+
             .universalWisdom: "सार्वभौमिक ज्ञान", .timelessTruthsSubtitle: "कालातीत सत्य जो हम सभी को जोड़ते हैं।",
             .simpleMeaning: "सरल अर्थ", .grandmaSaysTitle: "दादी कहती हैं...",
 
@@ -580,6 +591,10 @@ struct L10n {
             .recipes: "Recetas", .prepTime: "Tiempo de prep.", .ingredients: "Ingredientes",
             .steps: "Pasos", .difficulty: "Dificultad", .grandmasKitchen: "La Cocina de la Abuela",
             .comfortFoodSubtitle: "Comida reconfortante para el alma.", .instructions: "Instrucciones",
+            
+            .cozyActivities: "Actividades Acogedoras",
+            .cozyActivitiesSubtitle: "Momentos reconfortantes para tu alma.",
+            .grandmasHeart: "Corazón de la Abuela", .guidedMoment: "Momento Guiado",
 
             .universalWisdom: "Sabiduría Universal", .timelessTruthsSubtitle: "Verdades eternas que nos conectan a todos.",
             .simpleMeaning: "Significado Simple", .grandmaSaysTitle: "La Abuela Dice...",
@@ -730,6 +745,10 @@ struct L10n {
             .recipes: "Recettes", .prepTime: "Temps de Préparation", .ingredients: "Ingrédients",
             .steps: "Étapes", .difficulty: "Difficulté", .grandmasKitchen: "La Cuisine de Grand-mère",
             .comfortFoodSubtitle: "Une cuisine réconfortante pour l'âme.", .instructions: "Instructions",
+            
+            .cozyActivities: "Activités Cocooning",
+            .cozyActivitiesSubtitle: "Des moments de réconfort pour votre âme.",
+            .grandmasHeart: "Cœur de Grand-mère", .guidedMoment: "Moment Guidé",
 
             .universalWisdom: "Sagesse Universelle", .timelessTruthsSubtitle: "Des vérités intemporelles qui nous relient tous.",
             .simpleMeaning: "Signification Simple", .grandmaSaysTitle: "Grand-mère Dit...",
@@ -829,6 +848,10 @@ struct L10n {
             .allCategory: "全部", .shortCategory: "短篇", .moralCategory: "寓言",
             .bedtimeCategory: "睡前", .funnyCategory: "趣味", .natureCategory: "自然", .comfortCategory: "慰藉",
             .storiesLabel: "故事", .minRead: "分钟阅读",
+            
+            .cozyActivities: "温馨活动",
+            .cozyActivitiesSubtitle: "抚慰心灵的写意时刻。",
+            .grandmasHeart: "奶奶的心声", .guidedMoment: "导引时刻",
 
             .discussThisQuote: "讨论这句话",
             .updateGrowthPath: "更新您的成长之路",
