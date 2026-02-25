@@ -2,6 +2,7 @@ import SwiftUI
 
 /// Full story browser — destination for the "See All" button on the Home screen.
 /// Shows stories across all moods with a horizontal mood-chip filter and category pills.
+@MainActor
 struct AllStoriesView: View {
     @EnvironmentObject var lang: LanguageManager
     @ObservedObject private var storyManager = StoryManager.shared
@@ -144,6 +145,7 @@ struct AllStoriesView: View {
 
 // MARK: - Mood Filter Chip
 
+@MainActor
 private struct MoodFilterChip: View {
     let label: String
     let color: Color
@@ -166,6 +168,7 @@ private struct MoodFilterChip: View {
 
 // MARK: - Story Row
 
+@MainActor
 private struct AllStoryRow: View {
     let story: Story
     let mood: Mood

@@ -1,5 +1,6 @@
 import SwiftUI
 
+@MainActor
 struct ProfileView: View {
     @StateObject private var languageManager = LanguageManager.shared
     @EnvironmentObject var lang: LanguageManager
@@ -16,6 +17,7 @@ struct ProfileView: View {
     @State private var tempName = ""
     @State private var showResetAlert = false
     @State private var showRateAlert = false
+    @State private var showAvatarSheet = false
     
     var body: some View {
         NavigationStack {
@@ -26,31 +28,40 @@ struct ProfileView: View {
                 ScrollView {
                     VStack(spacing: 24) { // 24 -> 20
                         // Hero Header
-                        VStack(spacing: 12) { // 16 -> 12
-                            ZStack {
-                                Circle()
-                                    .fill(Color.themeRose.opacity(0.2))
-                                    .frame(width: 100, height: 100) // 120 -> 100
-                                    .blur(radius: 20)
-                                
-                                Image("grandma_avatar_circle")
-                                    .resizable()
-                                    .scaledToFit()
-                                    .frame(width: 80, height: 80) // 100 -> 80
-                                    .clipShape(Circle())
-                                    .overlay(Circle().stroke(.white, lineWidth: 3)) // 4 -> 3
-                                    .shadow(radius: 8) // 10 -> 8
+                        VStack(spacing: 16) { 
+                            // Profile Picture
+                            Button(action: { showAvatarSheet = true }) {
+                                ZStack {
+                                    Circle()
+                                        .fill(Color.themeRose.opacity(0.1))
+                                        .frame(width: 110, height: 110)
+                                        .blur(radius: 20)
+                                    
+                                    ProfileAvatarView(size: 90)
+                                        .shadow(radius: 8)
+                                    
+                                    // Change indicator
+                                    Image(systemName: "camera.fill")
+                                        .font(.caption2)
+                                        .foregroundStyle(.white)
+                                        .padding(6)
+                                        .background(Color.themeRose)
+                                        .clipShape(Circle())
+                                        .offset(x: 30, y: 30)
+                                }
                             }
+                            .buttonStyle(.plain)
                             
-                            VStack(spacing: 4) {
+                            VStack(spacing: 8) {
                                 Text(L10n.t(.myDear))
                                     .font(.granlyHeadline)
                                     .foregroundStyle(Color.themeText)
+                                
                                 Text("\(L10n.t(.storiesRead)): \(storiesRead)")
                                     .font(.granlySubheadline)
                                     .foregroundStyle(.secondary)
                                     .padding(.horizontal, 12)
-                                    .padding(.vertical, 6)
+                                    .padding(.vertical, 4)
                                     .background(.ultraThinMaterial)
                                     .clipShape(Capsule())
                             }
@@ -147,6 +158,9 @@ struct ProfileView: View {
             }
             .sheet(isPresented: $showLanguageSheet) {
                 LanguageSelectionView(hasSelectedLanguage: .constant(true))
+            }
+            .sheet(isPresented: $showAvatarSheet) {
+                AvatarSelectionSheet()
             }
             .alert(L10n.t(.renameGrandma), isPresented: $showNameEditAlert) {
                 TextField(L10n.t(.grandmasName), text: $tempName)
