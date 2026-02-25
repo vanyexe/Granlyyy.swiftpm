@@ -25,39 +25,60 @@ struct StoryView: View {
 
     // UI state
     @State private var artworkPulse  = false   // card breathes while speaking
+    @State private var glowPhase     = false   // ambient background orbs
 
     // MARK: Color helpers
     private var primaryColor: Color  { mood.baseColor }
     private var bgColors:    [Color] { mood.gradientColors(for: colorScheme) }
     private var textColor:   Color   { .white }
-    private var subtleText:  Color   { .white.opacity(0.60) }
+    private var subtleText:  Color   { .white.opacity(0.55) }
 
     var body: some View {
         GeometryReader { geo in
             ZStack(alignment: .top) {
 
-                // ─── Background: muted layered gradient + dark veil ──────
+                // ─── Rich layered background ────────────────────────────────
                 ZStack {
+                    // Deep base gradient
                     LinearGradient(
                         gradient: Gradient(stops: [
-                            .init(color: bgColors[0].opacity(0.72), location: 0.00),
-                            .init(color: bgColors[1].opacity(0.55), location: 0.50),
-                            .init(color: bgColors[2].opacity(0.88), location: 1.00)
+                            .init(color: bgColors[0].opacity(0.85), location: 0.00),
+                            .init(color: bgColors[1].opacity(0.62), location: 0.45),
+                            .init(color: bgColors[2].opacity(0.95), location: 1.00)
                         ]),
                         startPoint: .topLeading,
                         endPoint:   .bottomTrailing
                     )
-                    // Dark readability veil
+                    // Cinematic dark veil
                     LinearGradient(
                         gradient: Gradient(colors: [
-                            Color.black.opacity(colorScheme == .dark ? 0.52 : 0.30),
-                            Color.black.opacity(colorScheme == .dark ? 0.74 : 0.46)
+                            Color.black.opacity(colorScheme == .dark ? 0.55 : 0.32),
+                            Color.black.opacity(colorScheme == .dark ? 0.80 : 0.52)
                         ]),
                         startPoint: .top,
                         endPoint:   .bottom
                     )
+                    // Ambient orb — top centre
+                    Ellipse()
+                        .fill(primaryColor.opacity(glowPhase ? 0.24 : 0.11))
+                        .frame(width: 340, height: 230)
+                        .blur(radius: 65)
+                        .offset(x: glowPhase ? 30 : -30, y: glowPhase ? -140 : -110)
+                        .allowsHitTesting(false)
+                    // Ambient orb — bottom
+                    Ellipse()
+                        .fill(bgColors[1].opacity(glowPhase ? 0.20 : 0.09))
+                        .frame(width: 280, height: 190)
+                        .blur(radius: 55)
+                        .offset(x: glowPhase ? -45 : 25, y: glowPhase ? geo.size.height * 0.56 : geo.size.height * 0.50)
+                        .allowsHitTesting(false)
                 }
                 .ignoresSafeArea()
+                .onAppear {
+                    withAnimation(.easeInOut(duration: 5.5).repeatForever(autoreverses: true)) {
+                        glowPhase = true
+                    }
+                }
 
                 // ─── Filter overlays ─────────────────────────────────────
                 Group {
@@ -78,12 +99,13 @@ struct StoryView: View {
                 VStack(spacing: 0) {
 
                     // ── Top Nav Bar ──────────────────────────────────────
-                    HStack(alignment: .center) {
+                    HStack {
                         Button { dismiss() } label: {
                             Image(systemName: "chevron.down")
-                                .font(.system(size: 17, weight: .semibold))
-                                .frame(width: 38, height: 38)
-                                .background(.white.opacity(0.12), in: Circle())
+                                .font(.system(size: 16, weight: .semibold))
+                                .frame(width: 36, height: 36)
+                                .background(.white.opacity(0.10), in: Circle())
+                                .overlay(Circle().stroke(.white.opacity(0.09), lineWidth: 1))
                         }
 
                         Spacer()
@@ -91,40 +113,49 @@ struct StoryView: View {
                         VStack(spacing: 2) {
                             Text(L10n.t(.tellingFrom).uppercased())
                                 .font(.system(size: 9, weight: .bold))
-                                .kerning(1.6)
+                                .kerning(2.0)
                                 .foregroundStyle(subtleText)
                             Text(mood.localizedName(for: lang.selectedLanguage))
-                                .font(.system(size: 13, weight: .semibold))
+                                .font(.system(size: 14, weight: .semibold))
                                 .foregroundStyle(textColor)
                         }
 
                         Spacer()
 
                         if let story = story {
-                            ShareLink(item: "\(story.title)\n\n\(story.content)\n\n— From Granly App") {
+                            ShareLink(item: "\(story.title)\n\n\(story.content)\n\n— From Granly") {
                                 Image(systemName: "square.and.arrow.up")
-                                    .font(.system(size: 16, weight: .semibold))
-                                    .frame(width: 38, height: 38)
-                                    .background(.white.opacity(0.12), in: Circle())
+                                    .font(.system(size: 15, weight: .semibold))
+                                    .frame(width: 36, height: 36)
+                                    .background(.white.opacity(0.10), in: Circle())
+                                    .overlay(Circle().stroke(.white.opacity(0.09), lineWidth: 1))
                             }
                         } else {
-                            Color.clear.frame(width: 38, height: 38)
+                            Color.clear.frame(width: 36, height: 36)
                         }
                     }
                     .foregroundStyle(textColor)
-                    .padding(.horizontal, 24)
-                    .padding(.top, 10)
+                    .padding(.horizontal, 22)
+                    .padding(.top, 12)
 
-                    // ── Artwork Card ─────────────────────────────────────
-                    let cardSize: CGFloat = min(geo.size.width - 72, 290)
+                    // ── Avatar Card ──────────────────────────────────────
+                    let cardSize: CGFloat = min(geo.size.width - 110, 230)
                     ZStack {
-                        // Ambient glow
-                        RoundedRectangle(cornerRadius: 28)
-                            .fill(primaryColor.opacity(0.42))
-                            .frame(width: cardSize + 20, height: cardSize + 20)
-                            .blur(radius: 44)
-                            .scaleEffect(artworkPulse ? 1.10 : 1.00)
-                            .animation(.easeInOut(duration: 0.4), value: artworkPulse)
+                        // Outer soft glow ring
+                        Circle()
+                            .fill(primaryColor.opacity(artworkPulse ? 0.20 : 0.09))
+                            .frame(width: cardSize + 76, height: cardSize + 76)
+                            .blur(radius: 32)
+                            .scaleEffect(artworkPulse ? 1.08 : 1.00)
+                            .animation(.easeInOut(duration: 2.0).repeatForever(autoreverses: true), value: artworkPulse)
+
+                        // Inner bloom
+                        Circle()
+                            .fill(primaryColor.opacity(artworkPulse ? 0.42 : 0.22))
+                            .frame(width: cardSize + 28, height: cardSize + 28)
+                            .blur(radius: 48)
+                            .scaleEffect(artworkPulse ? 1.13 : 1.00)
+                            .animation(.easeInOut(duration: 1.6).repeatForever(autoreverses: true), value: artworkPulse)
 
                         // Grandma SceneKit view
                         GrandmaSceneView(
@@ -134,70 +165,81 @@ struct StoryView: View {
                             settings:   settings
                         )
                         .frame(width: cardSize, height: cardSize)
-                        .clipShape(RoundedRectangle(cornerRadius: 24, style: .continuous))
-                        .overlay(
-                            RoundedRectangle(cornerRadius: 24, style: .continuous)
-                                .stroke(.white.opacity(0.14), lineWidth: 1)
-                        )
-                        .shadow(color: .black.opacity(0.50), radius: 32, x: 0, y: 18)
-                        .scaleEffect(artworkPulse ? 1.025 : 1.00)
-                        .animation(.easeInOut(duration: 0.4), value: artworkPulse)
+                        .clipShape(Circle())
+                        .overlay(Circle().stroke(.white.opacity(0.16), lineWidth: 1.5))
+                        .shadow(color: primaryColor.opacity(0.50), radius: 30, x: 0, y: 12)
+                        .shadow(color: .black.opacity(0.42), radius: 22, x: 0, y: 10)
+                        .scaleEffect(artworkPulse ? 1.03 : 1.00)
+                        .animation(.easeInOut(duration: 0.45), value: artworkPulse)
                         .onTapGesture { handleGrandmaTap() }
 
                         // Heart toast
                         if showHeartToast {
                             HStack(spacing: 5) {
-                                Text(toastMessage).font(.system(size: 13, weight: .medium))
+                                Text(toastMessage).font(.system(size: 12, weight: .medium))
                                 Image(systemName: "heart.fill")
-                                    .font(.system(size: 12))
+                                    .font(.system(size: 11))
                                     .foregroundStyle(Color.themeRose)
                             }
-                            .foregroundStyle(Color.black.opacity(0.82))
+                            .foregroundStyle(Color.black.opacity(0.80))
                             .padding(.horizontal, 14).padding(.vertical, 8)
-                            .background(.white.opacity(0.92), in: Capsule())
-                            .shadow(color: .black.opacity(0.18), radius: 10, x: 0, y: 4)
+                            .background(.white.opacity(0.93), in: Capsule())
+                            .shadow(color: .black.opacity(0.15), radius: 10, x: 0, y: 4)
                             .transition(.scale.combined(with: .opacity))
-                            .offset(y: -(cardSize * 0.48))
+                            .offset(y: -(cardSize * 0.60))
                         }
                     }
                     .padding(.top, 22)
 
-                    // ── Story Title + Mood subtitle ──────────────────────
-                    VStack(spacing: 6) {
+                    // ── Story Title & Mood Pill ──────────────────────────
+                    VStack(spacing: 9) {
                         if let story = story {
                             Text(story.title)
-                                .font(.system(size: 21, weight: .bold))
+                                .font(.system(size: 22, weight: .bold, design: .rounded))
                                 .foregroundStyle(textColor)
                                 .lineLimit(2)
                                 .multilineTextAlignment(.center)
                                 .padding(.horizontal, 28)
+                                .shadow(color: .black.opacity(0.22), radius: 4, x: 0, y: 2)
                         } else {
-                            RoundedRectangle(cornerRadius: 4)
-                                .fill(.white.opacity(0.20))
-                                .frame(width: 160, height: 18)
+                            RoundedRectangle(cornerRadius: 6)
+                                .fill(.white.opacity(0.18))
+                                .frame(width: 180, height: 20)
                         }
+                        // Mood pill
                         HStack(spacing: 5) {
                             Image(systemName: mood.icon)
-                                .font(.system(size: 11))
-                                .foregroundStyle(primaryColor)
+                                .font(.system(size: 10, weight: .semibold))
                             Text(mood.localizedName(for: lang.selectedLanguage))
-                                .font(.system(size: 13, weight: .medium))
-                                .foregroundStyle(subtleText)
+                                .font(.system(size: 11, weight: .semibold))
+                                .kerning(0.5)
                         }
+                        .foregroundStyle(primaryColor)
+                        .padding(.horizontal, 12)
+                        .padding(.vertical, 5)
+                        .background(primaryColor.opacity(0.14), in: Capsule())
+                        .overlay(Capsule().stroke(primaryColor.opacity(0.28), lineWidth: 0.8))
                     }
-                    .padding(.top, 16)
+                    .padding(.top, 18)
 
-                    // ── Story Text — always visible, karaoke-style highlight ──────
+                    // ── Karaoke Text Panel ───────────────────────────────
                     if let story = story {
                         ProgressHighlightTextView(
                             text: story.content,
                             speakingRange: speechManager.speakingRange,
                             accentColor: primaryColor
                         )
-                        .frame(maxHeight: 200)
-                        .background(.black.opacity(0.18), in: RoundedRectangle(cornerRadius: 16, style: .continuous))
-                        .padding(.horizontal, 20)
-                        .padding(.top, 10)
+                        .frame(maxHeight: 210)
+                        .background {
+                            RoundedRectangle(cornerRadius: 20, style: .continuous)
+                                .fill(.black.opacity(0.22))
+                                .overlay(
+                                    RoundedRectangle(cornerRadius: 20, style: .continuous)
+                                        .stroke(.white.opacity(0.07), lineWidth: 1)
+                                )
+                        }
+                        .padding(.horizontal, 18)
+                        .padding(.top, 14)
                     }
 
                     Spacer(minLength: 0)
@@ -224,7 +266,7 @@ struct StoryView: View {
         .onChange(of: speechManager.isSpeaking) { speaking in
             animateAvatar = speaking
             updateActionForState()
-            withAnimation(.easeInOut(duration: 0.4)) { artworkPulse = speaking }
+            withAnimation(.easeInOut(duration: 0.5)) { artworkPulse = speaking }
         }
         .onChange(of: waveTrigger) { _ in updateActionForState() }
         .onDisappear { speechManager.stop() }
@@ -309,34 +351,47 @@ struct ControlsView: View {
     var body: some View {
         VStack(spacing: 0) {
 
-            // Thin separator
+            // Hairline divider
             Rectangle()
-                .fill(.white.opacity(0.09))
+                .fill(.white.opacity(0.07))
                 .frame(height: 0.5)
 
-            VStack(spacing: 18) {
+            VStack(spacing: 22) {
 
-                // ── Slim progress bar ────────────────────────────────
-                VStack(spacing: 5) {
+                // ── Progress bar ─────────────────────────────────────
+                VStack(spacing: 6) {
                     if speechManager.isPreparingAudio {
                         HStack {
                             Text("Preparing…")
-                                .font(.system(size: 11))
-                                .foregroundStyle(.white.opacity(0.55))
+                                .font(.system(size: 11, weight: .medium))
+                                .foregroundStyle(.white.opacity(0.45))
                             Spacer()
-                            ProgressView().tint(.white.opacity(0.55)).scaleEffect(0.7)
+                            ProgressView().tint(.white.opacity(0.45)).scaleEffect(0.65)
                         }
-                        .padding(.horizontal, 24)
+                        .padding(.horizontal, 26)
                     } else {
                         GeometryReader { g in
                             let filled = progressWidth(totalWidth: g.size.width)
                             ZStack(alignment: .leading) {
-                                Capsule().fill(.white.opacity(0.16)).frame(height: 3)
-                                Capsule().fill(accentColor).frame(width: filled, height: 3)
+                                // Track
+                                Capsule()
+                                    .fill(.white.opacity(0.12))
+                                    .frame(height: 4)
+                                // Gradient fill
+                                Capsule()
+                                    .fill(
+                                        LinearGradient(
+                                            colors: [accentColor.opacity(0.75), accentColor],
+                                            startPoint: .leading, endPoint: .trailing
+                                        )
+                                    )
+                                    .frame(width: filled, height: 4)
+                                // Thumb
                                 Circle()
                                     .fill(.white)
                                     .frame(width: 14, height: 14)
-                                    .shadow(color: .black.opacity(0.25), radius: 3, x: 0, y: 1)
+                                    .shadow(color: accentColor.opacity(0.55), radius: 6)
+                                    .shadow(color: .black.opacity(0.18), radius: 2, x: 0, y: 1)
                                     .offset(x: max(0, filled - 7))
                             }
                             .contentShape(Rectangle())
@@ -351,7 +406,7 @@ struct ControlsView: View {
                             )
                         }
                         .frame(height: 14)
-                        .padding(.horizontal, 24)
+                        .padding(.horizontal, 26)
                     }
 
                     HStack {
@@ -360,52 +415,58 @@ struct ControlsView: View {
                         Text(fmt(speechManager.duration))
                     }
                     .font(.system(size: 10, weight: .medium).monospacedDigit())
-                    .foregroundStyle(.white.opacity(0.50))
-                    .padding(.horizontal, 24)
+                    .foregroundStyle(.white.opacity(0.38))
+                    .padding(.horizontal, 26)
                 }
-                .padding(.top, 14)
+                .padding(.top, 16)
 
-                // ── Playback buttons ─────────────────────────────────
+                // ── Playback Buttons ─────────────────────────────────
                 HStack(alignment: .center, spacing: 0) {
 
                     // Heart
                     Button {
                         if let s = story {
-                            withAnimation(.spring(response: 0.3, dampingFraction: 0.6)) {
+                            withAnimation(.spring(response: 0.3, dampingFraction: 0.55)) {
                                 storyManager.toggleLike(for: s)
                             }
                         }
                     } label: {
                         Image(systemName: liked ? "heart.fill" : "heart")
-                            .font(.system(size: 20, weight: .semibold))
-                            .foregroundStyle(liked ? Color.themeRose : .white.opacity(0.75))
+                            .font(.system(size: 20, weight: .medium))
+                            .foregroundStyle(liked ? Color.themeRose : .white.opacity(0.60))
+                            .scaleEffect(liked ? 1.18 : 1.00)
+                            .animation(.spring(response: 0.3, dampingFraction: 0.5), value: liked)
                     }
                     .frame(maxWidth: .infinity)
 
                     // Restart
-                    Button {
-                        restart()
-                    } label: {
+                    Button { restart() } label: {
                         Image(systemName: "backward.end.fill")
-                            .font(.system(size: 24, weight: .semibold))
-                            .foregroundStyle(.white.opacity(0.88))
+                            .font(.system(size: 21, weight: .medium))
+                            .foregroundStyle(.white.opacity(0.75))
                     }
                     .frame(maxWidth: .infinity)
 
                     // ── Large Play / Pause ──
                     Button { handlePlayPause() } label: {
                         ZStack {
+                            // Accent glow behind button
+                            Circle()
+                                .fill(accentColor.opacity(0.28))
+                                .frame(width: 78, height: 78)
+                                .blur(radius: 14)
                             Circle()
                                 .fill(.white)
-                                .frame(width: 68, height: 68)
-                                .shadow(color: .black.opacity(0.28), radius: 14, x: 0, y: 7)
+                                .frame(width: 64, height: 64)
+                                .shadow(color: accentColor.opacity(0.50), radius: 18, x: 0, y: 5)
+                                .shadow(color: .black.opacity(0.22), radius: 10, x: 0, y: 4)
                             Image(systemName: speechManager.isSpeaking ? "pause.fill" : "play.fill")
-                                .font(.system(size: 27, weight: .bold))
-                                .foregroundStyle(.black.opacity(0.83))
+                                .font(.system(size: 24, weight: .bold))
+                                .foregroundStyle(.black.opacity(0.82))
                                 .offset(x: speechManager.isSpeaking ? 0 : 2)
                         }
-                        .scaleEffect(playPressed ? 0.91 : 1.00)
-                        .animation(.spring(response: 0.22, dampingFraction: 0.6), value: playPressed)
+                        .scaleEffect(playPressed ? 0.90 : 1.00)
+                        .animation(.spring(response: 0.20, dampingFraction: 0.6), value: playPressed)
                     }
                     .frame(maxWidth: .infinity)
 
@@ -415,8 +476,8 @@ struct ControlsView: View {
                         animateAvatar = false
                     } label: {
                         Image(systemName: "stop.circle")
-                            .font(.system(size: 24, weight: .semibold))
-                            .foregroundStyle(.white.opacity(0.88))
+                            .font(.system(size: 21, weight: .medium))
+                            .foregroundStyle(.white.opacity(0.75))
                     }
                     .frame(maxWidth: .infinity)
 
@@ -427,22 +488,32 @@ struct ControlsView: View {
                         story = StoryManager.shared.getRandomStory(for: mood)
                     } label: {
                         Image(systemName: "shuffle")
-                            .font(.system(size: 20, weight: .semibold))
-                            .foregroundStyle(.white.opacity(0.75))
+                            .font(.system(size: 18, weight: .medium))
+                            .foregroundStyle(.white.opacity(0.60))
                     }
                     .frame(maxWidth: .infinity)
                 }
                 .padding(.horizontal, 8)
-                .padding(.bottom, 30)
+                .padding(.bottom, 34)
             }
         }
-        .background(
+        .background {
             ZStack {
-                Color.black.opacity(0.34)
+                // Deep translucent base
+                Color.black.opacity(0.28)
+                // Frosted glass
                 VisualEffectBlur(blurStyle: .systemUltraThinMaterialDark)
             }
+            .overlay(alignment: .top) {
+                // Hairline separator with a subtle gradient fade
+                LinearGradient(
+                    colors: [.white.opacity(0.12), .white.opacity(0.04)],
+                    startPoint: .leading, endPoint: .trailing
+                )
+                .frame(height: 0.5)
+            }
             .ignoresSafeArea(edges: .bottom)
-        )
+        }
     }
 
     // MARK: Computed helpers
@@ -486,15 +557,13 @@ struct ControlsView: View {
 }
 
 // MARK: - Karaoke-style cumulative progress highlight
-/// Renders the story text with all already-spoken characters highlighted.
-/// Spoken = full white/accent. Current word = glow. Remaining = dim.
+/// Spoken text = bright or accent-colored. Upcoming = softly dimmed.
 @MainActor
 struct ProgressHighlightTextView: View {
     let text: String
     let speakingRange: NSRange?
     let accentColor: Color
 
-    // The character position up to which text has been spoken
     private var spokenUpTo: Int {
         guard let range = speakingRange else { return 0 }
         return range.location + range.length
@@ -503,15 +572,15 @@ struct ProgressHighlightTextView: View {
     var body: some View {
         ScrollViewReader { proxy in
             ScrollView(showsIndicators: false) {
-                // We use a Text built from AttributedString for smooth rendering
                 Text(buildAttributedString())
-                    .font(.system(size: 16, weight: .regular, design: .rounded))
-                    .lineSpacing(7)
+                    .font(.system(size: 15.5, weight: .regular, design: .rounded))
+                    .lineSpacing(9)
                     .multilineTextAlignment(.leading)
-                    .padding(.horizontal, 18)
-                    .padding(.vertical, 14)
+                    .tracking(0.2)
+                    .padding(.horizontal, 20)
+                    .padding(.vertical, 16)
                     .id("storyText")
-                    .animation(.easeInOut(duration: 0.18), value: spokenUpTo)
+                    .animation(.easeInOut(duration: 0.15), value: spokenUpTo)
             }
             .onChange(of: spokenUpTo) { _ in
                 withAnimation(.easeInOut(duration: 0.25)) {
@@ -527,30 +596,27 @@ struct ProgressHighlightTextView: View {
         let totalLength = nsString.length
         let upTo = min(spokenUpTo, totalLength)
 
-        // ── Past / spoken segment: bright, readable ──────────────────
+        // ── Spoken: bright white ──────────────────────────────
         if upTo > 0 {
-            let pastEnd = attributed.index(attributed.startIndex, offsetByCharacters: upTo)
-            let pastRange = attributed.startIndex ..< pastEnd
-            attributed[pastRange].foregroundColor = UIColor.white
+            let end = attributed.index(attributed.startIndex, offsetByCharacters: upTo)
+            attributed[attributed.startIndex ..< end].foregroundColor = UIColor.white
         }
 
-        // ── Current word: accent-colored glow ────────────────────────
+        // ── Active word: mood accent glow ──────────────────────
         if let speaking = speakingRange {
             let wordStart = min(speaking.location, totalLength)
             let wordEnd   = min(speaking.location + speaking.length, totalLength)
             if wordStart < wordEnd {
                 let si = attributed.index(attributed.startIndex, offsetByCharacters: wordStart)
                 let ei = attributed.index(attributed.startIndex, offsetByCharacters: wordEnd)
-                let wordRange = si ..< ei
-                attributed[wordRange].foregroundColor = UIColor(accentColor)
+                attributed[si ..< ei].foregroundColor = UIColor(accentColor)
             }
         }
 
-        // ── Remaining / upcoming: dimmed ─────────────────────────────
+        // ── Upcoming: softly dimmed ───────────────────────────
         if upTo < totalLength {
             let futureStart = attributed.index(attributed.startIndex, offsetByCharacters: upTo)
-            let futureRange = futureStart ..< attributed.endIndex
-            attributed[futureRange].foregroundColor = UIColor.white.withAlphaComponent(0.35)
+            attributed[futureStart ..< attributed.endIndex].foregroundColor = UIColor.white.withAlphaComponent(0.30)
         }
 
         return attributed
