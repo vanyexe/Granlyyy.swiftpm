@@ -2,24 +2,24 @@ import SwiftUI
 
 struct HistoricalStoryListView: View {
     @State private var selectedStory: HistoricalStory?
-    @AppStorage("selectedLanguage") private var selectedLanguage: String = AppLanguage.english.rawValue
     @EnvironmentObject var lang: LanguageManager
-    
+
     private var stories: [HistoricalStory] {
-        HistoricalStoriesData.top10Stories(for: AppLanguage(rawValue: selectedLanguage) ?? .english)
+        // Uses lang.selectedLanguage directly so view re-renders reactively
+        HistoricalStoriesData.top10Stories(for: lang.selectedLanguage)
     }
     
     var body: some View {
         if #available(iOS 17.0, *) {
             ScrollView {
                 VStack(alignment: .leading, spacing: 16) {
-                    Text("Stories That Shaped Us")
+                    Text(L10n.t(.storiesThatShapedUs))
                         .font(.granlyTitle)
                         .foregroundStyle(Color.themeText)
                         .padding(.horizontal)
                         .padding(.top, 10)
                     
-                    Text("Learn from the most impactful events in human history.")
+                    Text(L10n.t(.storiesThatShapedUsSubtitle))
                         .font(.granlySubheadline)
                         .foregroundStyle(.secondary)
                         .padding(.horizontal)

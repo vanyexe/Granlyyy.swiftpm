@@ -6,9 +6,22 @@ enum OutfitPattern: String, CaseIterable, Identifiable {
     case polkaDots = "Polka Dots"
     case plaid = "Plaid"
     case floral = "Floral"
-    
+
     var id: String { rawValue }
+
+    var localizedLabel: String {
+        let lang = AppLanguage(rawValue: UserDefaults.standard.string(forKey: "selectedLanguage") ?? "") ?? .english
+        switch self {
+        case .solid:     return [".english": "Solid",     ".hindi": "सादा",       ".spanish": "Sólido",       ".french": "Uni",          ".mandarin": "纯色"][lang.rawValue] ?? rawValue
+        case .stripes:   return [".english": "Stripes",   ".hindi": "धारीदार",     ".spanish": "Rayas",        ".french": "Rayures",      ".mandarin": "条纹"][lang.rawValue] ?? rawValue
+        case .polkaDots: return [".english": "Polka Dots",".hindi": "बिंदीदार",    ".spanish": "Lunares",      ".french": "Pois",         ".mandarin": "波点"][lang.rawValue] ?? rawValue
+        case .plaid:     return [".english": "Plaid",     ".hindi": "प्लेड",       ".spanish": "Cuadros",      ".french": "Tartan",       ".mandarin": "格子"][lang.rawValue] ?? rawValue
+        case .floral:    return [".english": "Floral",    ".hindi": "फूलदार",      ".spanish": "Floral",       ".french": "Floral",       ".mandarin": "花卉"][lang.rawValue] ?? rawValue
+        }
+    }
 }
+
+extension OutfitPattern: LocalizedOption { }
 
 @MainActor
 final class TextureGenerator {

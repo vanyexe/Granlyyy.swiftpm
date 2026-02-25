@@ -38,7 +38,7 @@ struct HistoricalStoryDetailView: View {
                 
                 // What Happened
                 VStack(alignment: .leading, spacing: 8) { // 12 -> 8
-                    HistoricalSectionHeader(title: "What Happened", icon: "book.fill")
+                    HistoricalSectionHeader(title: L10n.t(.whatHappened), icon: "book.fill")
                     
                     Text(story.summary)
                         .font(.granlyBody)
@@ -49,7 +49,7 @@ struct HistoricalStoryDetailView: View {
                 
                 // Lessons Extracted
                 VStack(alignment: .leading, spacing: 12) {
-                    HistoricalSectionHeader(title: "Life Lessons", icon: "sparkles")
+                    HistoricalSectionHeader(title: L10n.t(.lifeLessons), icon: "sparkles")
                     
                     ForEach(story.lessons, id: \.self) { lesson in
                         HStack(alignment: .top, spacing: 12) {
@@ -71,7 +71,7 @@ struct HistoricalStoryDetailView: View {
                 
                 // Grandma's Reflection
                 VStack(alignment: .leading, spacing: 12) {
-                    HistoricalSectionHeader(title: "Grandma Asks...", icon: "person.2.fill")
+                    HistoricalSectionHeader(title: L10n.t(.grandmaAsks), icon: "person.2.fill")
                     
                     ForEach(story.reflectionQuestions, id: \.self) { question in
                         HStack(alignment: .top) {
@@ -91,7 +91,7 @@ struct HistoricalStoryDetailView: View {
                     HStack(spacing: 6) {
                         Image(systemName: "leaf.fill")
                             .foregroundStyle(Color.themeGreen)
-                        Text("Growth Takeaway")
+                        Text(L10n.t(.growthTakeaway))
                             .font(.granlyHeadline)
                             .foregroundStyle(Color.themeText)
                     }
@@ -110,7 +110,7 @@ struct HistoricalStoryDetailView: View {
                 
                 // Journal Input
                 VStack(alignment: .leading, spacing: 12) {
-                    HistoricalSectionHeader(title: "Your Reflection", icon: "pencil")
+                    HistoricalSectionHeader(title: L10n.t(.yourReflection), icon: "pencil")
                     
                     TextEditor(text: $journalEntry)
                         .frame(height: 120)
@@ -130,17 +130,17 @@ struct HistoricalStoryDetailView: View {
                 
                 // Next Steps Linking
                 VStack(spacing: 12) {
-                    Text("Continue Your Journey")
+                    Text(L10n.t(.continueYourJourney))
                         .font(.granlyHeadline)
                         .foregroundStyle(Color.themeText)
                         .padding(.top, 10)
                     
                     NavigationLink(destination: AskGrandmaView()) {
-                        DetailActionRow(title: "Talk to Grandma about this", icon: "person.wave.2.fill")
+                        DetailActionRow(title: L10n.t(.talkGrandmaAboutThis), icon: "person.wave.2.fill")
                     }
                     
                     NavigationLink(destination: GrowthPathView()) {
-                        DetailActionRow(title: "Update your Growth Path", icon: "chart.line.uptrend.xyaxis")
+                        DetailActionRow(title: L10n.t(.updateGrowthPath), icon: "chart.line.uptrend.xyaxis")
                     }
                 }
                 .padding(.horizontal)

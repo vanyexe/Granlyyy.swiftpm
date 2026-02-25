@@ -5,15 +5,20 @@ struct StoryListView: View {
     @ObservedObject var storyManager = StoryManager.shared
     @Environment(\.dismiss) private var dismiss
     @EnvironmentObject var lang: LanguageManager
-    
-    // Filter by Category
-    @State private var selectedCategory: String = "All"
-    let categories = ["All", "Short", "Moral", "Bedtime", "Funny"]
-    
+
+    // Use index-based selection so it survives language switches
+    @State private var selectedCategoryIndex: Int = 0
+
+    private var categoryKeys: [L10nKey] {
+        [.allCategory, .shortCategory, .moralCategory, .bedtimeCategory, .funnyCategory]
+    }
+    // Raw English values for filtering story data (invariant)
+    private let categoryValues = ["All", "Short", "Moral", "Bedtime", "Funny"]
+
     var filteredStories: [Story] {
         let stories = storyManager.getStories(for: mood)
-        if selectedCategory == "All" { return stories }
-        return stories.filter { $0.category == selectedCategory }
+        if selectedCategoryIndex == 0 { return stories }
+        return stories.filter { $0.category == categoryValues[selectedCategoryIndex] }
     }
     
     var body: some View {
@@ -31,7 +36,7 @@ struct StoryListView: View {
                             .glassCard(cornerRadius: 12)
                     }
                     Spacer()
-                    Text("\(mood.name) Stories")
+                    Text("\(mood.localizedName(for: lang.selectedLanguage)) \(L10n.t(.storiesLabel))")
                         .font(.granlyTitle2)
                         .foregroundStyle(Color.themeText)
                     Spacer()
@@ -42,22 +47,22 @@ struct StoryListView: View {
                 
                 // Category Filter
                 ScrollView(.horizontal, showsIndicators: false) {
-                    HStack(spacing: 10) { // 12 -> 10
-                        ForEach(categories, id: \.self) { category in
-                            Button(action: { selectedCategory = category }) {
-                                Text(category)
-                                    .font(.granlyBodyBold) // Subheadline -> BodyBold for smaller compact tags
-                                    .padding(.horizontal, 14) // 16 -> 14
-                                    .padding(.vertical, 6) // 8 -> 6
-                                    .background(selectedCategory == category ? mood.baseColor : Color.clear)
-                                    .foregroundStyle(selectedCategory == category ? .white : Color.themeText)
+                    HStack(spacing: 10) {
+                        ForEach(0..<categoryKeys.count, id: \.self) { idx in
+                            Button(action: { selectedCategoryIndex = idx }) {
+                                Text(L10n.t(categoryKeys[idx]))
+                                    .font(.granlyBodyBold)
+                                    .padding(.horizontal, 14)
+                                    .padding(.vertical, 6)
+                                    .background(selectedCategoryIndex == idx ? mood.baseColor : Color.clear)
+                                    .foregroundStyle(selectedCategoryIndex == idx ? .white : Color.themeText)
                                     .clipShape(Capsule())
                                     .overlay(Capsule().stroke(mood.baseColor.opacity(0.3), lineWidth: 1))
                             }
                         }
                     }
                     .padding(.horizontal)
-                    .padding(.bottom, 12) // 16 -> 12
+                    .padding(.bottom, 12)
                 }
                 
                 // Story List
@@ -81,7 +86,7 @@ struct StoryListRow: View {
     let story: Story
     let moodColor: Color
     @ObservedObject var storyManager = StoryManager.shared
-    
+    @EnvironmentObject var lang: LanguageManager   // needed so SwiftUI re-renders on language change
     var body: some View {
         HStack(spacing: 12) { // 16 -> 12
             // Icon / Category Badge
@@ -101,7 +106,7 @@ struct StoryListRow: View {
                     .lineLimit(1)
                 
                 HStack {
-                    Text(story.category.uppercased()) // Premium pill tag
+                    Text(L10n.t(categoryKey(for: story.category)).uppercased())
                         .font(.system(size: 9, weight: .bold, design: .rounded))
                         .tracking(0.5)
                         .font(.granlyCaption)
@@ -110,7 +115,7 @@ struct StoryListRow: View {
                         .padding(.vertical, 2)
                         .clipShape(Capsule()) // 4px Radius -> Pill capsule
                     
-                    Text("• \(story.readTime) min read")
+                    Text("• \(story.readTime) \(L10n.t(.minRead))")
                         .font(.granlyCaption)
                         .foregroundStyle(.secondary)
                 }
@@ -133,6 +138,18 @@ struct StoryListRow: View {
         .glassCard(cornerRadius: 14) // 16 -> 14
     }
     
+    func categoryKey(for category: String) -> L10nKey {
+        switch category {
+        case "Short":   return .shortCategory
+        case "Moral":   return .moralCategory
+        case "Bedtime": return .bedtimeCategory
+        case "Funny":   return .funnyCategory
+        case "Nature":  return .natureCategory
+        case "Comfort": return .comfortCategory
+        default:        return .allCategory
+        }
+    }
+
     func getIcon(for category: String) -> String {
         switch category {
         case "Moral": return "star.fill"

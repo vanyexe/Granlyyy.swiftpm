@@ -2,6 +2,7 @@ import SwiftUI
 
 struct AboutView: View {
     @Environment(\.dismiss) private var dismiss
+    @EnvironmentObject var lang: LanguageManager
     
     var body: some View {
         ScrollView {
@@ -39,12 +40,12 @@ struct AboutView: View {
                 
                 // Mission Statement / Overview
                 VStack(spacing: 16) {
-                    Text("Our Mission")
+                    Text(L10n.t(.ourMission))
                         .font(.granlyHeadline)
                         .foregroundStyle(Color.themeText)
                         .frame(maxWidth: .infinity, alignment: .leading)
                     
-                    Text("Granly was built with a simple wish: to bring warmth, comfort, and timeless storytelling magic into your daily life. It is your quiet corner to pause, breathe, and feel loved.")
+                    Text(L10n.t(.missionBody))
                         .font(.granlyBody)
                         .lineSpacing(6)
                         .foregroundStyle(Color.themeText.opacity(0.8))
@@ -56,20 +57,20 @@ struct AboutView: View {
                 
                 // Links/Resources List
                 VStack(spacing: 0) {
-                    AboutRow(icon: "star.fill", iconColor: .yellow, title: "Rate on App Store", hasDivider: true)
-                    AboutRow(icon: "globe", iconColor: .blue, title: "Website", hasDivider: true)
-                    AboutRow(icon: "lock.fill", iconColor: .green, title: "Privacy Policy", hasDivider: true)
-                    AboutRow(icon: "doc.text.fill", iconColor: .gray, title: "Terms of Service", hasDivider: false)
+                    AboutRow(icon: "star.fill", iconColor: .yellow, title: L10n.t(.rateAppStore), hasDivider: true)
+                    AboutRow(icon: "globe", iconColor: .blue, title: L10n.t(.websiteLabel), hasDivider: true)
+                    AboutRow(icon: "lock.fill", iconColor: .green, title: L10n.t(.privacyPolicy), hasDivider: true)
+                    AboutRow(icon: "doc.text.fill", iconColor: .gray, title: L10n.t(.termsOfService), hasDivider: false)
                 }
                 .glassCard(cornerRadius: 16)
                 .padding(.horizontal)
                 
                 // Developer / Credits
                 VStack(spacing: 6) {
-                    Text("Designed & Developed with Care")
+                    Text(L10n.t(.designedWithCare))
                         .font(.granlyCaption)
                         .foregroundStyle(.secondary)
-                    Text("© 2026 Granly App")
+                    Text(L10n.t(.copyright))
                         .font(.granlyCaption)
                         .foregroundStyle(.secondary.opacity(0.7))
                 }
@@ -77,7 +78,7 @@ struct AboutView: View {
             }
         }
         .background(Color.themeBackground.ignoresSafeArea())
-        .navigationTitle("About Granly")
+        .navigationTitle(L10n.t(.aboutGranly))
         .navigationBarTitleDisplayMode(.inline)
     }
 }

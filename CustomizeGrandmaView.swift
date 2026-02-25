@@ -4,16 +4,22 @@ import SceneKit
 struct CustomizeGrandmaView: View {
     @StateObject private var settings = GrandmaSettings()
     @Environment(\.dismiss) private var dismiss
+    @EnvironmentObject var lang: LanguageManager
     @State private var showConfetti = false
     @State private var grandmaAction: GrandmaAction = .idle
     @State private var grandmaExpression: GrandmaExpression = .neutral
     @State private var showPresetToast = false
     
     // Tab selection
-    // Tab selection
     @State private var selectedTab = 0
-    let tabs = ["Hair", "Glasses", "Outfit", "Pattern", "Accessories", "Hats", "Earrings", "Face", "Backgrounds", "Filters"]
+    // Tab icons are static — only the text label localizes
     let tabIcons = ["comb.fill", "eyeglasses", "tshirt.fill", "paintpalette.fill", "sparkles", "graduationcap.fill", "circle.fill", "face.smiling", "photo.fill", "camera.filters"]
+    // Computed so SwiftUI re-evaluates when `lang` changes
+    var tabs: [String] {
+        [L10n.t(.hair), L10n.t(.glasses), L10n.t(.outfit), L10n.t(.pattern),
+         L10n.t(.accessories), L10n.t(.hats), L10n.t(.earrings), L10n.t(.face),
+         L10n.t(.backgrounds), L10n.t(.filters)]
+    }
     
     var body: some View {
         ZStack {
@@ -58,7 +64,7 @@ struct CustomizeGrandmaView: View {
                     }
                     .disabled(!settings.canUndo)
                     
-                    Text("Makeover")
+                    Text(L10n.t(.makeover))
                         .font(.granlyHeadline)
                         .foregroundStyle(Color.themeText)
                         .padding(.horizontal, 8)
@@ -92,7 +98,7 @@ struct CustomizeGrandmaView: View {
                             grandmaExpression = .neutral
                         }
                     }) {
-                        Text("Save")
+                        Text(L10n.t(.saveLabel))
                             .font(.granlyBodyBold)
                             .foregroundStyle(.white)
                             .padding(.horizontal, 16)
@@ -251,33 +257,33 @@ struct CustomizeGrandmaView: View {
                         HStack(spacing: 16) {
                             switch selectedTab {
                             case 0: // Hair
-                                OptionGroup(title: "Style") { TextGrid(options: HairStyle.allCases, selected: $settings.hairStyle, settings: settings) }
-                                OptionGroup(title: "Color") { ColorGrid(options: HairColor.allCases, selected: $settings.hairColor, settings: settings) }
-                                SnapshotSlider(title: "GREY INTENSITY", value: $settings.greyIntensity, settings: settings)
+                                OptionGroup(title: L10n.t(.optionStyle)) { TextGrid(options: HairStyle.allCases, selected: $settings.hairStyle, settings: settings) }
+                                OptionGroup(title: L10n.t(.optionColor)) { ColorGrid(options: HairColor.allCases, selected: $settings.hairColor, settings: settings) }
+                                SnapshotSlider(title: L10n.t(.greyIntensity), value: $settings.greyIntensity, settings: settings)
                             case 1: // Glasses
-                                OptionGroup(title: "Frames") { TextGrid(options: GlassesStyle.allCases, selected: $settings.glassesStyle, settings: settings) }
+                                OptionGroup(title: L10n.t(.optionFrames)) { TextGrid(options: GlassesStyle.allCases, selected: $settings.glassesStyle, settings: settings) }
                             case 2: // Outfit
-                                OptionGroup(title: "Style") { TextGrid(options: OutfitStyle.allCases, selected: $settings.outfitStyle, settings: settings) }
-                                OptionGroup(title: "Color") { ColorGrid(options: OutfitColor.allCases, selected: $settings.outfitColor, settings: settings) }
+                                OptionGroup(title: L10n.t(.optionStyle)) { TextGrid(options: OutfitStyle.allCases, selected: $settings.outfitStyle, settings: settings) }
+                                OptionGroup(title: L10n.t(.optionColor)) { ColorGrid(options: OutfitColor.allCases, selected: $settings.outfitColor, settings: settings) }
                             case 3: // Pattern
-                                OptionGroup(title: "Pattern") { TextGrid(options: OutfitPattern.allCases, selected: $settings.outfitPattern, settings: settings) }
+                                OptionGroup(title: L10n.t(.pattern)) { TextGrid(options: OutfitPattern.allCases, selected: $settings.outfitPattern, settings: settings) }
                             case 4: // Accessories
-                                OptionGroup(title: "Necklace") { TextGrid(options: AccessoryType.allCases, selected: $settings.accessory, settings: settings) }
+                                OptionGroup(title: L10n.t(.optionNecklace)) { TextGrid(options: AccessoryType.allCases, selected: $settings.accessory, settings: settings) }
                             case 5: // Hats
-                                OptionGroup(title: "Hat Style") { TextGrid(options: HatStyle.allCases, selected: $settings.hatStyle, settings: settings) }
+                                OptionGroup(title: L10n.t(.optionHatStyle)) { TextGrid(options: HatStyle.allCases, selected: $settings.hatStyle, settings: settings) }
                             case 6: // Earrings
-                                OptionGroup(title: "Earrings") { TextGrid(options: EarringStyle.allCases, selected: $settings.earringStyle, settings: settings) }
+                                OptionGroup(title: L10n.t(.earrings)) { TextGrid(options: EarringStyle.allCases, selected: $settings.earringStyle, settings: settings) }
                             case 7: // Face
-                                OptionGroup(title: "Skin Tone") { SkinToneGrid(options: SkinTone.allCases, selected: $settings.skinTone, settings: settings) }
-                                OptionGroup(title: "Eye Color") { ColorGrid(options: EyeColor.allCases, selected: $settings.eyeColor, settings: settings) }
-                                OptionGroup(title: "Expression") { TextGrid(options: FacialExpression.allCases, selected: $settings.facialExpression, settings: settings) }
-                                SnapshotSlider(title: "WRINKLES", value: $settings.wrinkleIntensity, settings: settings)
-                                SnapshotSlider(title: "BROW THICKNESS", value: $settings.browThickness, settings: settings)
-                                OptionGroup(title: "Lashes") { SnapshotToggle(title: "Eyelashes", isOn: $settings.hasLashes, settings: settings) }
+                                OptionGroup(title: L10n.t(.optionSkinTone)) { SkinToneGrid(options: SkinTone.allCases, selected: $settings.skinTone, settings: settings) }
+                                OptionGroup(title: L10n.t(.optionEyeColor)) { ColorGrid(options: EyeColor.allCases, selected: $settings.eyeColor, settings: settings) }
+                                OptionGroup(title: L10n.t(.optionExpression)) { TextGrid(options: FacialExpression.allCases, selected: $settings.facialExpression, settings: settings) }
+                                SnapshotSlider(title: L10n.t(.wrinkleIntensity), value: $settings.wrinkleIntensity, settings: settings)
+                                SnapshotSlider(title: L10n.t(.browThickness), value: $settings.browThickness, settings: settings)
+                                OptionGroup(title: L10n.t(.optionLashes)) { SnapshotToggle(title: L10n.t(.eyelashes), isOn: $settings.hasLashes, settings: settings) }
                             case 8: // Backgrounds
-                                OptionGroup(title: "Theme") { TextGrid(options: BackgroundTheme.allCases, selected: $settings.backgroundTheme, settings: settings) }
+                                OptionGroup(title: L10n.t(.optionTheme)) { TextGrid(options: BackgroundTheme.allCases, selected: $settings.backgroundTheme, settings: settings) }
                             case 9: // Filters
-                                OptionGroup(title: "Camera Filter") { TextGrid(options: CameraFilter.allCases, selected: $settings.filter, settings: settings) }
+                                OptionGroup(title: L10n.t(.optionCameraFilter)) { TextGrid(options: CameraFilter.allCases, selected: $settings.filter, settings: settings) }
                             default: EmptyView()
                             }
                         }
@@ -424,7 +430,7 @@ struct SkinToneGrid: View {
     }
 }
 
-struct TextGrid<T: Identifiable & RawRepresentable>: View where T.RawValue == String {
+struct TextGrid<T: LocalizedOption>: View {
     let options: [T]
     @Binding var selected: T
     var settings: GrandmaSettings?
@@ -438,7 +444,7 @@ struct TextGrid<T: Identifiable & RawRepresentable>: View where T.RawValue == St
                     haptic.selectionChanged()
                     withAnimation(.easeInOut(duration: 0.2)) { selected = option }
                 }) {
-                    Text(option.rawValue)
+                    Text(option.localizedLabel)
                         .font(.system(size: 14, weight: selected.id == option.id ? .bold : .medium, design: .rounded))
                         .padding(.horizontal, 20)
                         .padding(.vertical, 12)

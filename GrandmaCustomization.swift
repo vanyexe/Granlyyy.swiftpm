@@ -1,6 +1,13 @@
 import SwiftUI
 import SceneKit
 
+// MARK: - Localized Option Protocol
+/// Protocol adopted by every TextGrid option enum.
+/// The `localizedLabel` property returns the translated display name.
+protocol LocalizedOption: Identifiable, Hashable {
+    var localizedLabel: String { get }
+}
+
 // MARK: - Filter Enum
 enum CameraFilter: String, CaseIterable, Identifiable {
     case none = "Original"
@@ -8,9 +15,20 @@ enum CameraFilter: String, CaseIterable, Identifiable {
     case cool = "Cool"
     case sepia = "Sepia"
     case noir = "Noir"
-    
+
     var id: String { rawValue }
-    
+
+    var localizedLabel: String {
+        let lang = AppLanguage(rawValue: UserDefaults.standard.string(forKey: "selectedLanguage") ?? "") ?? .english
+        switch self {
+        case .none:  return [".english": "Original", ".hindi": "असल",       ".spanish": "Original", ".french": "Original", ".mandarin": "原始"][lang.rawValue] ?? rawValue
+        case .warm:  return [".english": "Warm",     ".hindi": "गर्म",       ".spanish": "Cálido",   ".french": "Chaud",    ".mandarin": "暖色"][lang.rawValue] ?? rawValue
+        case .cool:  return [".english": "Cool",     ".hindi": "ठंडा",       ".spanish": "Frío",     ".french": "Frais",    ".mandarin": "冷色"][lang.rawValue] ?? rawValue
+        case .sepia: return [".english": "Sepia",    ".hindi": "सेपिया",     ".spanish": "Sepia",    ".french": "Sépia",   ".mandarin": "棕色"][lang.rawValue] ?? rawValue
+        case .noir:  return [".english": "Noir",     ".hindi": "नोयर",       ".spanish": "Noir",     ".french": "Noir",     ".mandarin": "黑白"][lang.rawValue] ?? rawValue
+        }
+    }
+
     var colorFilter: CIFilter? {
         switch self {
         case .sepia: return CIFilter(name: "CISepiaTone")
@@ -48,8 +66,18 @@ enum HairStyle: String, CaseIterable, Identifiable {
     case bob = "Short Bob"
     case long = "Loose Waves"
     case pixie = "Pixie Cut"
-    
+
     var id: String { rawValue }
+
+    var localizedLabel: String {
+        let lang = AppLanguage(rawValue: UserDefaults.standard.string(forKey: "selectedLanguage") ?? "") ?? .english
+        switch self {
+        case .bun:   return [".english": "Classic Bun",   ".hindi": "क्लासिक जूड़ा",    ".spanish": "Moño Clásico",       ".french": "Chignon Classique",   ".mandarin": "经典发髻"][lang.rawValue] ?? rawValue
+        case .bob:   return [".english": "Short Bob",     ".hindi": "शॉर्ट बॉब",        ".spanish": "Bob Corto",           ".french": "Carré Court",         ".mandarin": "短波波头"][lang.rawValue] ?? rawValue
+        case .long:  return [".english": "Loose Waves",   ".hindi": "लहराती लटें",      ".spanish": "Ondas Sueltas",       ".french": "Ondulations Libres",  ".mandarin": "波浪长发"][lang.rawValue] ?? rawValue
+        case .pixie: return [".english": "Pixie Cut",     ".hindi": "पिक्सी कट",        ".spanish": "Corte Pixie",         ".french": "Coupe Pixie",         ".mandarin": "精灵短发"][lang.rawValue] ?? rawValue
+        }
+    }
 }
 
 enum GlassesStyle: String, CaseIterable, Identifiable {
@@ -57,8 +85,18 @@ enum GlassesStyle: String, CaseIterable, Identifiable {
     case square = "Square"
     case catEye = "Cat Eye"
     case none = "None"
-    
+
     var id: String { rawValue }
+
+    var localizedLabel: String {
+        let lang = AppLanguage(rawValue: UserDefaults.standard.string(forKey: "selectedLanguage") ?? "") ?? .english
+        switch self {
+        case .round:  return [".english": "Round",   ".hindi": "गोल",         ".spanish": "Redondo",    ".french": "Rond",     ".mandarin": "圆框"][lang.rawValue] ?? rawValue
+        case .square: return [".english": "Square",  ".hindi": "चौकोर",       ".spanish": "Cuadrado",   ".french": "Carré",    ".mandarin": "方框"][lang.rawValue] ?? rawValue
+        case .catEye: return [".english": "Cat Eye", ".hindi": "कैट आई",      ".spanish": "Ojo de Gato",".french": "Œil de Chat",".mandarin": "猫眼"][lang.rawValue] ?? rawValue
+        case .none:   return [".english": "None",    ".hindi": "कोई नहीं",    ".spanish": "Ninguno",    ".french": "Aucun",    ".mandarin": "无"][lang.rawValue] ?? rawValue
+        }
+    }
 }
 
 enum OutfitColor: String, CaseIterable, Identifiable {
@@ -87,8 +125,19 @@ enum AccessoryType: String, CaseIterable, Identifiable {
     case scarf = "Silk Scarf"
     case brooch = "Ruby Brooch"
     case none = "None"
-    
+
     var id: String { rawValue }
+
+    var localizedLabel: String {
+        let lang = AppLanguage(rawValue: UserDefaults.standard.string(forKey: "selectedLanguage") ?? "") ?? .english
+        switch self {
+        case .pearl:  return [".english": "Pearls",      ".hindi": "मोती",        ".spanish": "Perlas",           ".french": "Perles",         ".mandarin": "珍珠项链"][lang.rawValue] ?? rawValue
+        case .gold:   return [".english": "Gold Chain",  ".hindi": "सोने की चेन", ".spanish": "Cadena de Oro",   ".french": "Chaîne en Or",   ".mandarin": "金项链"][lang.rawValue] ?? rawValue
+        case .scarf:  return [".english": "Silk Scarf",  ".hindi": "रेशमी दुपट्टा",".spanish": "Pañuelo de Seda", ".french": "Foulard en Soie",".mandarin": "丝巾"][lang.rawValue] ?? rawValue
+        case .brooch: return [".english": "Ruby Brooch", ".hindi": "माणिक ब्रोच", ".spanish": "Broche de Rubí",  ".french": "Broche en Rubis",".mandarin": "红宝石胸针"][lang.rawValue] ?? rawValue
+        case .none:   return [".english": "None",        ".hindi": "कोई नहीं",    ".spanish": "Ninguno",          ".french": "Aucun",          ".mandarin": "无"][lang.rawValue] ?? rawValue
+        }
+    }
 }
 
 enum SkinTone: String, CaseIterable, Identifiable {
@@ -116,8 +165,18 @@ enum HatStyle: String, CaseIterable, Identifiable {
     case sunHat = "Sun Hat"
     case beanie = "Cozy Beanie"
     case beret = "Vintage Beret"
-    
+
     var id: String { rawValue }
+
+    var localizedLabel: String {
+        let lang = AppLanguage(rawValue: UserDefaults.standard.string(forKey: "selectedLanguage") ?? "") ?? .english
+        switch self {
+        case .none:   return [".english": "None",          ".hindi": "कोई नहीं",       ".spanish": "Ninguno",          ".french": "Aucun",              ".mandarin": "无"][lang.rawValue] ?? rawValue
+        case .sunHat: return [".english": "Sun Hat",       ".hindi": "धूप टोपी",       ".spanish": "Sombrero de Sol",   ".french": "Chapeau de Soleil", ".mandarin": "遮阳帽"][lang.rawValue] ?? rawValue
+        case .beanie: return [".english": "Cozy Beanie",   ".hindi": "गर्म टोपी",      ".spanish": "Gorro Acogedor",    ".french": "Bonnet Douillet",   ".mandarin":"毛线帽"][lang.rawValue] ?? rawValue
+        case .beret:  return [".english": "Vintage Beret", ".hindi": "विंटेज बेरेट", ".spanish": "Boina Vintage",     ".french": "Béret Vintage",     ".mandarin": "复古贝雷帽"][lang.rawValue] ?? rawValue
+        }
+    }
 }
 
 enum EarringStyle: String, CaseIterable, Identifiable {
@@ -125,8 +184,18 @@ enum EarringStyle: String, CaseIterable, Identifiable {
     case pearl = "Pearl Drops"
     case goldHoop = "Gold Hoops"
     case diamond = "Diamond Studs"
-    
+
     var id: String { rawValue }
+
+    var localizedLabel: String {
+        let lang = AppLanguage(rawValue: UserDefaults.standard.string(forKey: "selectedLanguage") ?? "") ?? .english
+        switch self {
+        case .none:     return [".english": "None",          ".hindi": "कोई नहीं",       ".spanish": "Ninguno",          ".french": "Aucun",             ".mandarin": "无"][lang.rawValue] ?? rawValue
+        case .pearl:    return [".english": "Pearl Drops",   ".hindi": "मोती की बूंद",  ".spanish": "Colgantes de Perla",".french": "Pendants en Perle",".mandarin": "珍珠耳坠"][lang.rawValue] ?? rawValue
+        case .goldHoop: return [".english": "Gold Hoops",    ".hindi": "सोने की बालियाँ",".spanish": "Aros Dorados",     ".french": "Anneaux Dorés",    ".mandarin": "金圈耳环"][lang.rawValue] ?? rawValue
+        case .diamond:  return [".english": "Diamond Studs", ".hindi": "हीरे के टॉप्स", ".spanish": "Pendientes de Diamante",".french": "Clous Diamant",   ".mandarin": "钻石耳钉"][lang.rawValue] ?? rawValue
+        }
+    }
 }
 
 enum BackgroundTheme: String, CaseIterable, Identifiable {
@@ -134,8 +203,18 @@ enum BackgroundTheme: String, CaseIterable, Identifiable {
     case garden = "Spring Garden"
     case library = "Old Library"
     case gradient = "Soft Gradient"
-    
+
     var id: String { rawValue }
+
+    var localizedLabel: String {
+        let lang = AppLanguage(rawValue: UserDefaults.standard.string(forKey: "selectedLanguage") ?? "") ?? .english
+        switch self {
+        case .cozyRoom: return [".english": "Cozy Room",     ".hindi": "आरामदायक कमरा",  ".spanish": "Sala Acogedora",   ".french": "Chambre Douillette", ".mandarin": "温馨房间"][lang.rawValue] ?? rawValue
+        case .garden:   return [".english": "Spring Garden", ".hindi": "बाग-बगीचा",      ".spanish": "Jardín Primaveral", ".french": "Jardin de Printemps",".mandarin": "春日花园"][lang.rawValue] ?? rawValue
+        case .library:  return [".english": "Old Library",   ".hindi": "पुराना पुस्तकालय",".spanish": "Biblioteca Antigua",".french": "Vieille Bibliothèque",".mandarin": "古老图书馆"][lang.rawValue] ?? rawValue
+        case .gradient: return [".english": "Soft Gradient", ".hindi": "सॉफ्ट ग्रेडिएंट",".spanish": "Degradado Suave",  ".french": "Dégradé Doux",       ".mandarin": "柔和渐变"][lang.rawValue] ?? rawValue
+        }
+    }
 }
 
 enum FacialExpression: String, CaseIterable, Identifiable {
@@ -143,8 +222,18 @@ enum FacialExpression: String, CaseIterable, Identifiable {
     case smile = "Smile"
     case laughing = "Laughing"
     case surprised = "Surprised"
-    
+
     var id: String { rawValue }
+
+    var localizedLabel: String {
+        let lang = AppLanguage(rawValue: UserDefaults.standard.string(forKey: "selectedLanguage") ?? "") ?? .english
+        switch self {
+        case .neutral:   return [".english": "Neutral",   ".hindi": "तटस्थ",     ".spanish": "Neutral",    ".french": "Neutre",    ".mandarin": "平静"][lang.rawValue] ?? rawValue
+        case .smile:     return [".english": "Smile",     ".hindi": "मुस्कान",   ".spanish": "Sonrisa",   ".french": "Sourire",  ".mandarin": "微笑"][lang.rawValue] ?? rawValue
+        case .laughing:  return [".english": "Laughing",  ".hindi": "हँसती हुई", ".spanish": "Riendo",    ".french": "Riant",    ".mandarin": "大笑"][lang.rawValue] ?? rawValue
+        case .surprised: return [".english": "Surprised", ".hindi": "हैरान",     ".spanish": "Sorprendida",".french": "Surprise",".mandarin": "惊讶"][lang.rawValue] ?? rawValue
+        }
+    }
 }
 
 enum EyeColor: String, CaseIterable, Identifiable {
@@ -170,6 +259,16 @@ enum OutfitStyle: String, CaseIterable, Identifiable {
     case nightwear = "Nightwear"
     case festive = "Festive"
     var id: String { rawValue }
+
+    var localizedLabel: String {
+        let lang = AppLanguage(rawValue: UserDefaults.standard.string(forKey: "selectedLanguage") ?? "") ?? .english
+        switch self {
+        case .casual:    return [".english": "Casual",    ".hindi": "सामान्य",  ".spanish": "Casual",     ".french": "Décontracté",".mandarin": "休闲"][lang.rawValue] ?? rawValue
+        case .saree:     return [".english": "Saree",     ".hindi": "साड़ी",     ".spanish": "Sari",       ".french": "Sari",       ".mandarin": "纱丽"][lang.rawValue] ?? rawValue
+        case .nightwear: return [".english": "Nightwear", ".hindi": "नाइटवियर", ".spanish": "Ropa de Noche",".french": "Vêtements de Nuit",".mandarin": "睡衣"][lang.rawValue] ?? rawValue
+        case .festive:   return [".english": "Festive",   ".hindi": "उत्सव",    ".spanish": "Festivo",    ".french": "Festif",     ".mandarin": "节日"][lang.rawValue] ?? rawValue
+        }
+    }
 }
 
 // MARK: - Preset Looks
@@ -513,3 +612,15 @@ extension FacialExpression: RawRepresentable { }
 extension OutfitPattern: RawRepresentable { }
 extension EyeColor: RawRepresentable { }
 extension OutfitStyle: RawRepresentable { }
+
+// MARK: - LocalizedOption conformances (for TextGrid)
+extension HairStyle: LocalizedOption { }
+extension GlassesStyle: LocalizedOption { }
+extension AccessoryType: LocalizedOption { }
+extension HatStyle: LocalizedOption { }
+extension EarringStyle: LocalizedOption { }
+extension BackgroundTheme: LocalizedOption { }
+extension FacialExpression: LocalizedOption { }
+extension OutfitStyle: LocalizedOption { }
+extension CameraFilter: LocalizedOption { }
+// OutfitPattern is defined in TextureGenerator.swift — conformance declared there

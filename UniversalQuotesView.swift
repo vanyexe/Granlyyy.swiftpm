@@ -2,11 +2,11 @@ import SwiftUI
 
 struct UniversalQuotesView: View {
     @State private var currentIndex = 0
-    @AppStorage("selectedLanguage") private var selectedLanguage: String = AppLanguage.english.rawValue
     @EnvironmentObject var lang: LanguageManager
-    
+
     private var quotes: [UniversalQuote] {
-        UniversalQuotesData.quotes(for: AppLanguage(rawValue: selectedLanguage) ?? .english)
+        // Reads lang.selectedLanguage so SwiftUI re-evaluates when language changes
+        UniversalQuotesData.quotes(for: lang.selectedLanguage)
     }
     
     var body: some View {
@@ -153,11 +153,11 @@ struct QuoteDetailCard: View {
                         .padding(.top, 10)
                     
                     NavigationLink(destination: AskGrandmaView()) {
-                        DetailActionRow(title: "Discuss this quote", icon: "person.wave.2.fill")
+                        DetailActionRow(title: L10n.t(.discussThisQuote), icon: "person.wave.2.fill")
                     }
                     
                     NavigationLink(destination: GrowthPathView()) {
-                        DetailActionRow(title: "Update your Growth Path", icon: "chart.line.uptrend.xyaxis")
+                        DetailActionRow(title: L10n.t(.updateGrowthPath), icon: "chart.line.uptrend.xyaxis")
                     }
                 }
                 .padding(.top, 8)

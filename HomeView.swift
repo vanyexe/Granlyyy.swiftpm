@@ -19,6 +19,7 @@ struct HomeView: View {
     @State private var showSurpriseStory = false
     @State private var surpriseStory: Story?
     @State private var showMemoriesSheet = false
+    @State private var showAllStories = false
     
     let moods = Mood.allMoods
     
@@ -46,6 +47,7 @@ struct HomeView: View {
                     .tag(Tab.profile)
                     .tabItem { Label(L10n.t(.profile), systemImage: "person.circle.fill") }
             }
+            .id(lang.selectedLanguage.rawValue) // Force tab item label refresh on language change
             .tint(Color.themeRose)
             .navigationDestination(isPresented: $showSurpriseStory) {
                 if let story = surpriseStory {
@@ -113,14 +115,16 @@ struct HomeView: View {
                                 
                                 Spacer()
                                 
-                                // "See All" pill
-                                Text(L10n.t(.seeAll))
-                                    .font(.system(size: 12, weight: .bold, design: .rounded))
-                                    .foregroundStyle(Color.themeRose)
-                                    .padding(.horizontal, 10)
-                                    .padding(.vertical, 4)
-                                    .background(Color.themeRose.opacity(0.12))
-                                    .clipShape(Capsule())
+                                // "See All" pill — navigates to AllStoriesView
+                                NavigationLink(destination: AllStoriesView()) {
+                                    Text(L10n.t(.seeAll))
+                                        .font(.system(size: 12, weight: .bold, design: .rounded))
+                                        .foregroundStyle(Color.themeRose)
+                                        .padding(.horizontal, 10)
+                                        .padding(.vertical, 4)
+                                        .background(Color.themeRose.opacity(0.12))
+                                        .clipShape(Capsule())
+                                }
                             }
                             .padding(.horizontal)
                             
@@ -270,6 +274,7 @@ struct FeaturedStoryCard: View {
     let mood: Mood
     let storyTitle: String
     let index: Int
+    @EnvironmentObject var lang: LanguageManager
     
     // Each card gets a unique gradient personality
     private var cardGradient: [Color] {
@@ -337,7 +342,7 @@ struct FeaturedStoryCard: View {
                 // Bottom: mood tag + title
                 VStack(alignment: .leading, spacing: 5) {
                     // Mood label — distinct capsule tag
-                    Text(mood.name.uppercased())
+                    Text(mood.localizedName(for: lang.selectedLanguage).uppercased())
                         .font(.system(size: 9, weight: .black, design: .rounded))
                         .tracking(1.5)
                         .foregroundStyle(.white.opacity(0.75))

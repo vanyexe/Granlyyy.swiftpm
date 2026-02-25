@@ -43,7 +43,7 @@ struct ProfileView: View {
                             }
                             
                             VStack(spacing: 4) {
-                                Text(userName)
+                                Text(L10n.t(.myDear))
                                     .font(.granlyHeadline)
                                     .foregroundStyle(Color.themeText)
                                 Text("\(L10n.t(.storiesRead)): \(storiesRead)")

@@ -25,6 +25,7 @@ enum L10nKey: String {
     case surpriseMe, favorites, dailyWisdom
     case dailyInspiration
     case featuredSeeAll
+    case noStoriesFound
 
     // MARK: Story
     case tellingFrom, readMin, shuffle, story, loading
@@ -55,11 +56,60 @@ enum L10nKey: String {
     // MARK: Wisdom
     case wisdom, takeAction, modernExplanation, grandmaAdvice, dailyPractice
 
+    // MARK: Daily Wisdom Page
+    case wisdomPageTitle, wisdomPageSubtitle, shareWisdom
+    case wisdomCatLife, wisdomCatLove, wisdomCatResilience, wisdomCatSimpleJoys, wisdomCatHappiness, wisdomCatPatience
+
+    // MARK: Wisdom Hub (DigitalGrandmaWisdomView)
+    case wisdomHubTitle, wisdomHubSubtitle
+    case impactfulStories, impactfulStoriesSubtitle, readOurHistory
+    case universalWisdomSubtitle, exploreDailyQuotes
+    case memoryBoxSubtitle, openMemoryBox
+    case askGrandmaSubtitle, talkToGrandma
+    case growthPath, growthPathSubtitle, chooseYourPath
+
+    // MARK: Story List
+    case allCategory, shortCategory, moralCategory, bedtimeCategory, funnyCategory, natureCategory, comfortCategory
+    case storiesLabel, minRead
+
+    // MARK: Universal Quotes Actions
+    case discussThisQuote, updateGrowthPath
+
+    // MARK: Emotional Garden (GrowthPathView)
+    case emotionalGarden, statEnergy, statPaths
+    case completeReflection, reflectionAckButton, reflectionMessage
+
+    // MARK: Ask Grandma Chat
+    case chatWithGrandma, grandmaOnline, grandmaTyping, tellGrandmaMind
+
+    // MARK: Impactful Stories (HistoricalStoryListView)
+    case storiesThatShapedUs, storiesThatShapedUsSubtitle
+
+    // MARK: Historical Story Detail
+    case whatHappened, lifeLessons, grandmaAsks, growthTakeaway, yourReflection, continueYourJourney, talkGrandmaAboutThis
+
+    // MARK: About Granly
+    case aboutGranly, ourMission, missionBody, rateAppStore, privacyPolicy, termsOfService, designedWithCare, copyright
+    case websiteLabel
+
+    // MARK: Grandma Makeover
+    case saveLabel
+    case optionStyle, optionColor, optionFrames, optionNecklace, optionHatStyle
+    case optionSkinTone, optionEyeColor, optionExpression, optionLashes, optionTheme, optionCameraFilter
+
     // MARK: Memory Box
     case memories, addMemory, noMemoriesYet
 
     // MARK: Ask Grandma
     case askGrandma, typeYourFeeling, sendMessage
+    case askGrandmaGreeting
+
+    // MARK: Growth Path Nodes
+    case growthNode1Title, growthNode1Desc
+    case growthNode2Title, growthNode2Desc
+    case growthNode3Title, growthNode3Desc
+    case growthNode4Title, growthNode4Desc
+    case growthNode5Title, growthNode5Desc
 
     // MARK: Historical Stories
     case historicalStories, inspiredBy, readStory
@@ -120,6 +170,8 @@ struct L10n {
             .howAreYouFeeling: "How are you feeling?",
             .surpriseMe: "Surprise Me", .favorites: "Favorites", .dailyWisdom: "Daily Wisdom",
             .dailyInspiration: "Daily Inspiration",
+            .featuredSeeAll: "All Stories",
+            .noStoriesFound: "No stories found for this filter.",
 
             .tellingFrom: "TELLING FROM", .readMin: "min read",
             .shuffle: "Shuffle", .story: "Story", .loading: "Loading...",
@@ -154,6 +206,70 @@ struct L10n {
             .wisdom: "Wisdom", .takeAction: "Today's Practice",
             .modernExplanation: "Modern Meaning", .grandmaAdvice: "Grandma Says",
             .dailyPractice: "Daily Practice",
+
+            .wisdomPageTitle: "Daily Wisdom", .wisdomPageSubtitle: "Grandma's timeless advice",
+            .shareWisdom: "Share Wisdom",
+            .wisdomCatLife: "Life Lessons", .wisdomCatLove: "Love & Family",
+            .wisdomCatResilience: "Resilience", .wisdomCatSimpleJoys: "Simple Joys",
+            .wisdomCatHappiness: "Happiness", .wisdomCatPatience: "Patience",
+
+            .wisdomHubTitle: "Wisdom & Growth", .wisdomHubSubtitle: "A gentle space to reflect and grow.",
+            .impactfulStories: "Impactful Stories", .impactfulStoriesSubtitle: "Lessons from history's greatest moments.",
+            .readOurHistory: "Read Our Shared History",
+            .universalWisdomSubtitle: "Timeless truths from across the world.",
+            .exploreDailyQuotes: "Explore Daily Quotes",
+            .memoryBoxSubtitle: "Revisit your favorite stories and quotes.",
+            .openMemoryBox: "Open Memory Box",
+            .askGrandmaSubtitle: "Need advice? I'm here to listen.",
+            .talkToGrandma: "Talk to Grandma",
+            .growthPath: "Growth Path", .growthPathSubtitle: "Track your emotional journey.",
+            .chooseYourPath: "Choose Your Path",
+
+            .allCategory: "All", .shortCategory: "Short", .moralCategory: "Moral",
+            .bedtimeCategory: "Bedtime", .funnyCategory: "Funny", .natureCategory: "Nature", .comfortCategory: "Comfort",
+            .storiesLabel: "Stories", .minRead: "min read",
+
+            .discussThisQuote: "Discuss this quote",
+            .updateGrowthPath: "Update your Growth Path",
+
+            .emotionalGarden: "Your Emotional Garden",
+            .statEnergy: "Energy", .statPaths: "Paths",
+            .completeReflection: "Complete Reflection",
+            .reflectionAckButton: "I have reflected on this",
+            .reflectionMessage: "By marking this as complete, you acknowledge you have spent time focusing on this.",
+
+            .chatWithGrandma: "Chat with Grandma",
+            .grandmaOnline: "Online • Ready to listen",
+            .grandmaTyping: "Grandma is typing...",
+            .tellGrandmaMind: "Tell Grandma what's on your mind...",
+
+            .storiesThatShapedUs: "Stories That Shaped Us",
+            .storiesThatShapedUsSubtitle: "Learn from the most impactful events in human history.",
+
+            .whatHappened: "What Happened", .lifeLessons: "Life Lessons",
+            .grandmaAsks: "Grandma Asks...", .growthTakeaway: "Growth Takeaway",
+            .yourReflection: "Your Reflection", .continueYourJourney: "Continue Your Journey",
+            .talkGrandmaAboutThis: "Talk to Grandma about this",
+
+            .aboutGranly: "About Granly", .ourMission: "Our Mission",
+            .missionBody: "Granly was built with a simple wish: to bring warmth, comfort, and timeless storytelling magic into your daily life. It is your quiet corner to pause, breathe, and feel loved.",
+            .rateAppStore: "Rate on App Store", .privacyPolicy: "Privacy Policy",
+            .termsOfService: "Terms of Service", .designedWithCare: "Designed & Developed with Care",
+            .copyright: "© 2026 Granly App", .websiteLabel: "Website",
+
+            .saveLabel: "Save",
+            .optionStyle: "Style", .optionColor: "Color", .optionFrames: "Frames",
+            .optionNecklace: "Necklace", .optionHatStyle: "Hat Style",
+            .optionSkinTone: "Skin Tone", .optionEyeColor: "Eye Color", .optionExpression: "Expression",
+            .optionLashes: "Lashes", .optionTheme: "Theme", .optionCameraFilter: "Camera Filter",
+
+            .askGrandmaGreeting: "Hello my dear! What's on your heart today? You can tell me anything.",
+
+            .growthNode1Title: "Seed of Patience", .growthNode1Desc: "Learn to sit with uncertainty.",
+            .growthNode2Title: "Sprout of Courage", .growthNode2Desc: "Face a fear, no matter how small.",
+            .growthNode3Title: "Branch of Forgiveness", .growthNode3Desc: "Let go of a past grievance.",
+            .growthNode4Title: "Bloom of Joy", .growthNode4Desc: "Find happiness in the mundane.",
+            .growthNode5Title: "Roots of Wisdom", .growthNode5Desc: "Reflect on a past failure.",
 
             .memories: "Memories", .addMemory: "Add Memory", .noMemoriesYet: "No memories yet.",
             .askGrandma: "Ask Grandma", .typeYourFeeling: "Type how you're feeling...",
@@ -205,6 +321,8 @@ struct L10n {
             .howAreYouFeeling: "आप कैसा महसूस कर रहे हैं?",
             .surpriseMe: "चौंकाइए मुझे", .favorites: "पसंदीदा", .dailyWisdom: "दैनिक ज्ञान",
             .dailyInspiration: "दैनिक प्रेरणा",
+            .featuredSeeAll: "सभी कहानियाँ",
+            .noStoriesFound: "इस फ़िल्टर के लिए कोई कहानी नहीं मिली।",
 
             .tellingFrom: "यह कहानी है", .readMin: "मिनट पढ़ें",
             .shuffle: "बदलें", .story: "कहानी", .loading: "लोड हो रहा है...",
@@ -239,6 +357,70 @@ struct L10n {
             .wisdom: "ज्ञान", .takeAction: "आज का अभ्यास",
             .modernExplanation: "आधुनिक अर्थ", .grandmaAdvice: "दादी कहती हैं",
             .dailyPractice: "दैनिक अभ्यास",
+
+            .wisdomPageTitle: "दैनिक ज्ञान", .wisdomPageSubtitle: "दादी की अनमोल सीखें",
+            .shareWisdom: "ज्ञान साझा करें",
+            .wisdomCatLife: "जीवन के पाठ", .wisdomCatLove: "प्यार और परिवार",
+            .wisdomCatResilience: "दृढ़ता", .wisdomCatSimpleJoys: "साधारण खुशियाँ",
+            .wisdomCatHappiness: "खुशी", .wisdomCatPatience: "धैर्य",
+
+            .wisdomHubTitle: "ज्ञान और विकास", .wisdomHubSubtitle: "सोचने और बढ़ने की एक सौम्य जगह।",
+            .impactfulStories: "प्रभावशाली कहानियाँ", .impactfulStoriesSubtitle: "इतिहास के महान पलों से सबक।",
+            .readOurHistory: "हमारा साझा इतिहास पढ़ें",
+            .universalWisdomSubtitle: "दुनिया भर से कालातीत सच्चाइयाँ।",
+            .exploreDailyQuotes: "दैनिक उद्धरण देखें",
+            .memoryBoxSubtitle: "अपनी पसंदीदा कहानियों और उद्धरणों पर वापस जाएँ।",
+            .openMemoryBox: "मेमोरी बॉक्स खोलें",
+            .askGrandmaSubtitle: "सलाह चाहिए? मैं यहाँ सुनने के लिए हूँ।",
+            .talkToGrandma: "दादी से बात करें",
+            .growthPath: "विकास पथ", .growthPathSubtitle: "अपनी भावनात्मक यात्रा ट्रैक करें।",
+            .chooseYourPath: "अपना रास्ता चुनें",
+
+            .allCategory: "सभी", .shortCategory: "छोटी", .moralCategory: "नैतिक",
+            .bedtimeCategory: "सोने की", .funnyCategory: "मज़ेदार", .natureCategory: "प्रकृति", .comfortCategory: "सुकून",
+            .storiesLabel: "कहानियाँ", .minRead: "मिनट पढ़ें",
+
+            .discussThisQuote: "इस उद्धरण पर चर्चा करें",
+            .updateGrowthPath: "अपना विकास पथ अपडेट करें",
+
+            .emotionalGarden: "आपका भावनात्मक उद्यान",
+            .statEnergy: "उर्जा", .statPaths: "मार्ग",
+            .completeReflection: "चिंतन पूरा करें",
+            .reflectionAckButton: "मैंने इस पर चिंतन किया है",
+            .reflectionMessage: "इसे पूर्ण के रूप में चिह्नित करने से आप स्वीकार करते हैं कि आपने इस पर ध्यान दिया है।",
+
+            .chatWithGrandma: "दादी से चैट करें",
+            .grandmaOnline: "ऑनलाइन • सुनने के लिए तैयार",
+            .grandmaTyping: "दादी टाइप कर रही हैं...",
+            .tellGrandmaMind: "दादी को बताएं क्या है आपके मन में...",
+
+            .storiesThatShapedUs: "हमारे आकार देने वाली कहानियाँ",
+            .storiesThatShapedUsSubtitle: "मानव इतिहास की सबसे प्रभावशाली घटनाओं से सीखें।",
+
+            .whatHappened: "क्या हुआ", .lifeLessons: "जीवन के पाठ",
+            .grandmaAsks: "दादी पूछती हैं...", .growthTakeaway: "विकास संदेश",
+            .yourReflection: "आपका चिंतन", .continueYourJourney: "अपनी यात्रा जारी रखें",
+            .talkGrandmaAboutThis: "दादी से इस बारे में बात करें",
+
+            .aboutGranly: "ग्रॉन्ली के बारे में", .ourMission: "हमारा उद्देश्य",
+            .missionBody: "ग्रॉन्ली एक सरल इच्छा के साथ बनाया गया था: आपके दैनिक जीवन में उष्मा, आराम और कालातीत कहानी का जादू लाना।",
+            .rateAppStore: "ऐप स्टोर पर रेट करें", .privacyPolicy: "गोपनीयता नीति",
+            .termsOfService: "सेवा शर्तें", .designedWithCare: "प्यार से डिज़ाइन और विकसित",
+            .copyright: "© 2026 ग्रॉन्ली एप्प", .websiteLabel: "वेबसाइट",
+
+            .saveLabel: "सहेजें",
+            .optionStyle: "शैली", .optionColor: "रंग", .optionFrames: "फ्रेम",
+            .optionNecklace: "हार", .optionHatStyle: "टोपी शैली",
+            .optionSkinTone: "त्वचा का रंग", .optionEyeColor: "आँखों का रंग", .optionExpression: "भाव",
+            .optionLashes: "पलकें", .optionTheme: "थीम", .optionCameraFilter: "कैमरा फ़िल्टर",
+
+            .askGrandmaGreeting: "नमस्ते मेरे प्यारे! आज आपके मन में क्या चल रहा है? मुझसे कुछ भी कह सकते हैं।",
+
+            .growthNode1Title: "धैर्य का बीज", .growthNode1Desc: "अनिश्चितता के साथ बैठना सीखें।",
+            .growthNode2Title: "साहस की कोपल", .growthNode2Desc: "चाहे कितना छोटा, एक डर का सामना करें।",
+            .growthNode3Title: "क्षमा की शाखा", .growthNode3Desc: "पुरानी शिकायत को छोड़ दें।",
+            .growthNode4Title: "खुशी का फूल", .growthNode4Desc: "साधारण चीज़ों में खुशी ढूंढें।",
+            .growthNode5Title: "ज्ञान की जड़ें", .growthNode5Desc: "पिछली गलति पर विचार करें।",
 
             .memories: "यादें", .addMemory: "याद जोड़ें", .noMemoriesYet: "अभी तक कोई याद नहीं।",
             .askGrandma: "दादी से पूछें", .typeYourFeeling: "आप क्या महसूस कर रहे हैं...",
@@ -290,6 +472,8 @@ struct L10n {
             .howAreYouFeeling: "¿Cómo te sientes?",
             .surpriseMe: "Sorpréndeme", .favorites: "Favoritos", .dailyWisdom: "Sabiduría diaria",
             .dailyInspiration: "Inspiración diaria",
+            .featuredSeeAll: "Todos los Cuentos",
+            .noStoriesFound: "No se encontraron cuentos para este filtro.",
 
             .tellingFrom: "CONTANDO DESDE", .readMin: "min de lectura",
             .shuffle: "Aleatorio", .story: "Historia", .loading: "Cargando...",
@@ -323,6 +507,70 @@ struct L10n {
             .wisdom: "Sabiduría", .takeAction: "Práctica de hoy",
             .modernExplanation: "Significado moderno", .grandmaAdvice: "La abuela dice",
             .dailyPractice: "Práctica diaria",
+
+            .wisdomPageTitle: "Sabiduría Diaria", .wisdomPageSubtitle: "Los consejos eternos de la abuela",
+            .shareWisdom: "Compartir Sabiduría",
+            .wisdomCatLife: "Lecciones de Vida", .wisdomCatLove: "Amor y Familia",
+            .wisdomCatResilience: "Resiliencia", .wisdomCatSimpleJoys: "Placeres Simples",
+            .wisdomCatHappiness: "Felicidad", .wisdomCatPatience: "Paciencia",
+
+            .wisdomHubTitle: "Sabiduría y Crecimiento", .wisdomHubSubtitle: "Un espacio para reflexionar y crecer.",
+            .impactfulStories: "Historias Impactantes", .impactfulStoriesSubtitle: "Lecciones de los grandes momentos de la historia.",
+            .readOurHistory: "Leer Nuestra Historia Compartida",
+            .universalWisdomSubtitle: "Verdades eternas de todo el mundo.",
+            .exploreDailyQuotes: "Explorar Citas Diarias",
+            .memoryBoxSubtitle: "Revisa tus historias y citas favoritas.",
+            .openMemoryBox: "Abrir Caja de Recuerdos",
+            .askGrandmaSubtitle: "¿Necesitas consejo? Estoy aquí para escucharte.",
+            .talkToGrandma: "Hablar con la Abuela",
+            .growthPath: "Camino de Crecimiento", .growthPathSubtitle: "Sigue tu viaje emocional.",
+            .chooseYourPath: "Elige Tu Camino",
+
+            .allCategory: "Todas", .shortCategory: "Corta", .moralCategory: "Moral",
+            .bedtimeCategory: "Para Dormir", .funnyCategory: "Graciosa", .natureCategory: "Naturaleza", .comfortCategory: "Consuelo",
+            .storiesLabel: "Historias", .minRead: "min de lectura",
+
+            .discussThisQuote: "Discutir esta cita",
+            .updateGrowthPath: "Actualizar tu Camino de Crecimiento",
+
+            .emotionalGarden: "Tu Jardín Emocional",
+            .statEnergy: "Energía", .statPaths: "Caminos",
+            .completeReflection: "Reflexión Completa",
+            .reflectionAckButton: "He reflexionado sobre esto",
+            .reflectionMessage: "Al marcar esto como completo, reconoces que has dedicado tiempo a enfocarte en esto.",
+
+            .chatWithGrandma: "Charla con la Abuela",
+            .grandmaOnline: "En línea • Lista para escuchar",
+            .grandmaTyping: "La abuela está escribiendo...",
+            .tellGrandmaMind: "Cuéntale a la abuela lo que tienes en mente...",
+
+            .storiesThatShapedUs: "Historias que nos Formaron",
+            .storiesThatShapedUsSubtitle: "Aprende de los eventos más impactantes de la historia humana.",
+
+            .whatHappened: "Qué Sucedió", .lifeLessons: "Lecciones de Vida",
+            .grandmaAsks: "La Abuela Pregunta...", .growthTakeaway: "Aprendizaje de Crecimiento",
+            .yourReflection: "Tu Reflexión", .continueYourJourney: "Continúa tu Viaje",
+            .talkGrandmaAboutThis: "Hablar con la abuela sobre esto",
+
+            .aboutGranly: "Acerca de Granly", .ourMission: "Nuestra Misión",
+            .missionBody: "Granly fue creado con un simple deseo: traer calidez, confort y la magia de la narración atemporal a tu vida diaria.",
+            .rateAppStore: "Valorar en App Store", .privacyPolicy: "Política de Privacidad",
+            .termsOfService: "Términos de Servicio", .designedWithCare: "Diseñado y Desarrollado con Cuidado",
+            .copyright: "© 2026 Granly App", .websiteLabel: "Sitio Web",
+
+            .saveLabel: "Guardar",
+            .optionStyle: "Estilo", .optionColor: "Color", .optionFrames: "Armazón",
+            .optionNecklace: "Collar", .optionHatStyle: "Tipo de sombrero",
+            .optionSkinTone: "Tono de piel", .optionEyeColor: "Color de ojos", .optionExpression: "Expresión",
+            .optionLashes: "Pestañas", .optionTheme: "Tema", .optionCameraFilter: "Filtro de cámara",
+
+            .askGrandmaGreeting: "¡Hola mi querido! ¿Qué tienes en el corazón hoy? Puedes contarme cualquier cosa.",
+
+            .growthNode1Title: "Semilla de Paciencia", .growthNode1Desc: "Aprende a sentarte con la incertidumbre.",
+            .growthNode2Title: "Brote de Coraje", .growthNode2Desc: "Enfrenta un miedo, sin importar cuán pequeño.",
+            .growthNode3Title: "Rama del Perdón", .growthNode3Desc: "Suelta un rencor del pasado.",
+            .growthNode4Title: "Flor de Alegría", .growthNode4Desc: "Encuentra felicidad en lo cotidiano.",
+            .growthNode5Title: "Raíces de Sabiduría", .growthNode5Desc: "Reflexiona sobre un fracaso pasado.",
 
             .memories: "Recuerdos", .addMemory: "Añadir recuerdo", .noMemoriesYet: "Aún no hay recuerdos.",
             .askGrandma: "Pregúntale a la abuela", .typeYourFeeling: "Escribe cómo te sientes...",
@@ -374,6 +622,8 @@ struct L10n {
             .howAreYouFeeling: "Comment vous sentez-vous?",
             .surpriseMe: "Surprenez-Moi", .favorites: "Favoris", .dailyWisdom: "Sagesse Quotidienne",
             .dailyInspiration: "Inspiration Quotidienne",
+            .featuredSeeAll: "Toutes les Histoires",
+            .noStoriesFound: "Aucune histoire trouvée pour ce filtre.",
 
             .tellingFrom: "RACONTÉ DEPUIS", .readMin: "min de lecture",
             .shuffle: "Mélanger", .story: "Histoire", .loading: "Chargement...",
@@ -407,6 +657,70 @@ struct L10n {
             .wisdom: "Sagesse", .takeAction: "Pratique du Jour",
             .modernExplanation: "Sens Moderne", .grandmaAdvice: "Grand-mère Dit",
             .dailyPractice: "Pratique Quotidienne",
+
+            .wisdomPageTitle: "Sagesse Quotidienne", .wisdomPageSubtitle: "Les conseils intemporels de Grand-mère",
+            .shareWisdom: "Partager la Sagesse",
+            .wisdomCatLife: "Leçons de Vie", .wisdomCatLove: "Amour et Famille",
+            .wisdomCatResilience: "Résilience", .wisdomCatSimpleJoys: "Joies Simples",
+            .wisdomCatHappiness: "Bonheur", .wisdomCatPatience: "Patience",
+
+            .wisdomHubTitle: "Sagesse et Croissance", .wisdomHubSubtitle: "Un espace doux pour réfléchir et grandir.",
+            .impactfulStories: "Histoires Marquantes", .impactfulStoriesSubtitle: "Leçons des plus grands moments de l'histoire.",
+            .readOurHistory: "Lire Notre Histoire Commune",
+            .universalWisdomSubtitle: "Des vérités intemporelles du monde entier.",
+            .exploreDailyQuotes: "Explorer les Citations du Jour",
+            .memoryBoxSubtitle: "Revisitez vos histoires et citations favorites.",
+            .openMemoryBox: "Ouvrir la Boîte à Souvenirs",
+            .askGrandmaSubtitle: "Besoin d'un conseil ? Je suis là pour écouter.",
+            .talkToGrandma: "Parler à Grand-mère",
+            .growthPath: "Chemin de Croissance", .growthPathSubtitle: "Suivez votre voyage émotionnel.",
+            .chooseYourPath: "Choisissez Votre Chemin",
+
+            .allCategory: "Tout", .shortCategory: "Court", .moralCategory: "Moral",
+            .bedtimeCategory: "Coucher", .funnyCategory: "Drôle", .natureCategory: "Nature", .comfortCategory: "Réconfort",
+            .storiesLabel: "Histoires", .minRead: "min de lecture",
+
+            .discussThisQuote: "Discuter de cette citation",
+            .updateGrowthPath: "Mettre à jour votre Chemin de Croissance",
+
+            .emotionalGarden: "Votre Jardin Émotionnel",
+            .statEnergy: "Énergie", .statPaths: "Chemins",
+            .completeReflection: "Réflexion Complète",
+            .reflectionAckButton: "J'ai réfléchi à ceci",
+            .reflectionMessage: "En marquant ceci comme terminé, vous reconnaissez avoir pris le temps de vous concentrer sur ceci.",
+
+            .chatWithGrandma: "Bavardez avec Grand-mère",
+            .grandmaOnline: "En ligne • Prête à écouter",
+            .grandmaTyping: "Grand-mère est en train d'écrire...",
+            .tellGrandmaMind: "Dites à Grand-mère ce que vous avez en tête...",
+
+            .storiesThatShapedUs: "Histoires qui Nous ont Façonnés",
+            .storiesThatShapedUsSubtitle: "Apprenez des événements les plus marquants de l'histoire humaine.",
+
+            .whatHappened: "Ce qui s'est Passé", .lifeLessons: "Leçons de Vie",
+            .grandmaAsks: "Grand-mère Demande...", .growthTakeaway: "Leçon de Croissance",
+            .yourReflection: "Votre Réflexion", .continueYourJourney: "Continuez votre Voyage",
+            .talkGrandmaAboutThis: "Parler à Grand-mère de ceci",
+
+            .aboutGranly: "À propos de Granly", .ourMission: "Notre Mission",
+            .missionBody: "Granly a été créé avec un simple souhait : apporter chaleur, réconfort et la magie de la narration intemporelle dans votre vie quotidienne.",
+            .rateAppStore: "Noter sur l'App Store", .privacyPolicy: "Politique de Confidentialité",
+            .termsOfService: "Conditions d'Utilisation", .designedWithCare: "Conçu et Développé avec Soin",
+            .copyright: "© 2026 Granly App", .websiteLabel: "Site Web",
+
+            .saveLabel: "Enregistrer",
+            .optionStyle: "Style", .optionColor: "Couleur", .optionFrames: "Montures",
+            .optionNecklace: "Collier", .optionHatStyle: "Modèle de chapeau",
+            .optionSkinTone: "Teint", .optionEyeColor: "Couleur des yeux", .optionExpression: "Expression",
+            .optionLashes: "Cils", .optionTheme: "Thème", .optionCameraFilter: "Filtre caméra",
+
+            .askGrandmaGreeting: "Bonjour mon cher! Qu'est-ce qui pese sur ton cœur aujourd'hui? Tu peux tout me dire.",
+
+            .growthNode1Title: "Graine de Patience", .growthNode1Desc: "Apprends à accepter l'incertitude.",
+            .growthNode2Title: "Pousse de Courage", .growthNode2Desc: "Affronte une peur, aussi petite soit-elle.",
+            .growthNode3Title: "Branche du Pardon", .growthNode3Desc: "Libère-toi d'un vieux grief.",
+            .growthNode4Title: "Fleur de Joie", .growthNode4Desc: "Trouve le bonheur dans l'ordinaire.",
+            .growthNode5Title: "Racines de Sagesse", .growthNode5Desc: "Réfléchis à un échec passé.",
 
             .memories: "Souvenirs", .addMemory: "Ajouter un Souvenir", .noMemoriesYet: "Pas encore de souvenirs.",
             .askGrandma: "Demandez à Grand-mère", .typeYourFeeling: "Comment vous sentez-vous...",
@@ -458,6 +772,8 @@ struct L10n {
             .howAreYouFeeling: "您现在感觉如何？",
             .surpriseMe: "给我惊喜", .favorites: "收藏", .dailyWisdom: "每日智慧",
             .dailyInspiration: "每日灵感",
+            .featuredSeeAll: "全部故事",
+            .noStoriesFound: "没有找到符合此筛选条件的故事。",
 
             .tellingFrom: "倾听源自", .readMin: "分钟阅读",
             .shuffle: "随机", .story: "故事", .loading: "加载中...",
@@ -491,6 +807,70 @@ struct L10n {
             .wisdom: "智慧", .takeAction: "今日实践",
             .modernExplanation: "现代启示", .grandmaAdvice: "奶奶说",
             .dailyPractice: "日常练习",
+
+            .wisdomPageTitle: "每日智慧", .wisdomPageSubtitle: "奶奶的永恒忠告",
+            .shareWisdom: "分享智慧",
+            .wisdomCatLife: "人生课题", .wisdomCatLove: "爱与家庭",
+            .wisdomCatResilience: "坚韧", .wisdomCatSimpleJoys: "简单快乐",
+            .wisdomCatHappiness: "幸福", .wisdomCatPatience: "耐心",
+
+            .wisdomHubTitle: "智慧与成长", .wisdomHubSubtitle: "一个温柔的反思与成长空间。",
+            .impactfulStories: "影响深远的故事", .impactfulStoriesSubtitle: "来自历史重大时刻的教训。",
+            .readOurHistory: "阅读我们的共同历史",
+            .universalWisdomSubtitle: "来自世界各地的永恒真理。",
+            .exploreDailyQuotes: "探索每日语录",
+            .memoryBoxSubtitle: "重温您最喜爱的故事和语录。",
+            .openMemoryBox: "打开记忆宝盒",
+            .askGrandmaSubtitle: "需要建议？我在这里倾听。",
+            .talkToGrandma: "和奶奶聊聊",
+            .growthPath: "成长之路", .growthPathSubtitle: "追踪您的情感旅程。",
+            .chooseYourPath: "选择您的道路",
+
+            .allCategory: "全部", .shortCategory: "短篇", .moralCategory: "寓言",
+            .bedtimeCategory: "睡前", .funnyCategory: "趣味", .natureCategory: "自然", .comfortCategory: "慰藉",
+            .storiesLabel: "故事", .minRead: "分钟阅读",
+
+            .discussThisQuote: "讨论这句话",
+            .updateGrowthPath: "更新您的成长之路",
+
+            .emotionalGarden: "您的情感花园",
+            .statEnergy: "能量", .statPaths: "路径",
+            .completeReflection: "完成反思",
+            .reflectionAckButton: "我已经反思了这个",
+            .reflectionMessage: "通过将此标记为已完成，您承认已花时间专注于此。",
+
+            .chatWithGrandma: "与奶奶聊天",
+            .grandmaOnline: "在线 • 准备倾听",
+            .grandmaTyping: "奶奶正在输入...",
+            .tellGrandmaMind: "告诉奶奶您心里想的...",
+
+            .storiesThatShapedUs: "塑造我们的故事",
+            .storiesThatShapedUsSubtitle: "从人类历史中最具影响力的事件中学习。",
+
+            .whatHappened: "发生了什么", .lifeLessons: "人生课题",
+            .grandmaAsks: "奶奶问...", .growthTakeaway: "成长要点",
+            .yourReflection: "您的反思", .continueYourJourney: "继续您的旅程",
+            .talkGrandmaAboutThis: "就此与奶奶交流",
+
+            .aboutGranly: "关于Granly", .ourMission: "我们的使命",
+            .missionBody: "Granly的诞生源于一个简单的愿望：将温暖、安慰和永恒的故事魔力带入您的日常生活。",
+            .rateAppStore: "在App Store评分", .privacyPolicy: "隐私政策",
+            .termsOfService: "服务条款", .designedWithCare: "用心设计与开发",
+            .copyright: "© 2026 Granly应用", .websiteLabel: "网站",
+
+            .saveLabel: "保存",
+            .optionStyle: "风格", .optionColor: "颜色", .optionFrames: "镜框",
+            .optionNecklace: "项链", .optionHatStyle: "帽子款式",
+            .optionSkinTone: "肤色", .optionEyeColor: "眼睛颜色", .optionExpression: "表情",
+            .optionLashes: "睫毛", .optionTheme: "主题", .optionCameraFilter: "相机滤镜",
+
+            .askGrandmaGreeting: "亲爱的，你好！今天心里有什么想说的吗？什么都可以告诉我。",
+
+            .growthNode1Title: "耐心的种子", .growthNode1Desc: "学习与不确定性和平共处。",
+            .growthNode2Title: "勇气的幼苗", .growthNode2Desc: "面对一个恐惧，无论多小。",
+            .growthNode3Title: "宽容的枝条", .growthNode3Desc: "放下过去的怨恨。",
+            .growthNode4Title: "快乐的花朵", .growthNode4Desc: "在平凡事物中寻找幸福。",
+            .growthNode5Title: "智慧的根", .growthNode5Desc: "反思过去的失败。",
 
             .memories: "回忆", .addMemory: "添加回忆", .noMemoriesYet: "暂无回忆。",
             .askGrandma: "问问奶奶", .typeYourFeeling: "写下您的感受...",

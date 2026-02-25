@@ -15,13 +15,13 @@ struct GrowthPathView: View {
                 VStack(spacing: 24) {
                     // Header Stats
                     VStack(spacing: 16) {
-                        Text("Your Emotional Garden")
-                            .font(.granlyTitle2) // Title -> Title2
+                        Text(L10n.t(.emotionalGarden))
+                            .font(.granlyTitle2)
                             .foregroundStyle(Color.themeText)
                         
                         HStack(spacing: 30) {
-                            StatRing(icon: "heart.fill", value: "\(tracker.emotionalScore)", label: "Energy", color: Color.themeRose)
-                            StatRing(icon: "leaf.fill", value: "\(tracker.completedPaths)", label: "Paths", color: Color.themeGreen)
+                            StatRing(icon: "heart.fill", value: "\(tracker.emotionalScore)", label: L10n.t(.statEnergy), color: Color.themeRose)
+                            StatRing(icon: "leaf.fill", value: "\(tracker.completedPaths)", label: L10n.t(.statPaths), color: Color.themeGreen)
                         }
                     }
                     .padding(.top, 20)
@@ -96,15 +96,15 @@ struct GrowthPathView: View {
             }
         }
         .navigationBarTitleDisplayMode(.inline)
-        .alert("Complete Reflection", isPresented: $showCompletionAlert, presenting: activeNode) { node in
-            Button("I have reflected on this") {
+        .alert(L10n.t(.completeReflection), isPresented: $showCompletionAlert, presenting: activeNode) { node in
+            Button(L10n.t(.reflectionAckButton)) {
                 withAnimation {
                     tracker.completeNode(id: node.id)
                 }
             }
-            Button("Cancel", role: .cancel) { }
+            Button(L10n.t(.cancel), role: .cancel) { }
         } message: { node in
-            Text("By marking this as complete, you acknowledge you have spent time focusing on: \(node.category).")
+            Text(L10n.t(.reflectionMessage))
         }
     }
 }
