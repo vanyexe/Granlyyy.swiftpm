@@ -1,5 +1,6 @@
 import SwiftUI
 
+@MainActor
 struct ContentView: View {
     @State private var isActive = false
     @AppStorage("hasCompletedOnboarding") private var hasCompletedOnboarding = false

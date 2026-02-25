@@ -7,6 +7,7 @@ struct ChatMessage: Identifiable {
     let isUser: Bool
 }
 
+@MainActor
 struct AskGrandmaView: View {
     @EnvironmentObject var lang: LanguageManager
     @State private var messageText: String = ""
@@ -21,13 +22,8 @@ struct AskGrandmaView: View {
             VStack {
                 // Header
                 HStack {
-                    ZStack {
-                        Circle()
-                            .fill(Color.themeWarm.opacity(0.3))
-                            .frame(width: 44, height: 44)
-                        Text("👵🏻")
-                            .font(.granlyTitle2)
-                    }
+                    ProfileAvatarView(size: 44)
+                        .shadow(color: .black.opacity(0.1), radius: 4)
 
                     VStack(alignment: .leading) {
                         Text(L10n.t(.chatWithGrandma))
@@ -344,6 +340,7 @@ struct AskGrandmaView: View {
     }
 }
 
+@MainActor
 struct MessageBubble: View {
     let message: ChatMessage
 

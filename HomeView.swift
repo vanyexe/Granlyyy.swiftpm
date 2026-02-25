@@ -8,6 +8,7 @@ enum Tab {
     case profile
 }
 
+@MainActor
 struct HomeView: View {
     @State private var selectedTab: Tab = .stories
     @State private var scrollOffset: CGFloat = 0
@@ -74,16 +75,14 @@ struct HomeView: View {
                             .foregroundStyle(Color.themeText)
                     }
                     Spacer()
-                    ZStack {
-                        Circle()
-                            .fill(Color.themeWarm.opacity(0.3))
-                            .frame(width: 50, height: 50)
-                        Text("👵🏻")
-                            .font(.granlyTitle)
-                    }
-                    .shadow(radius: 4)
-                    .onTapGesture { // Now taps navigate within the TabView or trigger a sheet
-                        selectedTab = .profile
+                    VStack(alignment: .trailing, spacing: 4) {
+                        ProfileAvatarView(size: 44)
+                            .shadow(color: .black.opacity(0.1), radius: 4)
+                            .onTapGesture {
+                                withAnimation {
+                                    selectedTab = .profile
+                                }
+                            }
                     }
                 }
                 .padding(.horizontal)
@@ -194,6 +193,7 @@ struct HomeView: View {
 }
 
 // MARK: - Components
+@MainActor
 struct DailyQuoteCard: View {
     @EnvironmentObject var lang: LanguageManager
     var body: some View {
@@ -220,6 +220,7 @@ struct DailyQuoteCard: View {
     }
 }
 
+@MainActor
 struct QuickActionButton: View {
     let icon: String
     let title: String
@@ -250,6 +251,7 @@ struct QuickActionButton: View {
     }
 }
 
+@MainActor
 struct MoodCard: View {
     let mood: Mood
     @EnvironmentObject var lang: LanguageManager
@@ -270,6 +272,7 @@ struct MoodCard: View {
     }
 }
 
+@MainActor
 struct FeaturedStoryCard: View {
     let mood: Mood
     let storyTitle: String

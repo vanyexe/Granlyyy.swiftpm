@@ -1,5 +1,6 @@
 import SwiftUI
 
+@MainActor
 struct LanguageSelectionView: View {
     @Binding var hasSelectedLanguage: Bool
     @EnvironmentObject var languageManager: LanguageManager

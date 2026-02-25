@@ -1,5 +1,6 @@
 import SwiftUI
 
+@MainActor
 struct OnboardingView: View {
     @Binding var hasCompletedOnboarding: Bool
     @EnvironmentObject var lang: LanguageManager

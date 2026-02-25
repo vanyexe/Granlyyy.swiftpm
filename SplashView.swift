@@ -1,5 +1,6 @@
 import SwiftUI
 
+@MainActor
 struct SplashView: View {
     @Binding var isActive: Bool
 
@@ -23,7 +24,7 @@ struct SplashView: View {
                     // Push content down from top to ~20% from top
                     Spacer().frame(height: geo.size.height * 0.16)
 
-                    // ── Heart Avatar ───────────────────────────────────
+                    // ── Profile Avatar ───────────────────────────────────
                     ZStack {
                         // Soft golden radial glow behind the heart
                         RadialGradient(
@@ -102,6 +103,7 @@ struct SplashView: View {
 }
 
 // MARK: - Animated Loading Dots
+@MainActor
 struct LoadingDots: View {
     @State private var animate = false
 
@@ -125,6 +127,7 @@ struct LoadingDots: View {
 }
 
 // MARK: - Parchment / Paper Texture Background
+@MainActor
 struct ParchmentBackground: View {
     var body: some View {
         ZStack {
