@@ -1,5 +1,6 @@
 import SwiftUI
 
+@MainActor
 struct MemoryBoxView: View {
     @ObservedObject var favoritesManager = FavoritesManager.shared
     @ObservedObject var storyManager = StoryManager.shared

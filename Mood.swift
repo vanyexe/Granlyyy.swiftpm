@@ -7,6 +7,7 @@ struct MoodPalette {
     let light: [Color]  // 3 stops: warm softness for light mode
 }
 
+@MainActor
 struct Mood: Identifiable, Hashable {
     let id = UUID()
     let name: String          // English key for StoryManager lookup (do not localize this)

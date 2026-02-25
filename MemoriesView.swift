@@ -1,5 +1,6 @@
 import SwiftUI
 
+@MainActor
 public struct MemoriesView: View {
     public init() {}
     @ObservedObject var storyManager = StoryManager.shared

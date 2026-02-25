@@ -5,7 +5,9 @@
 // Do not edit it by hand because the contents will be replaced.
 
 import PackageDescription
+#if canImport(AppleProductTypes)
 import AppleProductTypes
+#endif
 
 let package = Package(
     name: "Granly",
