@@ -139,13 +139,14 @@ struct StoryView: View {
                     .padding(.top, 12)
 
                     // ── Avatar Card ──────────────────────────────────────
+                    let width = geo.size.width
+                    let cardSize: CGFloat = (width.isFinite && width > 110) ? min(width - 110, 230) : 0
                     ZStack {
 
                         // Outer glow
                         Circle()
                             .fill(primaryColor.opacity(artworkPulse ? 0.20 : 0.09))
-                            .frame(maxWidth: 300)
-                            .aspectRatio(1, contentMode: .fit)
+                            .frame(width: cardSize + 76, height: cardSize + 76)
                             .blur(radius: 32)
                             .scaleEffect(artworkPulse ? 1.08 : 1.00)
                             .animation(.easeInOut(duration: 2.0).repeatForever(autoreverses: true), value: artworkPulse)
@@ -153,8 +154,7 @@ struct StoryView: View {
                         // Inner bloom
                         Circle()
                             .fill(primaryColor.opacity(artworkPulse ? 0.42 : 0.22))
-                            .frame(maxWidth: 240)
-                            .aspectRatio(1, contentMode: .fit)
+                            .frame(width: cardSize + 48, height: cardSize + 48)
                             .blur(radius: 48)
                             .scaleEffect(artworkPulse ? 1.13 : 1.00)
                             .animation(.easeInOut(duration: 1.6).repeatForever(autoreverses: true), value: artworkPulse)
@@ -166,8 +166,7 @@ struct StoryView: View {
                             isSpeaking: $speechManager.isSpeaking,
                             settings:   settings
                         )
-                        .frame(maxWidth: 200)
-                        .aspectRatio(1, contentMode: .fit)
+                        .frame(width: cardSize, height: cardSize)
                         .clipShape(Circle())
                         .overlay(Circle().stroke(.white.opacity(0.16), lineWidth: 1.5))
                         .shadow(color: primaryColor.opacity(0.50), radius: 30, x: 0, y: 12)
@@ -608,31 +607,33 @@ struct ProgressHighlightTextView: View {
 
     private func buildAttributedString() -> AttributedString {
         var attributed = AttributedString(text)
-        let nsString = text as NSString
-        let totalLength = nsString.length
-        let upTo = min(spokenUpTo, totalLength)
+        let totalUTF16 = text.utf16.count
+        let upTo = min(spokenUpTo, totalUTF16)
 
         // ── Spoken: bright white ──────────────────────────────
         if upTo > 0 {
-            let end = attributed.index(attributed.startIndex, offsetByCharacters: upTo)
-            attributed[attributed.startIndex ..< end].foregroundColor = UIColor.white
+            if let upToPos = text.utf16.index(text.startIndex, offsetBy: upTo, limitedBy: text.endIndex),
+               let endRange = attributed.range(of: text[..<upToPos]) {
+                attributed[endRange].foregroundColor = UIColor.white
+            }
         }
 
         // ── Active word: mood accent glow ──────────────────────
-        if let speaking = speakingRange {
-            let wordStart = min(speaking.location, totalLength)
-            let wordEnd   = min(speaking.location + speaking.length, totalLength)
-            if wordStart < wordEnd {
-                let si = attributed.index(attributed.startIndex, offsetByCharacters: wordStart)
-                let ei = attributed.index(attributed.startIndex, offsetByCharacters: wordEnd)
-                attributed[si ..< ei].foregroundColor = UIColor(accentColor)
+        if let speaking = speakingRange, speaking.location + speaking.length <= totalUTF16 {
+            let wordStart = min(speaking.location, totalUTF16)
+            let wordEnd   = min(speaking.location + speaking.length, totalUTF16)
+            
+            if let startPos = text.utf16.index(text.startIndex, offsetBy: wordStart, limitedBy: text.endIndex),
+               let endPos = text.utf16.index(text.startIndex, offsetBy: wordEnd, limitedBy: text.endIndex),
+               let wordRange = attributed.range(of: text[startPos..<endPos]) {
+                attributed[wordRange].foregroundColor = UIColor(accentColor)
             }
         }
 
         // ── Upcoming: softly dimmed ───────────────────────────
-        if upTo < totalLength {
-            let futureStart = attributed.index(attributed.startIndex, offsetByCharacters: upTo)
-            attributed[futureStart ..< attributed.endIndex].foregroundColor = UIColor.white.withAlphaComponent(0.30)
+        if let startPos = text.utf16.index(text.startIndex, offsetBy: upTo, limitedBy: text.endIndex),
+           let upcomingRange = attributed.range(of: text[startPos...]) {
+            attributed[upcomingRange].foregroundColor = UIColor.white.withAlphaComponent(0.30)
         }
 
         return attributed
