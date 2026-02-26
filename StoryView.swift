@@ -8,7 +8,7 @@ struct StoryView: View {
     var storyToLoad: Story?
 
     @State private var story: Story?
-    @StateObject private var speechManager = SpeechManager()
+    @ObservedObject private var audioService = AudioService.shared
     @State private var animateAvatar    = false
     @ObservedObject private var storyManager = StoryManager.shared
     @StateObject private var settings   = GrandmaSettings()
@@ -37,219 +37,145 @@ struct StoryView: View {
         GeometryReader { geo in
             ZStack(alignment: .top) {
 
-                // ─── Rich layered background ────────────────────────────────
-                ZStack {
-                    // Deep base gradient
-                    LinearGradient(
-                        gradient: Gradient(stops: [
-                            .init(color: bgColors[0].opacity(0.85), location: 0.00),
-                            .init(color: bgColors[1].opacity(0.62), location: 0.45),
-                            .init(color: bgColors[2].opacity(0.95), location: 1.00)
-                        ]),
-                        startPoint: .topLeading,
-                        endPoint:   .bottomTrailing
-                    )
-                    // Cinematic dark veil
-                    LinearGradient(
-                        gradient: Gradient(colors: [
-                            Color.black.opacity(colorScheme == .dark ? 0.55 : 0.32),
-                            Color.black.opacity(colorScheme == .dark ? 0.80 : 0.52)
-                        ]),
-                        startPoint: .top,
-                        endPoint:   .bottom
-                    )
-                    // Ambient orb — top centre
-                    Ellipse()
-                        .fill(primaryColor.opacity(glowPhase ? 0.24 : 0.11))
-                        .frame(width: 340, height: 230)
-                        .blur(radius: 65)
-                        .offset(x: glowPhase ? 30 : -30, y: glowPhase ? -140 : -110)
-                        .allowsHitTesting(false)
-                    // Ambient orb — bottom
-                    Ellipse()
-                        .fill(bgColors[1].opacity(glowPhase ? 0.20 : 0.09))
-                        .frame(width: 280, height: 190)
-                        .blur(radius: 55)
-                        .offset(x: glowPhase ? -45 : 25, y: glowPhase ? geo.size.height * 0.56 : geo.size.height * 0.50)
-                        .allowsHitTesting(false)
-                }
+                // ─── Cinematic Mood Canvas ────────────────────────────────
+                // Deep, rich gradient using the mood palette — inspired by Apple Music
+                MoodBackgroundView(colors: bgColors, accentColor: primaryColor)
+                    .ignoresSafeArea()
+                
+                // Velvet dark veil: keeps text legible while preserving colour richness
+                LinearGradient(
+                    colors: [
+                        Color.black.opacity(colorScheme == .dark ? 0.62 : 0.28),
+                        Color.black.opacity(colorScheme == .dark ? 0.82 : 0.50)
+                    ],
+                    startPoint: .top, endPoint: .bottom
+                )
                 .ignoresSafeArea()
-                .onAppear {
-                    withAnimation(.easeInOut(duration: 5.5).repeatForever(autoreverses: true)) {
-                        glowPhase = true
-                    }
-                }
-
-                // ─── Filter overlays ─────────────────────────────────────
-                Group {
-                    if settings.filter == .sepia {
-                        Color(red: 0.3, green: 0.2, blue: 0.1).opacity(0.22)
-                    } else if settings.filter == .noir {
-                        Color.black.opacity(0.45)
-                    } else if settings.filter == .warm {
-                        Color.orange.opacity(0.10)
-                    } else if settings.filter == .cool {
-                        Color.blue.opacity(0.10)
-                    }
-                }
-                .ignoresSafeArea()
-                .allowsHitTesting(false)
 
                 // ─── Main content column ─────────────────────────────────
                 VStack(spacing: 0) {
 
-                    // ── Top Nav Bar ──────────────────────────────────────
+                    // ── Top Nav Bar (minimal) ────────────────────────────
                     HStack {
                         Button { dismiss() } label: {
                             Image(systemName: "chevron.down")
                                 .font(.system(size: 16, weight: .semibold))
-                                .frame(width: 36, height: 36)
-                                .background(.white.opacity(0.10), in: Circle())
-                                .overlay(Circle().stroke(.white.opacity(0.09), lineWidth: 1))
+                                .foregroundStyle(.white)
+                                .frame(width: 38, height: 38)
+                                .background(.white.opacity(0.12), in: Circle())
+                                .overlay(Circle().stroke(.white.opacity(0.10), lineWidth: 1))
                         }
 
                         Spacer()
 
-                        VStack(spacing: 2) {
-                            Text(L10n.t(.tellingFrom).uppercased())
-                                .font(.system(size: 9, weight: .bold))
-                                .kerning(2.0)
-                                .foregroundStyle(subtleText)
-                            Text(mood.localizedName(for: lang.selectedLanguage))
-                                .font(.system(size: 14, weight: .semibold))
-                                .foregroundStyle(textColor)
-                        }
+                        Text("Story Time")
+                            .font(.system(size: 13, weight: .semibold, design: .rounded))
+                            .foregroundStyle(.white.opacity(0.70))
+                            .tracking(0.8)
+                            .textCase(.uppercase)
 
                         Spacer()
 
-                        if let story = story {
-                            ShareLink(item: "\(story.title)\n\n\(story.content)\n\n— From Granly") {
-                                Image(systemName: "square.and.arrow.up")
-                                    .font(.system(size: 15, weight: .semibold))
-                                    .frame(width: 36, height: 36)
-                                    .background(.white.opacity(0.10), in: Circle())
-                                    .overlay(Circle().stroke(.white.opacity(0.09), lineWidth: 1))
-                            }
-                        } else {
-                            Color.clear.frame(width: 36, height: 36)
-                        }
+                        // Placeholder to balance the HStack
+                        Color.clear.frame(width: 38, height: 38)
                     }
-                    .foregroundStyle(textColor)
-                    .padding(.horizontal, 22)
-                    .padding(.top, 12)
+                    .padding(.horizontal, 24)
+                    .padding(.top, 16)
+                    .padding(.bottom, 20)
 
-                    // ── Avatar Card ──────────────────────────────────────
-                    let width = geo.size.width
-                    let cardSize: CGFloat = (width.isFinite && width > 110) ? min(width - 110, 230) : 0
+                    // ── Avatar Card (Centered Top) ───────────────────────
                     ZStack {
-
+                        let cardSize: CGFloat = min(geo.size.width - 60, 240)
+                        
                         // Outer glow
                         Circle()
                             .fill(primaryColor.opacity(artworkPulse ? 0.20 : 0.09))
-                            .frame(width: cardSize + 76, height: cardSize + 76)
+                            .frame(width: cardSize + 40, height: cardSize + 40)
                             .blur(radius: 32)
-                            .scaleEffect(artworkPulse ? 1.08 : 1.00)
+                            .scaleEffect(artworkPulse ? 1.05 : 1.00)
                             .animation(.easeInOut(duration: 2.0).repeatForever(autoreverses: true), value: artworkPulse)
 
-                        // Inner bloom
-                        Circle()
-                            .fill(primaryColor.opacity(artworkPulse ? 0.42 : 0.22))
-                            .frame(width: cardSize + 48, height: cardSize + 48)
-                            .blur(radius: 48)
-                            .scaleEffect(artworkPulse ? 1.13 : 1.00)
-                            .animation(.easeInOut(duration: 1.6).repeatForever(autoreverses: true), value: artworkPulse)
-
-                        // Grandma SceneKit view
                         GrandmaSceneView(
                             action:     $action,
                             expression: $expression,
-                            isSpeaking: $speechManager.isSpeaking,
+                            isSpeaking: $audioService.isPlaying,
                             settings:   settings
                         )
                         .frame(width: cardSize, height: cardSize)
-                        .clipShape(Circle())
-                        .overlay(Circle().stroke(.white.opacity(0.16), lineWidth: 1.5))
-                        .shadow(color: primaryColor.opacity(0.50), radius: 30, x: 0, y: 12)
-                        .shadow(color: .black.opacity(0.42), radius: 22, x: 0, y: 10)
-                        .scaleEffect(artworkPulse ? 1.03 : 1.00)
-                        .animation(.easeInOut(duration: 0.45), value: artworkPulse)
+                        // Soft depth shadow
+                        .background(
+                            RadialGradient(gradient: Gradient(colors: [.black.opacity(0.6), .clear]), center: .center, startRadius: 0, endRadius: cardSize/2 + 20)
+                        )
+                        .clipShape(RoundedRectangle(cornerRadius: cardSize / 2, style: .continuous))
+                        .overlay(
+                            RoundedRectangle(cornerRadius: cardSize / 2, style: .continuous)
+                                .stroke(.white.opacity(0.15), lineWidth: 1.5)
+                        )
+                        .shadow(color: primaryColor.opacity(0.30), radius: 30, x: 0, y: 15)
+                        .shadow(color: .black.opacity(0.40), radius: 15, x: 0, y: 10)
+                        .scaleEffect(artworkPulse ? 1.02 : 1.0)
+                        .animation(.spring(response: 0.8, dampingFraction: 0.6).repeatForever(autoreverses: true), value: artworkPulse)
                         .onTapGesture { handleGrandmaTap() }
-
-                        // Heart toast
+                        
+                        // Heart toast 
                         if showHeartToast {
-                            HStack(spacing: 5) {
-                                Text(toastMessage)
-                                    .font(.system(size: 12, weight: .medium))
-                                Image(systemName: "heart.fill")
-                                    .font(.system(size: 11))
-                                    .foregroundStyle(Color.themeRose)
-                            }
-                            .foregroundStyle(Color.black.opacity(0.80))
-                            .padding(.horizontal, 14)
-                            .padding(.vertical, 8)
-                            .background(.white.opacity(0.93), in: Capsule())
-                            .shadow(color: .black.opacity(0.15), radius: 10, x: 0, y: 4)
-                            .transition(.scale.combined(with: .opacity))
-                            .offset(y: -120)
+                            Image(systemName: "heart.fill")
+                                .font(.system(size: 34))
+                                .foregroundStyle(Color.themeRose)
+                                .shadow(radius: 6)
+                                .transition(.scale.combined(with: .opacity))
                         }
                     }
-                    .padding(.top, 22)
-                    // ── Story Title & Mood Pill ──────────────────────────
-                    VStack(spacing: 9) {
-                        if let story = story {
-                            Text(story.title)
-                                .font(.system(size: 22, weight: .bold, design: .rounded))
-                                .foregroundStyle(textColor)
-                                .lineLimit(2)
-                                .multilineTextAlignment(.center)
-                                .padding(.horizontal, 28)
-                                .shadow(color: .black.opacity(0.22), radius: 4, x: 0, y: 2)
-                        } else {
-                            RoundedRectangle(cornerRadius: 6)
-                                .fill(.white.opacity(0.18))
-                                .frame(width: 180, height: 20)
-                        }
-                        // Mood pill
-                        HStack(spacing: 5) {
-                            Image(systemName: mood.icon)
-                                .font(.system(size: 10, weight: .semibold))
-                            Text(mood.localizedName(for: lang.selectedLanguage))
-                                .font(.system(size: 11, weight: .semibold))
-                                .kerning(0.5)
-                        }
-                        .foregroundStyle(primaryColor)
-                        .padding(.horizontal, 12)
-                        .padding(.vertical, 5)
-                        .background(primaryColor.opacity(0.14), in: Capsule())
-                        .overlay(Capsule().stroke(primaryColor.opacity(0.28), lineWidth: 0.8))
-                    }
-                    .padding(.top, 18)
+                    .padding(.bottom, 16)
 
-                    // ── Karaoke Text Panel ───────────────────────────────
+                    // ── Story Title + Mood Pill ─────────────────────────
+                    if let story = story {
+                        VStack(spacing: 10) {
+
+                            // Title
+                            Text(story.title)
+                                .font(.system(size: 24, weight: .heavy, design: .rounded))
+                                .foregroundStyle(.white)
+                                .multilineTextAlignment(.center)
+                                .shadow(color: primaryColor.opacity(0.55), radius: 10, y: 4)
+                                .padding(.horizontal, 28)
+
+                            // Mood pill
+                            HStack(spacing: 6) {
+                                Image(systemName: mood.icon)
+                                    .font(.system(size: 11, weight: .semibold))
+                                Text(mood.localizedName(for: lang.selectedLanguage))
+                                    .font(.system(size: 12, weight: .semibold, design: .rounded))
+                            }
+                            .foregroundStyle(primaryColor)
+                            .padding(.horizontal, 14)
+                            .padding(.vertical, 6)
+                            .background(
+                                Capsule()
+                                    .fill(primaryColor.opacity(0.18))
+                                    .overlay(Capsule().stroke(primaryColor.opacity(0.35), lineWidth: 1))
+                            )
+                        }
+                        .padding(.bottom, 16)
+                    }
+
+                    // ── Full Screen Karaoke Text Panel (Lyrics View) ─────────────────
                     if let story = story {
                         ProgressHighlightTextView(
                             text: story.content,
-                            speakingRange: speechManager.speakingRange,
+                            speakingRange: audioService.speakingRange,
                             accentColor: primaryColor
                         )
-                        .frame(maxHeight: 210)
-                        .background {
-                            RoundedRectangle(cornerRadius: 20, style: .continuous)
-                                .fill(.black.opacity(0.22))
-                                .overlay(
-                                    RoundedRectangle(cornerRadius: 20, style: .continuous)
-                                        .stroke(.white.opacity(0.07), lineWidth: 1)
-                                )
-                        }
-                        .padding(.horizontal, 18)
-                        .padding(.top, 14)
+                        .frame(maxWidth: .infinity, maxHeight: .infinity)
+                        .padding(.top, 4)
                     }
+
 
                     Spacer(minLength: 0)
 
                     // ── Controls ─────────────────────────────────────────
                     ControlsView(
-                        speechManager: speechManager,
+                        audioService:  audioService,
                         storyManager:  storyManager,
                         story:         $story,
                         animateAvatar: $animateAvatar,
@@ -266,13 +192,13 @@ struct StoryView: View {
             UserDefaults.standard.set(n + 1, forKey: "storiesRead")
             updateExpressionForMood()
         }
-        .onChange(of: speechManager.isSpeaking) { speaking in
+        .onChange(of: audioService.isPlaying) { speaking in
             animateAvatar = speaking
             updateActionForState()
             withAnimation(.easeInOut(duration: 0.5)) { artworkPulse = speaking }
         }
         .onChange(of: waveTrigger) { _ in updateActionForState() }
-        .onDisappear { speechManager.stop() }
+        .onDisappear { audioService.stopAudio() }
     }
 
     // MARK: - Helpers
@@ -285,7 +211,7 @@ struct StoryView: View {
     }
 
     private func updateActionForState() {
-        if speechManager.isSpeaking { action = .tellStory }
+        if audioService.isPlaying { action = .tellStory }
         else if waveTrigger         { action = .wave }
         else                        { action = .idle }
     }
@@ -342,8 +268,8 @@ struct MoodBackgroundView: View {
 
 // MARK: - Controls View  (Spotify-style bottom panel)
 struct ControlsView: View {
-    @ObservedObject var speechManager: SpeechManager
-    @ObservedObject var storyManager:  StoryManager
+    @ObservedObject var audioService: AudioService
+    @ObservedObject var storyManager: StoryManager
     @Binding var story:        Story?
     @Binding var animateAvatar: Bool
     let mood:        Mood
@@ -363,7 +289,7 @@ struct ControlsView: View {
 
                 // ── Progress bar ─────────────────────────────────────
                 VStack(spacing: 6) {
-                    if speechManager.isPreparingAudio {
+                    if audioService.isPreparingAudio {
                         HStack {
                             Text("Preparing…")
                                 .font(.system(size: 11, weight: .medium))
@@ -378,34 +304,38 @@ struct ControlsView: View {
                             ZStack(alignment: .leading) {
                                 // Track
                                 Capsule()
-                                    .fill(.white.opacity(0.12))
-                                    .frame(height: 4)
+                                    .fill(.white.opacity(0.15))
+                                    .frame(height: 5)
+
                                 // Gradient fill
                                 Capsule()
                                     .fill(
                                         LinearGradient(
-                                            colors: [accentColor.opacity(0.75), accentColor],
+                                            colors: [accentColor.opacity(0.85), accentColor],
                                             startPoint: .leading, endPoint: .trailing
                                         )
                                     )
-                                    .frame(width: filled, height: 4)
+                                    .frame(width: filled, height: 5)
+                                    .shadow(color: accentColor.opacity(audioService.isPlaying ? 0.6 : 0.0), radius: 6, x: 0, y: 0)
                                 // Thumb
                                 Circle()
                                     .fill(.white)
-                                    .frame(width: 14, height: 14)
-                                    .shadow(color: accentColor.opacity(0.55), radius: 6)
-                                    .shadow(color: .black.opacity(0.18), radius: 2, x: 0, y: 1)
-                                    .offset(x: filled.isFinite ? max(0, filled - 7) : 0)
+                                    .frame(width: 16, height: 16)
+                                    .shadow(color: accentColor.opacity(0.7), radius: 8)
+                                    .shadow(color: .black.opacity(0.25), radius: 3, x: 0, y: 2)
+                                    .offset(x: filled.isFinite ? max(0, filled - 8) : 0)
+                                    .scaleEffect(audioService.isScrubbing ? 1.2 : 1.0)
+                                    .animation(.spring(response: 0.3, dampingFraction: 0.6), value: audioService.isScrubbing)
                             }
                             .contentShape(Rectangle())
                             .gesture(
                                 DragGesture(minimumDistance: 0)
                                     .onChanged { v in
                                         let ratio = max(0, min(1, v.location.x / g.size.width))
-                                        speechManager.scrubbingStarted()
-                                        speechManager.scrub(to: speechManager.duration * ratio)
+                                        audioService.scrubbingStarted()
+                                        audioService.scrub(to: audioService.duration * ratio)
                                     }
-                                    .onEnded { _ in speechManager.scrubbingEnded() }
+                                    .onEnded { _ in audioService.scrubbingEnded() }
                             )
                         }
                         .frame(height: 14)
@@ -413,9 +343,9 @@ struct ControlsView: View {
                     }
 
                     HStack {
-                        Text(fmt(speechManager.currentTime))
+                        Text(fmt(audioService.currentTime))
                         Spacer()
-                        Text(fmt(speechManager.duration))
+                        Text(fmt(audioService.duration))
                     }
                     .font(.system(size: 10, weight: .medium).monospacedDigit())
                     .foregroundStyle(.white.opacity(0.38))
@@ -423,81 +353,175 @@ struct ControlsView: View {
                 }
                 .padding(.top, 16)
 
-                // ── Playback Buttons ─────────────────────────────────
-                HStack(alignment: .center, spacing: 0) {
+                // ── Like / Share / Next Row ───────────────────────────
+                HStack(spacing: 0) {
 
-                    // Heart
+                    // Like
                     Button {
                         if let s = story {
-                            withAnimation(.spring(response: 0.3, dampingFraction: 0.55)) {
+                            withAnimation(.spring(response: 0.3, dampingFraction: 0.5)) {
                                 storyManager.toggleLike(for: s)
                             }
+                            UIImpactFeedbackGenerator(style: .medium).impactOccurred()
                         }
                     } label: {
-                        Image(systemName: liked ? "heart.fill" : "heart")
-                            .font(.system(size: 20, weight: .medium))
-                            .foregroundStyle(liked ? Color.themeRose : .white.opacity(0.60))
-                            .scaleEffect(liked ? 1.18 : 1.00)
-                            .animation(.spring(response: 0.3, dampingFraction: 0.5), value: liked)
+                        VStack(spacing: 4) {
+                            Image(systemName: liked ? "heart.fill" : "heart")
+                                .font(.system(size: 20, weight: .semibold))
+                                .foregroundStyle(liked ? Color.themeRose : .white.opacity(0.75))
+                                .scaleEffect(liked ? 1.15 : 1.0)
+                                .animation(.spring(response: 0.3, dampingFraction: 0.5), value: liked)
+                            Text(liked ? "Liked" : "Like")
+                                .font(.system(size: 10, weight: .medium))
+                                .foregroundStyle(.white.opacity(0.45))
+                        }
                     }
                     .frame(maxWidth: .infinity)
 
-                    // Restart
-                    Button { restart() } label: {
-                        Image(systemName: "backward.end.fill")
-                            .font(.system(size: 21, weight: .medium))
-                            .foregroundStyle(.white.opacity(0.75))
+                    // Share
+                    if let s = story {
+                        ShareLink(item: "\(s.title)\n\n\(s.content)\n\n— From Granly") {
+                            VStack(spacing: 4) {
+                                Image(systemName: "square.and.arrow.up")
+                                    .font(.system(size: 20, weight: .semibold))
+                                    .foregroundStyle(.white.opacity(0.75))
+                                Text("Share")
+                                    .font(.system(size: 10, weight: .medium))
+                                    .foregroundStyle(.white.opacity(0.45))
+                            }
+                        }
+                        .frame(maxWidth: .infinity)
+                    }
+
+                    // Next (shuffle)
+                    Button {
+                        UIImpactFeedbackGenerator(style: .light).impactOccurred()
+                        audioService.stopAudio()
+                        animateAvatar = false
+                        story = StoryManager.shared.getRandomStory(for: mood)
+                    } label: {
+                        VStack(spacing: 4) {
+                            Image(systemName: "shuffle")
+                                .font(.system(size: 20, weight: .semibold))
+                                .foregroundStyle(.white.opacity(0.75))
+                            Text("Next")
+                                .font(.system(size: 10, weight: .medium))
+                                .foregroundStyle(.white.opacity(0.45))
+                        }
                     }
                     .frame(maxWidth: .infinity)
+                }
+                .padding(.horizontal, 16)
+
+                // ── Playback Buttons ─────────────────────────────────
+                HStack(alignment: .center, spacing: 32) {
+
+                    Spacer()
+
+                    // Backward skip
+                    Button { scrubRelative(by: -15) } label: {
+                        Image(systemName: "gobackward.15")
+                            .font(.system(size: 24, weight: .medium))
+                            .foregroundStyle(.white.opacity(0.75))
+                    }
 
                     // ── Large Play / Pause ──
                     Button { handlePlayPause() } label: {
                         ZStack {
-                            // Accent glow behind button
+                            // Layered shadow for depth
                             Circle()
-                                .fill(accentColor.opacity(0.28))
-                                .frame(width: 78, height: 78)
-                                .blur(radius: 14)
+                                .fill(accentColor.opacity(0.4))
+                                .frame(width: 90, height: 90)
+                                .blur(radius: 20)
+                            
+                            // Frosted Glass Effect inside button
                             Circle()
                                 .fill(.white)
-                                .frame(width: 64, height: 64)
-                                .shadow(color: accentColor.opacity(0.50), radius: 18, x: 0, y: 5)
-                                .shadow(color: .black.opacity(0.22), radius: 10, x: 0, y: 4)
-                            Image(systemName: speechManager.isSpeaking ? "pause.fill" : "play.fill")
-                                .font(.system(size: 24, weight: .bold))
-                                .foregroundStyle(.black.opacity(0.82))
-                                .offset(x: speechManager.isSpeaking ? 0 : 2)
+                                .frame(width: 74, height: 74)
+                                .shadow(color: accentColor.opacity(0.6), radius: 20, x: 0, y: 8)
+                                .shadow(color: .black.opacity(0.3), radius: 12, x: 0, y: 6)
+                            
+                            Image(systemName: audioService.isPlaying ? "pause.fill" : "play.fill")
+                                .font(.system(size: 28, weight: .black))
+                                .foregroundStyle(.black.opacity(0.85))
+                                .offset(x: audioService.isPlaying ? 0 : 2)
                         }
-                        .scaleEffect(playPressed ? 0.90 : 1.00)
-                        .animation(.spring(response: 0.20, dampingFraction: 0.6), value: playPressed)
+                        .scaleEffect(playPressed ? 0.88 : (audioService.isPlaying ? 1.03 : 1.00))
+                        .animation(.spring(response: 0.25, dampingFraction: 0.55), value: playPressed)
+                        .animation(.easeInOut(duration: 1.2).repeatForever(autoreverses: true), value: audioService.isPlaying)
                     }
-                    .frame(maxWidth: .infinity)
 
-                    // Stop
-                    Button {
-                        speechManager.stop()
-                        animateAvatar = false
-                    } label: {
-                        Image(systemName: "stop.circle")
-                            .font(.system(size: 21, weight: .medium))
+                    // Forward skip
+                    Button { scrubRelative(by: 15) } label: {
+                        Image(systemName: "goforward.15")
+                            .font(.system(size: 24, weight: .medium))
                             .foregroundStyle(.white.opacity(0.75))
                     }
+
+                    Spacer()
+                }
+                .padding(.horizontal, 24)
+
+                // ── Like / Share / Next Row (below play button) ───────
+                HStack(spacing: 0) {
+
+                    // Like
+                    Button {
+                        if let s = story {
+                            withAnimation(.spring(response: 0.3, dampingFraction: 0.5)) {
+                                storyManager.toggleLike(for: s)
+                            }
+                            UIImpactFeedbackGenerator(style: .medium).impactOccurred()
+                        }
+                    } label: {
+                        VStack(spacing: 4) {
+                            Image(systemName: liked ? "heart.fill" : "heart")
+                                .font(.system(size: 20, weight: .semibold))
+                                .foregroundStyle(liked ? Color.themeRose : .white.opacity(0.75))
+                                .scaleEffect(liked ? 1.15 : 1.0)
+                                .animation(.spring(response: 0.3, dampingFraction: 0.5), value: liked)
+                            Text(liked ? "Liked" : "Like")
+                                .font(.system(size: 10, weight: .medium))
+                                .foregroundStyle(.white.opacity(0.45))
+                        }
+                    }
                     .frame(maxWidth: .infinity)
 
-                    // Shuffle / next
+                    // Share
+                    if let s = story {
+                        ShareLink(item: "\(s.title)\n\n\(s.content)\n\n— From Granly") {
+                            VStack(spacing: 4) {
+                                Image(systemName: "square.and.arrow.up")
+                                    .font(.system(size: 20, weight: .semibold))
+                                    .foregroundStyle(.white.opacity(0.75))
+                                Text("Share")
+                                    .font(.system(size: 10, weight: .medium))
+                                    .foregroundStyle(.white.opacity(0.45))
+                            }
+                        }
+                        .frame(maxWidth: .infinity)
+                    }
+
+                    // Next (shuffle to random story)
                     Button {
-                        speechManager.stop()
+                        UIImpactFeedbackGenerator(style: .light).impactOccurred()
+                        audioService.stopAudio()
                         animateAvatar = false
                         story = StoryManager.shared.getRandomStory(for: mood)
                     } label: {
-                        Image(systemName: "shuffle")
-                            .font(.system(size: 18, weight: .medium))
-                            .foregroundStyle(.white.opacity(0.60))
+                        VStack(spacing: 4) {
+                            Image(systemName: "shuffle")
+                                .font(.system(size: 20, weight: .semibold))
+                                .foregroundStyle(.white.opacity(0.75))
+                            Text("Next")
+                                .font(.system(size: 10, weight: .medium))
+                                .foregroundStyle(.white.opacity(0.45))
+                        }
                     }
                     .frame(maxWidth: .infinity)
                 }
-                .padding(.horizontal, 8)
-                .padding(.bottom, 34)
+                .padding(.horizontal, 16)
+                .padding(.bottom, 36)
             }
         }
         .background {
@@ -529,14 +553,14 @@ struct ControlsView: View {
         guard
             totalWidth.isFinite,
             totalWidth > 0,
-            speechManager.duration.isFinite,
-            speechManager.duration > 0,
-            speechManager.currentTime.isFinite
+            audioService.duration.isFinite,
+            audioService.duration > 0,
+            audioService.currentTime.isFinite
         else {
             return 0
         }
 
-        let progress = speechManager.currentTime / speechManager.duration
+        let progress = audioService.currentTime / audioService.duration
         let clampedProgress = max(0, min(1, progress))
 
         return totalWidth * CGFloat(clampedProgress)
@@ -547,96 +571,142 @@ struct ControlsView: View {
     }
 
     private func handlePlayPause() {
-        if speechManager.isPreparingAudio { return }
+        if audioService.isPreparingAudio { return }
         UIImpactFeedbackGenerator(style: .light).impactOccurred()
         playPressed = true
         DispatchQueue.main.asyncAfter(deadline: .now() + 0.15) { playPressed = false }
 
-        if speechManager.isSpeaking {
-            speechManager.pause(); animateAvatar = false
-        } else if speechManager.duration > 0 && speechManager.currentTime < speechManager.duration {
-            speechManager.resume(); animateAvatar = true
+        if audioService.isPlaying {
+            audioService.pauseAudio(); animateAvatar = false
+        } else if audioService.duration > 0 && audioService.currentTime < audioService.duration {
+            audioService.resumeAudio(); animateAvatar = true
         } else if let c = story?.content {
-            speechManager.speak(text: c); animateAvatar = true
+            audioService.readText(c); animateAvatar = true
         }
     }
 
+    private func scrubRelative(by seconds: TimeInterval) {
+        UIImpactFeedbackGenerator(style: .medium).impactOccurred()
+        let newTime = max(0, min(audioService.duration, audioService.currentTime + seconds))
+        audioService.scrub(to: newTime)
+    }
+
     private func restart() {
-        speechManager.stop(); animateAvatar = false
+        audioService.stopAudio(); animateAvatar = false
         if let c = story?.content {
             DispatchQueue.main.asyncAfter(deadline: .now() + 0.15) {
-                speechManager.speak(text: c); animateAvatar = true
+                audioService.readText(c); animateAvatar = true
             }
         }
     }
 }
 
-// MARK: - Karaoke-style cumulative progress highlight
-/// Spoken text = bright or accent-colored. Upcoming = softly dimmed.
+// MARK: - Spotify-Style Scrolling Lyrics View
+/// Spoken lines = bright white. Upcoming = dimmed.
+/// Smoothly auto-scrolls line by line to keep the active line visible.
 @MainActor
 struct ProgressHighlightTextView: View {
     let text: String
     let speakingRange: NSRange?
     let accentColor: Color
 
-    private var spokenUpTo: Int {
-        guard let range = speakingRange else { return 0 }
-        return range.location + range.length
+    /// We break the story text into lines for Spotify-like tracking
+    @State private var textSegments: [(id: Int, text: String, startIdx: Int, endIdx: Int)] = []
+    
+    // Derived state for the current line being spoken
+    private var activeSegmentID: Int? {
+        guard let s = speakingRange else { return nil }
+        let location = s.location
+        // Find whichever segment contains the start of the current word
+        if let current = textSegments.first(where: { location >= $0.startIdx && location < $0.endIdx })?.id {
+            return current
+        }
+        // Fallback to most recent spoken text
+        return textSegments.last(where: { location >= $0.startIdx })?.id
     }
 
     var body: some View {
         ScrollViewReader { proxy in
             ScrollView(showsIndicators: false) {
-                Text(buildAttributedString())
-                    .font(.system(size: 15.5, weight: .regular, design: .rounded))
-                    .lineSpacing(9)
-                    .multilineTextAlignment(.leading)
-                    .tracking(0.2)
-                    .padding(.horizontal, 20)
-                    .padding(.vertical, 16)
-                    .id("storyText")
-                    .animation(.easeInOut(duration: 0.15), value: spokenUpTo)
+                VStack(alignment: .center, spacing: 32) { // Spotify style gap between lines
+                    // Padding to allow scrolling the first line to the middle
+                    Color.clear.frame(height: 60)
+                    
+                    ForEach(textSegments, id: \.id) { segment in
+                        let status = segmentStatus(segment)
+                        Text(segment.text)
+                            .font(.system(size: 28, weight: .bold, design: .rounded)) // Elegant, massive text
+                            .lineSpacing(6)
+                            .multilineTextAlignment(.center)
+                            // Bright white if active, slightly dimmed if passed, faded if upcoming
+                            .foregroundColor(status == .active ? .white : (status == .passed ? .white.opacity(0.55) : .white.opacity(0.30)))
+                            .shadow(color: .black.opacity(status == .active ? 0.4 : 0), radius: 6, x: 0, y: 3)
+                            .id(segment.id)
+                            .animation(.easeInOut(duration: 0.35), value: activeSegmentID)
+                            .frame(maxWidth: .infinity, alignment: .center)
+                    }
+                    
+                    // Padding at the bottom to allow the last line to scroll up fully
+                    Color.clear.frame(height: 250)
+                }
+                .padding(.horizontal, 24)
             }
-            .onChange(of: spokenUpTo) { _ in
-                withAnimation(.easeInOut(duration: 0.25)) {
-                    proxy.scrollTo("storyText", anchor: .bottom)
+            .onAppear {
+                buildSegments()
+            }
+            .onChange(of: text) { _ in
+                buildSegments()
+            }
+            // Auto-scroll logic: scroll softly to centered active line
+            .onChange(of: activeSegmentID) { newID in
+                if let newID = newID {
+                    withAnimation(.easeInOut(duration: 0.6)) {
+                        proxy.scrollTo(newID, anchor: .center)
+                    }
                 }
             }
         }
     }
+    
+    enum SegmentStatus { case passed, active, upcoming }
+    
+    private func segmentStatus(_ segment: (id: Int, text: String, startIdx: Int, endIdx: Int)) -> SegmentStatus {
+        guard let activeID = activeSegmentID else { return .upcoming }
+        if segment.id < activeID { return .passed }
+        if segment.id == activeID { return .active }
+        return .upcoming
+    }
 
-    private func buildAttributedString() -> AttributedString {
-        var attributed = AttributedString(text)
-        let totalUTF16 = text.utf16.count
-        let upTo = min(spokenUpTo, totalUTF16)
-
-        // ── Spoken: bright white ──────────────────────────────
-        if upTo > 0 {
-            if let upToPos = text.utf16.index(text.startIndex, offsetBy: upTo, limitedBy: text.endIndex),
-               let endRange = attributed.range(of: text[..<upToPos]) {
-                attributed[endRange].foregroundColor = UIColor.white
-            }
-        }
-
-        // ── Active word: mood accent glow ──────────────────────
-        if let speaking = speakingRange, speaking.location + speaking.length <= totalUTF16 {
-            let wordStart = min(speaking.location, totalUTF16)
-            let wordEnd   = min(speaking.location + speaking.length, totalUTF16)
+    /// Breaks the text apart into localized sentences (or newline separated)
+    private func buildSegments() {
+        var segments: [(id: Int, text: String, startIdx: Int, endIdx: Int)] = []
+        
+        let nsText = text as NSString
+        var currentPosition = 0
+        var idCounter = 0
+        
+        // We'll split by double newlines or single newlines to get nice chunks.
+        let paragraphs = text.components(separatedBy: .newlines).filter { !$0.trimmingCharacters(in: .whitespaces).isEmpty }
+        
+        // Since we need exact `NSRange` locations relative to the original text, we find their ranges
+        for paragraph in paragraphs {
+            let pString = paragraph.trimmingCharacters(in: .whitespaces)
+            let searchRange = NSRange(location: currentPosition, length: nsText.length - currentPosition)
+            let foundRange = nsText.range(of: pString, options: [], range: searchRange)
             
-            if let startPos = text.utf16.index(text.startIndex, offsetBy: wordStart, limitedBy: text.endIndex),
-               let endPos = text.utf16.index(text.startIndex, offsetBy: wordEnd, limitedBy: text.endIndex),
-               let wordRange = attributed.range(of: text[startPos..<endPos]) {
-                attributed[wordRange].foregroundColor = UIColor(accentColor)
+            if foundRange.location != NSNotFound {
+                segments.append((
+                    id: idCounter,
+                    text: pString,
+                    startIdx: foundRange.location,
+                    endIdx: foundRange.location + foundRange.length
+                ))
+                currentPosition = foundRange.location + foundRange.length
+                idCounter += 1
             }
         }
-
-        // ── Upcoming: softly dimmed ───────────────────────────
-        if let startPos = text.utf16.index(text.startIndex, offsetBy: upTo, limitedBy: text.endIndex),
-           let upcomingRange = attributed.range(of: text[startPos...]) {
-            attributed[upcomingRange].foregroundColor = UIColor.white.withAlphaComponent(0.30)
-        }
-
-        return attributed
+        
+        self.textSegments = segments
     }
 }
 
@@ -649,265 +719,4 @@ struct VisualEffectBlur: UIViewRepresentable {
     func updateUIView(_ uiView: UIVisualEffectView, context: Context) {}
 }
 
-// MARK: - Speech Manager  (direct AVSpeechSynthesizer — no file writing, no glitches)
-/// Uses AVSpeechSynthesizer.speak() directly — pause/resume/stop via synthesizer API.
-/// Progress is approximated from character position (willSpeakRange delegate).
-class SpeechManager: NSObject, ObservableObject, AVSpeechSynthesizerDelegate, @unchecked Sendable {
-
-    // MARK: Published state
-    @Published var isSpeaking:       Bool         = false
-    @Published var isPreparingAudio: Bool         = false   // kept for ControlsView compatibility
-    @Published var currentTime:      TimeInterval = 0
-    @Published var duration:         TimeInterval = 0
-    @Published var speakingRange:    NSRange?     = nil
-
-    // MARK: Internals
-    private let synthesizer = AVSpeechSynthesizer()
-    private var totalCharCount: Int  = 0
-    private var progressTimer: Timer?
-    private var isScrubbing          = false
-    private var wasPlayingBeforeScrub = false
-    private var currentText: String  = ""
-
-    // MARK: - Init / Deinit
-    override init() {
-        super.init()
-        synthesizer.delegate = self
-        configureAudioSession()
-        registerInterruptionObserver()
-    }
-
-    deinit {
-        NotificationCenter.default.removeObserver(self)
-        progressTimer?.invalidate()
-        synthesizer.stopSpeaking(at: .immediate)
-    }
-
-    // MARK: - Audio Session
-    private func configureAudioSession() {
-        do {
-            let session = AVAudioSession.sharedInstance()
-            try session.setCategory(.playback, mode: .spokenAudio, options: [.duckOthers, .allowBluetoothHFP])
-            try session.setActive(true, options: .notifyOthersOnDeactivation)
-        } catch {
-            print("SpeechManager: audio session error — \(error)")
-        }
-    }
-
-    private func registerInterruptionObserver() {
-        NotificationCenter.default.addObserver(
-            self,
-            selector: #selector(handleInterruption(_:)),
-            name:     AVAudioSession.interruptionNotification,
-            object:   AVAudioSession.sharedInstance()
-        )
-        NotificationCenter.default.addObserver(
-            self,
-            selector: #selector(handleRouteChange(_:)),
-            name:     AVAudioSession.routeChangeNotification,
-            object:   AVAudioSession.sharedInstance()
-        )
-    }
-
-    @objc private func handleInterruption(_ notification: Notification) {
-        guard let info = notification.userInfo,
-              let typeValue = info[AVAudioSessionInterruptionTypeKey] as? UInt,
-              let type = AVAudioSession.InterruptionType(rawValue: typeValue) else { return }
-        let optionsValue = info[AVAudioSessionInterruptionOptionKey] as? UInt
-        DispatchQueue.main.async { [weak self] in
-            guard let self else { return }
-            if type == .began {
-                self.synthesizer.pauseSpeaking(at: .word)
-                self.isSpeaking = false
-                self.stopProgressTimer()
-            } else {
-                if let val = optionsValue {
-                    let opts = AVAudioSession.InterruptionOptions(rawValue: val)
-                    if opts.contains(.shouldResume) { self.resume() }
-                }
-            }
-        }
-    }
-
-    @objc private func handleRouteChange(_ notification: Notification) {
-        guard let info = notification.userInfo,
-              let reasonValue = info[AVAudioSessionRouteChangeReasonKey] as? UInt,
-              let reason = AVAudioSession.RouteChangeReason(rawValue: reasonValue) else { return }
-        if reason == .oldDeviceUnavailable {
-            DispatchQueue.main.async { [weak self] in self?.pause() }
-        }
-    }
-
-    // MARK: - Public API
-
-    func speak(text: String, languageBCP47: String? = nil) {
-        stop()
-        speakingRange    = nil
-        let bcp47        = languageBCP47 ?? resolvedBCP47()
-        currentText      = text
-        totalCharCount   = text.count
-        // Estimate duration: average 130 words/min, ~5 chars/word, at 0.78× rate
-        let wordsPerSec  = (130.0 * 0.78) / 60.0
-        let charsPerSec  = wordsPerSec * 5.0
-        duration         = TimeInterval(totalCharCount) / charsPerSec
-        currentTime      = 0
-
-        let utterance             = AVSpeechUtterance(string: text)
-        utterance.voice           = bestVoice(for: bcp47)
-        utterance.rate            = AVSpeechUtteranceDefaultSpeechRate * 0.78
-        utterance.pitchMultiplier = 1.08
-        utterance.volume          = 0.95
-        utterance.preUtteranceDelay = 0.1
-
-        do { try AVAudioSession.sharedInstance().setActive(true) } catch {}
-        synthesizer.speak(utterance)
-    }
-
-    func pause() {
-        guard synthesizer.isSpeaking else { return }
-        synthesizer.pauseSpeaking(at: .word)
-        isSpeaking = false
-        stopProgressTimer()
-    }
-
-    func resume() {
-        guard synthesizer.isPaused else { return }
-        do { try AVAudioSession.sharedInstance().setActive(true) } catch {}
-        synthesizer.continueSpeaking()
-        isSpeaking = true
-        startProgressTimer()
-    }
-
-    func stop() {
-        synthesizer.stopSpeaking(at: .immediate)
-        isSpeaking       = false
-        isPreparingAudio = false
-        currentTime      = 0
-        duration         = 0
-        speakingRange    = nil
-        stopProgressTimer()
-    }
-
-    /// Scrubbing is text-position based — we restart from a proportional offset into the text.
-    func scrub(to time: TimeInterval) {
-        let ratio   = duration > 0 ? max(0, min(1, time / duration)) : 0
-        currentTime = time
-        // Restart speech from estimated character position
-        let charOffset = Int(ratio * Double(totalCharCount))
-        guard charOffset < currentText.count else { return }
-        let idx        = currentText.index(currentText.startIndex, offsetBy: charOffset)
-        let remaining  = String(currentText[idx...])
-        let wasPlaying = isSpeaking
-        synthesizer.stopSpeaking(at: .immediate)
-        if wasPlaying {
-            let bcp47 = resolvedBCP47()
-            let u = AVSpeechUtterance(string: remaining)
-            u.voice           = bestVoice(for: bcp47)
-            u.rate            = AVSpeechUtteranceDefaultSpeechRate * 0.78
-            u.pitchMultiplier = 1.08
-            u.volume          = 0.95
-            synthesizer.speak(u)
-        }
-    }
-
-    func scrubbingStarted() {
-        isScrubbing = true
-        wasPlayingBeforeScrub = isSpeaking
-        if isSpeaking { synthesizer.pauseSpeaking(at: .word) }
-    }
-
-    func scrubbingEnded() {
-        isScrubbing = false
-        if wasPlayingBeforeScrub { synthesizer.continueSpeaking(); startProgressTimer() }
-    }
-
-    // MARK: - AVSpeechSynthesizerDelegate
-
-    func speechSynthesizer(_ synthesizer: AVSpeechSynthesizer, didStart utterance: AVSpeechUtterance) {
-        DispatchQueue.main.async { [weak self] in
-            self?.isSpeaking       = true
-            self?.isPreparingAudio = false
-            self?.startProgressTimer()
-        }
-    }
-
-    func speechSynthesizer(_ synthesizer: AVSpeechSynthesizer, willSpeakRangeOfSpeechString characterRange: NSRange, utterance: AVSpeechUtterance) {
-        guard !isScrubbing, totalCharCount > 0 else { return }
-        let ratio = Double(characterRange.location) / Double(totalCharCount)
-        DispatchQueue.main.async { [weak self] in
-            guard let self else { return }
-            self.currentTime = self.duration * ratio
-            self.speakingRange = characterRange
-        }
-    }
-
-    func speechSynthesizer(_ synthesizer: AVSpeechSynthesizer, didFinish utterance: AVSpeechUtterance) {
-        DispatchQueue.main.async { [weak self] in
-            guard let self else { return }
-            self.isSpeaking  = false
-            self.currentTime = self.duration
-            self.speakingRange = nil
-            self.stopProgressTimer()
-        }
-    }
-
-    func speechSynthesizer(_ synthesizer: AVSpeechSynthesizer, didPause utterance: AVSpeechUtterance) {
-        DispatchQueue.main.async { [weak self] in self?.isSpeaking = false }
-    }
-
-    func speechSynthesizer(_ synthesizer: AVSpeechSynthesizer, didContinue utterance: AVSpeechUtterance) {
-        DispatchQueue.main.async { [weak self] in
-            self?.isSpeaking = true
-            self?.startProgressTimer()
-        }
-    }
-
-    func speechSynthesizer(_ synthesizer: AVSpeechSynthesizer, didCancel utterance: AVSpeechUtterance) {
-        DispatchQueue.main.async { [weak self] in
-            guard let self else { return }
-            self.isSpeaking  = false
-            self.speakingRange = nil
-            self.stopProgressTimer()
-        }
-    }
-
-    // MARK: - Private helpers
-
-    private func resolvedBCP47() -> String {
-        let code = UserDefaults.standard.string(forKey: "selectedLanguage") ?? AppLanguage.english.rawValue
-        return AppLanguage(rawValue: code)?.bcp47 ?? "en-US"
-    }
-
-    private func bestVoice(for bcp47: String) -> AVSpeechSynthesisVoice? {
-        let all    = AVSpeechSynthesisVoice.speechVoices()
-        let prefix = String(bcp47.prefix(2))
-        var voice: AVSpeechSynthesisVoice?
-        if #available(iOS 16.0, *) {
-            voice = all.first(where: { $0.language.starts(with: prefix) && $0.gender == .female && $0.quality == .premium })
-                 ?? all.first(where: { $0.language.starts(with: prefix) && $0.gender == .female && $0.quality == .enhanced })
-        }
-        return voice
-            ?? all.first(where: { $0.language.starts(with: prefix) && $0.gender == .female })
-            ?? all.first(where: { $0.language.starts(with: prefix) })
-            ?? AVSpeechSynthesisVoice(language: bcp47)
-    }
-
-    private func startProgressTimer() {
-        stopProgressTimer()
-        // Fine-grained UI updates between willSpeakRange callbacks
-        progressTimer = Timer.scheduledTimer(withTimeInterval: 0.1, repeats: true) { [weak self] _ in
-            guard let self, self.isSpeaking, !self.isScrubbing, self.duration > 0 else { return }
-            // Gently nudge currentTime forward between delegate callbacks
-            let newTime = min(self.currentTime + 0.1, self.duration)
-            if newTime > self.currentTime {
-                self.currentTime = newTime
-            }
-        }
-    }
-
-    private func stopProgressTimer() {
-        progressTimer?.invalidate()
-        progressTimer = nil
-    }
-}
 
