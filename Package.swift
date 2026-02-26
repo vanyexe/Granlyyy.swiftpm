@@ -5,9 +5,7 @@
 // Do not edit it by hand because the contents will be replaced.
 
 import PackageDescription
-#if canImport(AppleProductTypes)
 import AppleProductTypes
-#endif
 
 let package = Package(
     name: "Granly",
@@ -19,6 +17,7 @@ let package = Package(
             name: "Granly",
             targets: ["AppModule"],
             bundleIdentifier: "com.vany.Granly",
+            teamIdentifier: "K874F584C7",
             displayVersion: "1.0",
             bundleVersion: "1",
             appIcon: .asset("AppIcon"),

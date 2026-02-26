@@ -16,11 +16,8 @@ struct HomeView: View {
     @EnvironmentObject var lang: LanguageManager
     
     // For Navigation
-    @State private var showWisdomSheet = false
     @State private var showSurpriseStory = false
     @State private var surpriseStory: Story?
-    @State private var showMemoriesSheet = false
-    @State private var showAllStories = false
     
     let moods = Mood.allMoods
     
@@ -76,8 +73,8 @@ struct HomeView: View {
                     }
                     Spacer()
                     VStack(alignment: .trailing, spacing: 4) {
-                        ProfileAvatarView(size: 44)
-                            .shadow(color: .black.opacity(0.1), radius: 4)
+                        ProfileAvatarView(size: 52)
+                            .shadow(color: .black.opacity(0.12), radius: 6)
                             .onTapGesture {
                                 withAnimation {
                                     selectedTab = .profile
@@ -198,25 +195,26 @@ struct DailyQuoteCard: View {
     @EnvironmentObject var lang: LanguageManager
     var body: some View {
         HStack {
-            VStack(alignment: .leading, spacing: 8) {
+            VStack(alignment: .leading, spacing: 6) {
                 Text(L10n.t(.dailyInspiration))
                     .font(.granlyCaption)
-                    .foregroundStyle(.white.opacity(0.8))
+                    .foregroundStyle(.white.opacity(0.75))
                 Text(L10n.t(.dailyQuoteText))
                     .font(.granlyHeadline)
                     .foregroundStyle(.white)
+                    .lineSpacing(3)
             }
             Spacer()
             Image(systemName: "quote.opening")
-                .font(.system(size: 32)) // Reduced from 40
-                .foregroundStyle(.white.opacity(0.2))
+                .font(.system(size: 24))
+                .foregroundStyle(.white.opacity(0.18))
         }
-        .padding(16) // Reduced from 20
+        .padding(16)
         .background(
             LinearGradient(colors: [Color.themeRose, Color.themeWarm], startPoint: .topLeading, endPoint: .bottomTrailing)
         )
-        .clipShape(RoundedRectangle(cornerRadius: 16)) // Tighter corners
-        .shadow(color: Color.themeRose.opacity(0.4), radius: 8, x: 0, y: 4) // Smaller shadow
+        .clipShape(RoundedRectangle(cornerRadius: 14))
+        .shadow(color: Color.themeRose.opacity(0.30), radius: 6, x: 0, y: 3)
     }
 }
 
@@ -230,23 +228,23 @@ struct QuickActionButton: View {
     
     var body: some View {
         Button(action: action) {
-            VStack(spacing: 6) { // 8 -> 6
+            VStack(spacing: 6) {
                 Circle()
-                    .fill(color.opacity(0.15))
-                    .frame(width: 38, height: 38) // 44 -> 38
+                    .fill(color.opacity(0.12))
+                    .frame(width: 48, height: 48)
                     .overlay(
                         Image(systemName: icon)
-                            .font(.granlySubheadline) // Headline -> Subheadline
+                            .font(.system(size: 20, weight: .semibold))
                             .foregroundStyle(color)
                     )
-                
+
                 Text(title)
-                    .font(.system(size: 11, weight: .bold, design: .rounded)) // Custom small crisp text
+                    .font(.system(size: 13, weight: .semibold, design: .rounded))
                     .foregroundStyle(Color.themeText)
             }
             .frame(maxWidth: .infinity)
-            .padding(.vertical, 10) // 12 -> 10
-            .glassCard(cornerRadius: 14) // 16 -> 14
+            .padding(.vertical, 14)
+            .glassCard(cornerRadius: 14)
         }
     }
 }
@@ -259,15 +257,15 @@ struct MoodCard: View {
     var body: some View {
         VStack(spacing: 12) {
             Image(systemName: mood.icon)
-                .font(.system(size: 28))
+                .font(.system(size: 36))
                 .foregroundStyle(mood.baseColor)
-            
+
             Text(mood.localizedName(for: lang.selectedLanguage))
                 .font(.granlyBodyBold)
                 .foregroundStyle(Color.themeText)
         }
         .frame(maxWidth: .infinity)
-        .padding(.vertical, 20)
+        .padding(.vertical, 24)
         .glassCard(cornerRadius: 16)
     }
 }
@@ -303,77 +301,70 @@ struct FeaturedStoryCard: View {
             // Decorative circle (top-right corner accent)
             Circle()
                 .fill(.white.opacity(0.08))
-                .frame(width: 120, height: 120)
-                .offset(x: 70, y: -55)
+                .frame(width: 150, height: 150)
+                .offset(x: 90, y: -65)
             Circle()
                 .fill(.white.opacity(0.05))
-                .frame(width: 70, height: 70)
-                .offset(x: 20, y: -85)
+                .frame(width: 90, height: 90)
+                .offset(x: 30, y: -95)
             
             // Content overlay
             VStack(alignment: .leading, spacing: 0) {
                 // Top Row: icon + reading time badge
                 HStack(alignment: .top) {
-                    // Mood icon in frosted bubble
                     ZStack {
                         Circle()
-                            .fill(.white.opacity(0.22))
+                            .fill(.white.opacity(0.20))
                             .frame(width: 36, height: 36)
                         Image(systemName: mood.icon)
                             .font(.system(size: 16, weight: .semibold))
                             .foregroundStyle(.white)
                     }
-                    
+
                     Spacer()
-                    
-                    // Reading time pill
-                    HStack(spacing: 3) {
+
+                    HStack(spacing: 4) {
                         Image(systemName: "clock")
-                            .font(.system(size: 9, weight: .bold))
+                            .font(.system(size: 10, weight: .semibold))
                         Text("3 " + L10n.t(.readMin))
-                            .font(.system(size: 10, weight: .bold, design: .rounded))
+                            .font(.system(size: 11, weight: .semibold, design: .rounded))
                     }
-                    .foregroundStyle(.white.opacity(0.9))
-                    .padding(.horizontal, 8)
-                    .padding(.vertical, 4)
-                    .background(.white.opacity(0.18))
+                    .foregroundStyle(.white.opacity(0.88))
+                    .padding(.horizontal, 10)
+                    .padding(.vertical, 5)
+                    .background(.white.opacity(0.16))
                     .clipShape(Capsule())
                 }
-                
+
                 Spacer()
-                
-                // Bottom: mood tag + title
-                VStack(alignment: .leading, spacing: 5) {
-                    // Mood label — distinct capsule tag
+
+                VStack(alignment: .leading, spacing: 6) {
                     Text(mood.localizedName(for: lang.selectedLanguage).uppercased())
-                        .font(.system(size: 9, weight: .black, design: .rounded))
-                        .tracking(1.5)
-                        .foregroundStyle(.white.opacity(0.75))
+                        .font(.system(size: 11, weight: .bold, design: .rounded))
+                        .tracking(1.4)
+                        .foregroundStyle(.white.opacity(0.70))
                         .padding(.horizontal, 8)
-                        .padding(.vertical, 3)
-                        .background(.white.opacity(0.15))
+                        .padding(.vertical, 4)
+                        .background(.white.opacity(0.13))
                         .clipShape(Capsule())
-                    
-                    // Story title
+
                     Text(storyTitle)
-                        .font(.system(size: 15, weight: .bold, design: .rounded))
+                        .font(.system(size: 18, weight: .bold, design: .rounded))
                         .foregroundStyle(.white)
                         .lineLimit(2)
                         .multilineTextAlignment(.leading)
-                        .shadow(color: .black.opacity(0.25), radius: 2, x: 0, y: 1)
+                        .shadow(color: .black.opacity(0.25), radius: 3, x: 0, y: 2)
                 }
             }
-            .padding(14)
+            .padding(12)
         }
-        .frame(width: 170, height: 200)
+        .frame(width: 180, height: 210)
         .clipShape(RoundedRectangle(cornerRadius: 20, style: .continuous))
-        // Rich layered shadow for depth
-        .shadow(color: cardGradient[1].opacity(0.45), radius: 14, x: 0, y: 8)
+        .shadow(color: cardGradient[1].opacity(0.35), radius: 12, x: 0, y: 8)
         .shadow(color: .black.opacity(0.08), radius: 4, x: 0, y: 2)
-        // Subtle scale on appear
-        .scaleEffect(appear ? 1.0 : 0.92)
+        .scaleEffect(appear ? 1.0 : 0.94)
         .opacity(appear ? 1 : 0)
-        .animation(.spring(response: 0.5, dampingFraction: 0.7).delay(Double(index) * 0.08), value: appear)
+        .animation(.spring(response: 0.45, dampingFraction: 0.75).delay(Double(index) * 0.07), value: appear)
         .onAppear { appear = true }
     }
 }

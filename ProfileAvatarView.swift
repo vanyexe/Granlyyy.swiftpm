@@ -25,9 +25,15 @@ struct ProfileAvatarView: View {
             } else {
                 ZStack {
                     Circle()
-                        .fill(Color.themeRose.opacity(0.1))
-                    Text("👵🏻")
-                        .font(.system(size: size * 0.55))
+                        .fill(
+                            LinearGradient(
+                                colors: [Color.themeRose.opacity(0.20), Color.themeWarm.opacity(0.14)],
+                                startPoint: .topLeading, endPoint: .bottomTrailing
+                            )
+                        )
+                    Image(systemName: "person.crop.circle.fill")
+                        .font(.system(size: size * 0.58))
+                        .foregroundStyle(Color.themeRose.opacity(0.80))
                 }
             }
         }

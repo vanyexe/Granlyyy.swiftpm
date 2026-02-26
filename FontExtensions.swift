@@ -1,40 +1,41 @@
 import SwiftUI
 
 extension Font {
-    // MARK: - Warm Thematic Typography (Granly)
-    
-    /// Large, striking, modern rounded font for main headers. Feels premium, friendly, and cozy.
+    // MARK: - Granly Design System — Refined Type Scale
+    // Inspired by Spotify, Apple Music, Instagram proportions.
+
+    /// Hero display text — large titles only. 34pt Bold Rounded.
     static var granlyTitle: Font {
-        .system(size: 38, weight: .heavy, design: .rounded)
+        .system(size: 34, weight: .bold, design: .rounded)
     }
-    
-    /// Bold, engaging font for section headers.
+
+    /// Section hero titles, page headers. 28pt Semibold Rounded.
     static var granlyTitle2: Font {
-        .system(size: 28, weight: .bold, design: .rounded)
+        .system(size: 28, weight: .semibold, design: .rounded)
     }
-    
-    /// Smooth, semi-bold font for card headers or inline titles.
+
+    /// Card headers, section titles. 20pt Semibold Rounded.
     static var granlyHeadline: Font {
-        .system(size: 22, weight: .semibold, design: .rounded)
+        .system(size: 20, weight: .semibold, design: .rounded)
     }
-    
-    /// Main body font. Rounded, slightly medium weight for a highly readable, premium feel (like top wellness apps).
+
+    /// Primary readable body text. 17pt Regular Rounded.
     static var granlyBody: Font {
-        .system(size: 18, weight: .medium, design: .rounded)
+        .system(size: 17, weight: .regular, design: .rounded)
     }
-    
-    /// Emphasized body font.
+
+    /// Emphasized body text — buttons, labels. 17pt Semibold Rounded.
     static var granlyBodyBold: Font {
-        .system(size: 18, weight: .bold, design: .rounded)
+        .system(size: 17, weight: .semibold, design: .rounded)
     }
-    
-    /// Subheadline for secondary descriptive text.
+
+    /// Secondary / supporting text. 15pt Medium Rounded.
     static var granlySubheadline: Font {
-        .system(size: 16, weight: .medium, design: .rounded)
+        .system(size: 15, weight: .medium, design: .rounded)
     }
-    
-    /// Small caption font for metadata or hints.
+
+    /// Metadata, timestamps, hints. 13pt Regular Rounded.
     static var granlyCaption: Font {
-        .system(size: 14, weight: .medium, design: .rounded)
+        .system(size: 13, weight: .regular, design: .rounded)
     }
 }

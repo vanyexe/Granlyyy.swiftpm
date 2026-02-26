@@ -217,11 +217,11 @@ struct StoryView: View {
             Spacer()
             VStack(spacing: 2) {
                 Text("PLAYING FROM YOUR LIBRARY")
-                    .font(.system(size: 10, weight: .semibold, design: .rounded))
-                    .foregroundStyle(.white.opacity(0.55))
-                    .tracking(0.6)
+                    .font(.system(size: 11, weight: .bold, design: .rounded))
+                    .foregroundStyle(.white.opacity(0.60))
+                    .tracking(0.8)
                 Text("Grandma's Stories")
-                    .font(.system(size: 13, weight: .bold, design: .rounded))
+                    .font(.system(size: 15, weight: .bold, design: .rounded))
                     .foregroundStyle(.white)
             }
             Spacer()
@@ -282,14 +282,14 @@ struct StoryView: View {
     // MARK: ── 3. Title Row ───────────────────────────────────────────
     private func titleRow(story: Story) -> some View {
         HStack(alignment: .top, spacing: 12) {
-            VStack(alignment: .leading, spacing: 5) {
+            VStack(alignment: .leading, spacing: 6) {
                 Text(story.title)
-                    .font(.system(size: 22, weight: .bold, design: .rounded))
+                    .font(.system(size: 26, weight: .bold, design: .rounded))
                     .foregroundStyle(.white)
                     .lineLimit(2)
                 Text("Narrated by Grandma")
-                    .font(.system(size: 14, weight: .medium))
-                    .foregroundStyle(.white.opacity(0.55))
+                    .font(.system(size: 16, weight: .medium))
+                    .foregroundStyle(.white.opacity(0.60))
             }
             Spacer()
             Button {
@@ -301,8 +301,8 @@ struct StoryView: View {
                 let liked = storyManager.isLiked(story: story)
                 Image(systemName: liked ? "heart.fill" : "heart")
                     .font(.system(size: 26, weight: .semibold))
-                    .foregroundStyle(liked ? Color.themeRose : .white.opacity(0.55))
-                    .scaleEffect(liked ? 1.15 : 1.0)
+                    .foregroundStyle(liked ? Color.themeRose : .white.opacity(0.60))
+                    .scaleEffect(liked ? 1.12 : 1.0)
                     .animation(.spring(response: 0.3, dampingFraction: 0.5), value: liked)
             }
             .padding(.top, 2)
@@ -336,10 +336,10 @@ struct StoryView: View {
                         // Thumb
                         Circle()
                             .fill(.white)
-                            .frame(width: 14, height: 14)
-                            .shadow(color: .black.opacity(0.25), radius: 4)
-                            .offset(x: filled.isFinite ? max(0, filled - 7) : 0)
-                            .scaleEffect(audioService.isScrubbing ? 1.35 : 1.0)
+                            .frame(width: 16, height: 16)
+                            .shadow(color: .black.opacity(0.35), radius: 6)
+                            .offset(x: filled.isFinite ? max(0, filled - 8) : 0)
+                            .scaleEffect(audioService.isScrubbing ? 1.45 : 1.0)
                             .animation(.spring(response: 0.25, dampingFraction: 0.6), value: audioService.isScrubbing)
                     }
                     .contentShape(Rectangle())
@@ -361,8 +361,8 @@ struct StoryView: View {
                 Spacer()
                 Text(fmtTime(audioService.duration))
             }
-            .font(.system(size: 11, weight: .medium).monospacedDigit())
-            .foregroundStyle(.white.opacity(0.42))
+            .font(.system(size: 13, weight: .medium).monospacedDigit())
+            .foregroundStyle(.white.opacity(0.60))
         }
     }
 
@@ -370,7 +370,7 @@ struct StoryView: View {
     private var controlsRow: some View {
         HStack(alignment: .center, spacing: 0) {
 
-            // Shuffle (load random)
+            // Shuffle
             Button {
                 UIImpactFeedbackGenerator(style: .light).impactOccurred()
                 audioService.stopAudio(); animateAvatar = false
@@ -378,11 +378,11 @@ struct StoryView: View {
             } label: {
                 Image(systemName: "shuffle")
                     .font(.system(size: 20, weight: .medium))
-                    .foregroundStyle(.white.opacity(0.65))
+                    .foregroundStyle(.white.opacity(0.70))
             }
             .frame(maxWidth: .infinity)
 
-            // Previous / Restart
+            // Restart
             Button {
                 UIImpactFeedbackGenerator(style: .medium).impactOccurred()
                 audioService.stopAudio(); animateAvatar = false
@@ -398,7 +398,7 @@ struct StoryView: View {
             }
             .frame(maxWidth: .infinity)
 
-            // Play / Pause (large white Spotify disc)
+            // Play / Pause
             Button {
                 guard !audioService.isPreparingAudio else { return }
                 UIImpactFeedbackGenerator(style: .medium).impactOccurred()
@@ -413,21 +413,21 @@ struct StoryView: View {
                 ZStack {
                     Circle()
                         .fill(.white)
-                        .frame(width: 68, height: 68)
-                        .shadow(color: .black.opacity(0.28), radius: 14, y: 6)
+                        .frame(width: 72, height: 72)
+                        .shadow(color: .black.opacity(0.25), radius: 12, y: 5)
                     if audioService.isPreparingAudio {
-                        ProgressView().tint(.black).scaleEffect(0.9)
+                        ProgressView().tint(.black).scaleEffect(1.0)
                     } else {
                         Image(systemName: audioService.isPlaying ? "pause.fill" : "play.fill")
-                            .font(.system(size: 28, weight: .black))
+                            .font(.system(size: 30, weight: .black))
                             .foregroundStyle(.black)
-                            .offset(x: audioService.isPlaying ? 0 : 2)
+                            .offset(x: audioService.isPlaying ? 0 : 3)
                     }
                 }
             }
             .frame(maxWidth: .infinity)
 
-            // Next (+15s)
+            // +15s forward
             Button {
                 UIImpactFeedbackGenerator(style: .medium).impactOccurred()
                 audioService.scrub(to: min(audioService.duration, audioService.currentTime + 15))
@@ -438,13 +438,13 @@ struct StoryView: View {
             }
             .frame(maxWidth: .infinity)
 
-            // Timer / options placeholder
+            // Timer
             Button {
                 UIImpactFeedbackGenerator(style: .light).impactOccurred()
             } label: {
                 Image(systemName: "timer")
-                    .font(.system(size: 20, weight: .medium))
-                    .foregroundStyle(.white.opacity(0.65))
+                    .font(.system(size: 17, weight: .medium))
+                    .foregroundStyle(.white.opacity(0.60))
             }
             .frame(maxWidth: .infinity)
         }
@@ -453,31 +453,28 @@ struct StoryView: View {
     // MARK: ── 6. Utility Bar ─────────────────────────────────────────
     private var utilityBar: some View {
         HStack {
-            // Device / output icon
             Image(systemName: "hifispeaker.2")
-                .font(.system(size: 18, weight: .medium))
-                .foregroundStyle(.white.opacity(0.55))
+                .font(.system(size: 16, weight: .medium))
+                .foregroundStyle(.white.opacity(0.50))
 
             Spacer()
 
-            // Share
             if let s = story {
                 ShareLink(item: "\(s.title)\n\n\(s.content)\n\n— From Granly") {
                     Image(systemName: "square.and.arrow.up")
-                        .font(.system(size: 18, weight: .medium))
-                        .foregroundStyle(.white.opacity(0.55))
+                        .font(.system(size: 16, weight: .medium))
+                        .foregroundStyle(.white.opacity(0.50))
                 }
             }
 
             Spacer()
 
-            // Queue list
             Button {
                 showFullLyrics = true
             } label: {
                 Image(systemName: "list.bullet")
-                    .font(.system(size: 18, weight: .medium))
-                    .foregroundStyle(.white.opacity(0.55))
+                    .font(.system(size: 16, weight: .medium))
+                    .foregroundStyle(.white.opacity(0.50))
             }
         }
     }
@@ -499,14 +496,14 @@ struct StoryView: View {
 
             // Lines preview (5 lines max)
             let previewLines = Array(syncEngine.lines.prefix(currentLineIdx + 5).suffix(5))
-            VStack(alignment: .leading, spacing: 10) {
+            VStack(alignment: .leading, spacing: 8) {
                 ForEach(previewLines) { line in
                     let state = lineState(for: line.id)
                     Text(line.text)
-                        .font(.system(size: 17, weight: state == .active ? .bold : .regular))
+                        .font(.system(size: 15, weight: state == .active ? .semibold : .regular))
                         .foregroundStyle(.white.opacity(
                             state == .active ? 1.0 :
-                            state == .passed ? 0.42 : 0.68
+                            state == .passed ? 0.38 : 0.62
                         ))
                         .multilineTextAlignment(.leading)
                         .lineLimit(2)

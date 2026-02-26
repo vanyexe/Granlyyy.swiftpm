@@ -32,8 +32,8 @@ struct StoryListView: View {
                         Image(systemName: "chevron.left")
                             .font(.granlyHeadline) // Title2 -> Headline for a smaller back button
                             .foregroundStyle(Color.themeText)
-                            .frame(width: 36, height: 36) // 44 -> 36
-                            .glassCard(cornerRadius: 12)
+                            .frame(width: 44, height: 44) // 44 -> 36
+                            .glassCard(cornerRadius: 14)
                     }
                     Spacer()
                     Text("\(mood.localizedName(for: lang.selectedLanguage)) \(L10n.t(.storiesLabel))")
@@ -41,7 +41,7 @@ struct StoryListView: View {
                         .foregroundStyle(Color.themeText)
                     Spacer()
                     // Hidden balance
-                    Color.clear.frame(width: 36, height: 36)
+                    Color.clear.frame(width: 44, height: 44)
                 }
                 .padding()
                 
@@ -52,8 +52,8 @@ struct StoryListView: View {
                             Button(action: { selectedCategoryIndex = idx }) {
                                 Text(L10n.t(categoryKeys[idx]))
                                     .font(.granlyBodyBold)
-                                    .padding(.horizontal, 14)
-                                    .padding(.vertical, 6)
+                                    .padding(.horizontal, 18)
+                                    .padding(.vertical, 8)
                                     .background(selectedCategoryIndex == idx ? mood.baseColor : Color.clear)
                                     .foregroundStyle(selectedCategoryIndex == idx ? .white : Color.themeText)
                                     .clipShape(Capsule())
@@ -93,10 +93,10 @@ struct StoryListRow: View {
             ZStack {
                 Circle()
                     .fill(moodColor.opacity(0.15))
-                    .frame(width: 40, height: 40) // 50 -> 40
+                    .frame(width: 48, height: 48) // 50 -> 40
                 Image(systemName: getIcon(for: story.category))
                     .foregroundStyle(moodColor)
-                    .font(.granlySubheadline) // Headline -> Subheadline
+                    .font(.system(size: 18)) // Headline -> Subheadline
             }
             
             VStack(alignment: .leading, spacing: 4) {
@@ -107,12 +107,11 @@ struct StoryListRow: View {
                 
                 HStack {
                     Text(L10n.t(categoryKey(for: story.category)).uppercased())
-                        .font(.system(size: 9, weight: .bold, design: .rounded))
-                        .tracking(0.5)
-                        .font(.granlyCaption)
+                        .font(.system(size: 11, weight: .bold, design: .rounded))
+                        .tracking(0.6)
                         .foregroundStyle(moodColor)
-                        .padding(.horizontal, 6)
-                        .padding(.vertical, 2)
+                        .padding(.horizontal, 8)
+                        .padding(.vertical, 4)
                         .clipShape(Capsule()) // 4px Radius -> Pill capsule
                     
                     Text("• \(story.readTime) \(L10n.t(.minRead))")

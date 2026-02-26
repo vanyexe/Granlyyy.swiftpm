@@ -4,12 +4,12 @@ import SwiftUI
 struct SplashView: View {
     @Binding var isActive: Bool
 
-    @State private var avatarScale: CGFloat = 0.55
+    @State private var avatarScale: CGFloat = 0.85
     @State private var avatarOpacity: Double = 0
-    @State private var titleOffset: CGFloat = 30
+    @State private var titleOffset: CGFloat = 20
     @State private var titleOpacity: Double = 0
     @State private var glowOpacity: Double = 0
-    @State private var glowScale: CGFloat = 0.6
+    @State private var glowScale: CGFloat = 0.8
     @State private var dotOpacity: Double = 0
 
     var body: some View {
@@ -18,83 +18,68 @@ struct SplashView: View {
             ParchmentBackground()
                 .ignoresSafeArea()
 
-            // ── Content positioned in the upper ~50% of the screen ────
-            GeometryReader { geo in
-                VStack(spacing: 0) {
-                    // Push content down from top to ~20% from top
-                    Spacer().frame(height: geo.size.height * 0.16)
+            // ── Centered Content ───────────────────────────────────────
+            VStack(spacing: 28) {
+                Spacer()
 
-                    // ── Profile Avatar ───────────────────────────────────
-                    ZStack {
-                        // Soft golden radial glow behind the heart
-                        RadialGradient(
-                            colors: [
-                                Color(red: 1.0, green: 0.90, blue: 0.55).opacity(0.70),
-                                Color.clear
-                            ],
-                            center: .center,
-                            startRadius: 10,
-                            endRadius: 145
-                        )
-                        .frame(width: 290, height: 290)
+                // ── Grandma Image with Glow ────────────────────────────
+                ZStack {
+                    // Soft glow behind the image
+                    Circle()
+                        .fill(Color(red: 1.0, green: 0.85, blue: 0.50).opacity(0.5))
+                        .frame(width: 180, height: 180)
+                        .blur(radius: 40)
                         .scaleEffect(glowScale)
                         .opacity(glowOpacity)
 
-                        Image("grandma_heart")
-                            .resizable()
-                            .interpolation(.high)
-                            .aspectRatio(contentMode: .fit)
-                            .frame(width: 270, height: 270)
-                            .scaleEffect(avatarScale)
-                            .opacity(avatarOpacity)
-                            .blendMode(.multiply)
-                    }
-                    .frame(width: 290, height: 290)
-
-                    // ── "Granly" Script Title ──────────────────────────
-                    Text("Granly")
-                        .font(.custom("Snell Roundhand", size: 82))
-                        .foregroundStyle(Color(red: 0.32, green: 0.14, blue: 0.05))
-                        // subtle drop-shadow exactly as in the reference
-                        .shadow(color: Color(red: 0.32, green: 0.14, blue: 0.05).opacity(0.22), radius: 3, x: 2, y: 3)
-                        .offset(y: titleOffset)
-                        .opacity(titleOpacity)
-                        .padding(.top, -4)
-
-                    // ── Everything below is empty parchment ───────────
-                    Spacer()
-
-                    // Subtle loading dots at the very bottom
-                    LoadingDots()
-                        .opacity(dotOpacity)
-                        .padding(.bottom, 48)
+                    Image("grandma_heart")
+                        .resizable()
+                        .scaledToFit()
+                        .frame(width: 210, height: 210)
+                        .shadow(color: .black.opacity(0.18), radius: 20, x: 0, y: 10)
+                        .scaleEffect(avatarScale)
+                        .opacity(avatarOpacity)
                 }
-                .frame(width: geo.size.width)
+
+                // ── "Granly" Script Title ──────────────────────────────
+                Text("Granly")
+                    .font(.custom("Snell Roundhand", size: 62))
+                    .foregroundStyle(Color(red: 0.35, green: 0.18, blue: 0.08))
+                    .shadow(color: Color(red: 0.35, green: 0.18, blue: 0.08).opacity(0.20), radius: 4, x: 0, y: 3)
+                    .offset(y: titleOffset)
+                    .opacity(titleOpacity)
+
+                Spacer()
+
+                // ── Subtle Loading Dots ────────────────────────────────
+                LoadingDots()
+                    .opacity(dotOpacity)
+                    .padding(.bottom, 50)
             }
         }
         .onAppear {
             // 1. Glow up first
-            withAnimation(.easeOut(duration: 0.85).delay(0.1)) {
+            withAnimation(.easeOut(duration: 1.2)) {
                 glowOpacity = 1
-                glowScale = 1.15
+                glowScale = 1.1
             }
-            // 2. Avatar springs in
-            withAnimation(.spring(response: 0.6, dampingFraction: 0.6).delay(0.2)) {
+            // 2. Avatar fades & scales in softly
+            withAnimation(.easeOut(duration: 1.0).delay(0.2)) {
                 avatarScale = 1.0
                 avatarOpacity = 1
             }
-            // 3. Title slides up
-            withAnimation(.easeOut(duration: 0.65).delay(0.65)) {
+            // 3. Title slides up and fades in
+            withAnimation(.easeOut(duration: 0.8).delay(0.6)) {
                 titleOffset = 0
                 titleOpacity = 1
             }
-            // 4. Loading dots fade in
-            withAnimation(.easeIn(duration: 0.5).delay(1.4)) {
+            // 4. Loading dots fade in gracefully
+            withAnimation(.easeIn(duration: 0.6).delay(1.2)) {
                 dotOpacity = 1
             }
-            // 5. Auto-transition
-            DispatchQueue.main.asyncAfter(deadline: .now() + 3.5) {
-                withAnimation(.easeInOut(duration: 0.55)) {
+            // 5. Auto-transition to next screen
+            DispatchQueue.main.asyncAfter(deadline: .now() + 3.2) {
+                withAnimation(.easeInOut(duration: 0.6)) {
                     isActive = true
                 }
             }

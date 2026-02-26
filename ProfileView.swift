@@ -5,8 +5,6 @@ struct ProfileView: View {
     @StateObject private var languageManager = LanguageManager.shared
     @EnvironmentObject var lang: LanguageManager
     @AppStorage("grandmaName") private var grandmaName = "Granly"
-    @AppStorage("userName") private var userName = "My Dear"
-    @AppStorage("notificationsEnabled") private var notificationsEnabled = true
     @AppStorage("darkMode") private var darkMode = false
     @AppStorage("storiesRead") private var storiesRead = 12
     
@@ -33,35 +31,34 @@ struct ProfileView: View {
                             Button(action: { showAvatarSheet = true }) {
                                 ZStack {
                                     Circle()
-                                        .fill(Color.themeRose.opacity(0.1))
-                                        .frame(width: 110, height: 110)
-                                        .blur(radius: 20)
-                                    
-                                    ProfileAvatarView(size: 90)
-                                        .shadow(radius: 8)
-                                    
-                                    // Change indicator
+                                        .fill(Color.themeRose.opacity(0.08))
+                                        .frame(width: 100, height: 100)
+                                        .blur(radius: 16)
+
+                                    ProfileAvatarView(size: 110)
+                                .shadow(color: .black.opacity(0.15), radius: 10, y: 4)
+
                                     Image(systemName: "camera.fill")
-                                        .font(.caption2)
+                                        .font(.system(size: 10, weight: .semibold))
                                         .foregroundStyle(.white)
-                                        .padding(6)
+                                        .padding(5)
                                         .background(Color.themeRose)
                                         .clipShape(Circle())
-                                        .offset(x: 30, y: 30)
+                                        .offset(x: 26, y: 26)
                                 }
                             }
                             .buttonStyle(.plain)
                             
-                            VStack(spacing: 8) {
+                            VStack(spacing: 6) {
                                 Text(L10n.t(.myDear))
                                     .font(.granlyHeadline)
                                     .foregroundStyle(Color.themeText)
-                                
+
                                 Text("\(L10n.t(.storiesRead)): \(storiesRead)")
                                     .font(.granlySubheadline)
                                     .foregroundStyle(.secondary)
-                                    .padding(.horizontal, 12)
-                                    .padding(.vertical, 4)
+                                    .padding(.horizontal, 10)
+                                    .padding(.vertical, 3)
                                     .background(.ultraThinMaterial)
                                     .clipShape(Capsule())
                             }
@@ -107,10 +104,10 @@ struct ProfileView: View {
                             
                             NavigationLink(destination: AboutView()) {
                                 HStack {
-                                    Image(systemName: "info.circle").foregroundStyle(.blue).font(.system(size: 18)).frame(width: 24)
+                                    Image(systemName: "info.circle").foregroundStyle(.blue).font(.system(size: 20)).frame(width: 28)
                                     Text(L10n.t(.aboutGrantly)).font(.granlyBodyBold).foregroundStyle(Color.themeText)
                                     Spacer()
-                                    Image(systemName: "chevron.right").font(.system(size: 12, weight: .semibold)).foregroundStyle(.secondary)
+                                    Image(systemName: "chevron.right").font(.system(size: 14, weight: .semibold)).foregroundStyle(.secondary)
                                 }
                                 .padding(.vertical, 6).contentShape(Rectangle())
                             }
@@ -121,10 +118,10 @@ struct ProfileView: View {
                             
                             ShareLink(item: "Check out Granly! It's the sweetest storytelling app ever.") {
                                 HStack {
-                                    Image(systemName: "square.and.arrow.up").foregroundStyle(.pink).frame(width: 30)
-                                    Text(L10n.t(.shareWithFriends)).foregroundStyle(Color.themeText)
+                                    Image(systemName: "square.and.arrow.up").foregroundStyle(.pink).font(.system(size: 20)).frame(width: 32)
+                                    Text(L10n.t(.shareWithFriends)).font(.granlyBodyBold).foregroundStyle(Color.themeText)
                                     Spacer()
-                                    Image(systemName: "chevron.right").font(.granlyCaption).foregroundStyle(.secondary)
+                                    Image(systemName: "chevron.right").font(.system(size: 14, weight: .semibold)).foregroundStyle(.secondary)
                                 }
                                 .padding(.vertical, 8)
                             }
@@ -215,20 +212,20 @@ struct SettingsRow: View {
             HStack {
                 Image(systemName: icon)
                     .foregroundStyle(color)
-                    .font(.system(size: 18)) // Add explicit compact icon size
-                    .frame(width: 24) // 30 -> 24
+                    .font(.system(size: 24))
+                    .frame(width: 32)
                 Text(title)
-                    .font(.granlyBodyBold) // Make items more editorial
+                    .font(.granlyBodyBold)
                     .foregroundStyle(Color.themeText)
                 Spacer()
                 Text(value)
                     .font(.granlySubheadline)
                     .foregroundStyle(.secondary)
                 Image(systemName: "chevron.right")
-                    .font(.system(size: 12, weight: .semibold)) // Explicit small chevron
+                    .font(.system(size: 16, weight: .semibold))
                     .foregroundStyle(.secondary)
             }
-            .padding(.vertical, 6) // 8 -> 6
+            .padding(.vertical, 10)
         }
     }
 }
@@ -244,17 +241,17 @@ struct SettingsActionRow: View {
             HStack {
                 Image(systemName: icon)
                     .foregroundStyle(color)
-                    .font(.system(size: 18)) // Explicit compact
-                    .frame(width: 24) // 30 -> 24
+                    .font(.system(size: 24))
+                    .frame(width: 32)
                 Text(title)
                     .font(.granlyBodyBold)
                     .foregroundStyle(Color.themeText)
                 Spacer()
                 Image(systemName: "chevron.right")
-                    .font(.system(size: 12, weight: .semibold))
+                    .font(.system(size: 16, weight: .semibold))
                     .foregroundStyle(.secondary)
             }
-            .padding(.vertical, 6) // 8 -> 6
+            .padding(.vertical, 10)
         }
     }
 }
@@ -268,17 +265,17 @@ struct ToggleRow: View {
     var body: some View {
         HStack {
             Image(systemName: icon)
-                .foregroundStyle(color)
-                .font(.system(size: 18))
-                .frame(width: 24) // 30 -> 24
-            Text(title)
-                .font(.granlyBodyBold)
-                .foregroundStyle(Color.themeText)
-            Spacer()
-            Toggle("", isOn: $isOn)
-                .labelsHidden()
-                .tint(Color.themeRose)
+                    .foregroundStyle(color)
+                    .font(.system(size: 20))
+                    .frame(width: 28)
+                Text(title)
+                    .font(.granlyBodyBold)
+                    .foregroundStyle(Color.themeText)
+                Spacer()
+                Toggle("", isOn: $isOn)
+                    .labelsHidden()
+                    .tint(Color.themeRose)
         }
-        .padding(.vertical, 6) // 8 -> 6
+        .padding(.vertical, 6)
     }
 }
