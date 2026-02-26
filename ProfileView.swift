@@ -95,7 +95,7 @@ struct ProfileView: View {
                             
                             ToggleRow(icon: "moon.fill", color: .purple, title: L10n.t(.darkMode), isOn: $darkMode)
                             
-                            ToggleRow(icon: "bell.fill", color: .orange, title: L10n.t(.dailyReminders), isOn: $notificationsEnabled)
+
                         }
                         .padding(16) // 20 -> 16
                         .glassCard(cornerRadius: 16)
@@ -110,7 +110,6 @@ struct ProfileView: View {
                                     Image(systemName: "info.circle").foregroundStyle(.blue).font(.system(size: 18)).frame(width: 24)
                                     Text(L10n.t(.aboutGrantly)).font(.granlyBodyBold).foregroundStyle(Color.themeText)
                                     Spacer()
-                                    Text("\(L10n.t(.version)) 2.0").font(.granlySubheadline).foregroundStyle(.secondary)
                                     Image(systemName: "chevron.right").font(.system(size: 12, weight: .semibold)).foregroundStyle(.secondary)
                                 }
                                 .padding(.vertical, 6).contentShape(Rectangle())

@@ -26,15 +26,9 @@ struct AboutView: View {
                         .overlay(Circle().stroke(Color.white.opacity(0.2), lineWidth: 1))
                         .shadow(color: Color.black.opacity(0.05), radius: 10)
                     
-                    VStack(spacing: 4) {
-                        Text("Granly")
-                            .font(.system(size: 28, weight: .bold, design: .rounded))
-                            .foregroundStyle(Color.themeText)
-                        
-                        Text("Version 2.0")
-                            .font(.granlySubheadline)
-                            .foregroundStyle(.secondary)
-                    }
+                    Text("Granly")
+                        .font(.system(size: 28, weight: .bold, design: .rounded))
+                        .foregroundStyle(Color.themeText)
                 }
                 .padding(.top, 40)
                 

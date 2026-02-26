@@ -70,7 +70,7 @@ final class AudioService: NSObject, ObservableObject, AVSpeechSynthesizerDelegat
             if language.rawValue == "zh" || language.bcp47.starts(with: "zh") {
                 charsPerWord = 1.0 // Chinese characters encode more meaning per character
             } else {
-                charsPerWord = 5.0
+                charsPerWord = 7.0
             }
         }
         let charsPerSec = wordsPerSec * charsPerWord
@@ -80,10 +80,10 @@ final class AudioService: NSObject, ObservableObject, AVSpeechSynthesizerDelegat
 
         let utterance = AVSpeechUtterance(string: text)
         utterance.voice = bestGrandmaVoice(for: language)
-        utterance.rate = AVSpeechUtteranceDefaultSpeechRate * 0.78
-        utterance.pitchMultiplier = 1.08
+        utterance.rate = AVSpeechUtteranceDefaultSpeechRate * 0.65
+        utterance.pitchMultiplier = 1.2
         utterance.volume = 0.95
-        utterance.preUtteranceDelay = 0.1
+        utterance.preUtteranceDelay = 0.68
 
         setupAudioSessionIfNeeded()
         synthesizer.speak(utterance)
