@@ -20,18 +20,20 @@ public struct MemoriesView: View {
             VStack(spacing: 0) {
                 // Header
                 HStack {
-                    VStack(alignment: .leading, spacing: 2) {
-                        Text("Saved Memories")
-                            .font(.granlyTitle2) // Title -> Title2
+                    VStack(alignment: .leading, spacing: 6) {
+                        Text(L10n.t(.savedMemoriesTitle))
+                            .font(.system(size: 34, weight: .bold, design: .rounded))
                             .foregroundStyle(Color.themeText)
-                        HStack(spacing: 4) {
-                            Text("\(savedStories.count) stories saved")
-                            Image(systemName: "heart.fill")
+                        
+                        if !savedStories.isEmpty {
+                            Text(L10n.tf(.storiesSavedCount, savedStories.count))
+                                .font(.granlySubheadline)
                                 .foregroundStyle(Color.themeRose)
                         }
-                        .font(.granlySubheadline)
-                        .foregroundStyle(.secondary)
                     }
+                    .frame(maxWidth: .infinity, alignment: .leading)
+                    .padding(.horizontal, 24)
+                    .padding(.top, 10)
                     Spacer()
                 }
                 .padding(.horizontal, 24)
@@ -39,43 +41,23 @@ public struct MemoriesView: View {
                 .padding(.bottom, 12)
                 
                 if savedStories.isEmpty {
-                    Spacer()
-                    // Beautiful empty state
-                    VStack(spacing: 20) {
-                        ZStack {
-                            Circle()
-                                .fill(Color.themeRose.opacity(0.1))
-                                .frame(width: 100, height: 100) // 140 -> 100
-                                .blur(radius: 20)
-                            
-                            VStack(spacing: 8) {
-                                Image(systemName: "person.crop.circle.fill")
-                                    .font(.system(size: 48)) // 60 -> 48
-                                    .foregroundStyle(Color.themeText.opacity(0.8))
-                                Image(systemName: "heart.fill")
-                                    .font(.system(size: 24)) // 30 -> 24
-                                    .foregroundStyle(Color.themeRose)
-                                    .offset(x: 16, y: -16) // 20,-20 -> 16,-16
-                            }
-                        }
+                    VStack(spacing: 16) {
+                        Spacer().frame(height: 60)
+                        Image(systemName: "heart.slash")
+                            .font(.system(size: 48, weight: .light))
+                            .foregroundStyle(Color.themeRose.opacity(0.5))
                         
-                        Text("No memories yet")
-                            .font(.granlyHeadline) // Title -> Headline
+                        Text(L10n.t(.noMemoriesYet))
+                            .font(.granlyHeadline)
                             .foregroundStyle(Color.themeText)
                         
-                        Text("When grandma tells you a story you love,\ntap the heart to save it here forever.")
-                            .font(.granlySubheadline)
+                        Text(L10n.t(.noMemoriesBody))
+                            .font(.granlyBody)
                             .foregroundStyle(.secondary)
                             .multilineTextAlignment(.center)
-                            .lineSpacing(4)
-                        
-                        Image(systemName: "heart.slash")
-                            .font(.granlyTitle)
-                            .foregroundStyle(Color.themeRose.opacity(0.3))
-                            .padding(.top, 8)
+                            .padding(.horizontal, 40)
                     }
-                    .padding(40)
-                    Spacer()
+                    .frame(maxWidth: .infinity, alignment: .center)
                 } else {
                     ScrollView(showsIndicators: false) {
                         VStack(spacing: 14) {

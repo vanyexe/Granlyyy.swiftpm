@@ -97,9 +97,7 @@ struct CozyActivityCard: View {
                         .font(.system(size: 9))
                     Text(activity.duration)
                         .font(.system(size: 10, weight: .medium, design: .rounded))
-                    Text("·")
-                        .font(.system(size: 10))
-                    Text("\(activity.steps.count) steps")
+                    Text("\(activity.steps.count) \(L10n.t(.steps))")
                         .font(.system(size: 10, weight: .medium, design: .rounded))
                 }
                 .foregroundStyle(.secondary)
@@ -126,13 +124,11 @@ struct ActivityPlayerView: View {
     @Environment(\.dismiss) private var dismiss
 
     @State private var currentStep = 0
-    @State private var isComplete = false
-    @State private var showCelebration = false
     @State private var stepAppear = false
     @State private var visualPulse = false
 
     private var totalSteps: Int { activity.steps.count }
-    private var progress: Double { Double(currentStep) / Double(totalSteps) }
+    private var progress: Double { Double(currentStep + 1) / Double(totalSteps) }
 
     var body: some View {
         ZStack {
@@ -155,33 +151,19 @@ struct ActivityPlayerView: View {
                             .padding(.horizontal, 24)
 
                         // Step content card
-                        if !isComplete {
-                            stepCard
-                                .padding(.horizontal, 16)
-                        } else {
-                            completionCard
-                                .padding(.horizontal, 16)
-                        }
+                        stepCard
+                            .padding(.horizontal, 16)
 
                         // Navigation buttons
-                        if !isComplete {
-                            navigationButtons
-                                .padding(.horizontal, 24)
-                        }
+                        navigationButtons
+                            .padding(.horizontal, 24)
 
                         // Grandma tip
-                        if !isComplete {
-                            grandmaTipCard
-                                .padding(.horizontal, 16)
-                        }
+                        grandmaTipCard
+                            .padding(.horizontal, 16)
                     }
                     .padding(.bottom, 48)
                 }
-            }
-
-            // ── Celebration overlay ──────────────────────────
-            if showCelebration {
-                celebrationOverlay
             }
         }
         .navigationBarHidden(true)
@@ -295,11 +277,11 @@ struct ActivityPlayerView: View {
         VStack(spacing: 8) {
             // Step label
             HStack(alignment: .bottom) {
-                Text(isComplete ? "Complete!" : "Step \(currentStep + 1) of \(totalSteps)")
+                Text(L10n.tf(.stepNoOfTotal, currentStep + 1, totalSteps))
                     .font(.system(size: 14, weight: .semibold, design: .rounded))
                     .foregroundStyle(activity.color)
                 Spacer()
-                Text(isComplete ? "100%" : "\(Int(progress * 100))%")
+                Text("\(Int(progress * 100))%")
                     .font(.system(size: 14, weight: .medium, design: .rounded))
                     .foregroundStyle(.secondary)
             }
@@ -317,9 +299,7 @@ struct ActivityPlayerView: View {
                             startPoint: .leading, endPoint: .trailing
                         ))
                         .frame(
-                            width: isComplete
-                                ? geo.size.width
-                                : max(0, geo.size.width * CGFloat(progress)),
+                            width: max(0, geo.size.width * CGFloat(progress)),
                             height: 6
                         )
                         .animation(.spring(response: 0.5, dampingFraction: 0.75), value: currentStep)
@@ -331,13 +311,13 @@ struct ActivityPlayerView: View {
             HStack(spacing: 8) {
                 ForEach(0..<totalSteps, id: \.self) { i in
                     Circle()
-                        .fill(i < currentStep || isComplete
+                        .fill(i < currentStep
                               ? activity.color
                               : i == currentStep
                               ? activity.color.opacity(0.6)
                               : activity.color.opacity(0.18))
-                        .frame(width: i == currentStep && !isComplete ? 12 : 8,
-                               height: i == currentStep && !isComplete ? 12 : 8)
+                        .frame(width: i == currentStep ? 12 : 8,
+                               height: i == currentStep ? 12 : 8)
                         .animation(.spring(response: 0.4, dampingFraction: 0.7), value: currentStep)
                 }
                 Spacer()
@@ -359,7 +339,7 @@ struct ActivityPlayerView: View {
                         .foregroundStyle(.white)
                 }
 
-                Text("Current Step")
+                Text(L10n.t(.currentStep))
                     .font(.system(size: 14, weight: .semibold, design: .rounded))
                     .foregroundStyle(activity.color)
 
@@ -372,6 +352,7 @@ struct ActivityPlayerView: View {
                     .scaleEffect(visualPulse ? 1.4 : 0.8)
                     .animation(.easeInOut(duration: 1.2).repeatForever(autoreverses: true), value: visualPulse)
             }
+
 
             // Instruction text
             Text(activity.steps[currentStep])
@@ -403,7 +384,7 @@ struct ActivityPlayerView: View {
                     HStack(spacing: 6) {
                         Image(systemName: "chevron.left")
                             .font(.system(size: 14, weight: .semibold))
-                        Text("Back")
+                        Text(L10n.t(.back))
                             .font(.system(size: 16, weight: .semibold, design: .rounded))
                     }
                     .foregroundStyle(activity.color)
@@ -417,7 +398,7 @@ struct ActivityPlayerView: View {
             // Next / Complete button
             Button(action: nextStep) {
                 HStack(spacing: 8) {
-                    Text(currentStep == totalSteps - 1 ? "Complete" : "Next Step")
+                    Text(currentStep == totalSteps - 1 ? L10n.t(.completeLabel) : L10n.t(.nextStep))
                         .font(.system(size: 16, weight: .semibold, design: .rounded))
                     Image(systemName: currentStep == totalSteps - 1 ? "checkmark" : "chevron.right")
                         .font(.system(size: 14, weight: .bold))
@@ -439,7 +420,7 @@ struct ActivityPlayerView: View {
                 Image(systemName: "quote.opening")
                     .font(.system(size: 18))
                     .foregroundStyle(activity.color)
-                Text("Grandma's Heart")
+                Text(L10n.t(.grandmasHeart))
                     .font(.system(size: 15, weight: .semibold, design: .rounded))
                     .foregroundStyle(Color.themeText)
             }
@@ -459,155 +440,21 @@ struct ActivityPlayerView: View {
         )
     }
 
-    // MARK: Completion Card
-    private var completionCard: some View {
-        VStack(spacing: 20) {
-            // Trophy icon
-            ZStack {
-                Circle()
-                    .fill(LinearGradient(
-                        colors: [activity.color.opacity(0.90), activity.color.opacity(0.60)],
-                        startPoint: .topLeading, endPoint: .bottomTrailing
-                    ))
-                    .frame(width: 72, height: 72)
-                    .shadow(color: activity.color.opacity(0.40), radius: 14)
-                Image(systemName: "checkmark")
-                    .font(.system(size: 28, weight: .bold))
-                    .foregroundStyle(.white)
-            }
-
-            VStack(spacing: 8) {
-                Text("Activity Complete!")
-                    .font(.system(size: 20, weight: .bold, design: .rounded))
-                    .foregroundStyle(Color.themeText)
-                Text("You've completed all \(totalSteps) steps of \(activity.title). Well done.")
-                    .font(.system(size: 14, weight: .regular, design: .rounded))
-                    .foregroundStyle(.secondary)
-                    .multilineTextAlignment(.center)
-                    .lineSpacing(4)
-            }
-
-            // Restart button
-            Button(action: restart) {
-                HStack(spacing: 6) {
-                    Image(systemName: "arrow.counterclockwise")
-                        .font(.system(size: 12, weight: .semibold))
-                    Text("Try Again")
-                        .font(.system(size: 14, weight: .semibold, design: .rounded))
-                }
-                .foregroundStyle(activity.color)
-                .padding(.horizontal, 24)
-                .padding(.vertical, 12)
-                .background(activity.color.opacity(0.12))
-                .clipShape(Capsule())
-            }
-        }
-        .padding(24)
-        .frame(maxWidth: .infinity)
-        .background(.ultraThinMaterial)
-        .clipShape(RoundedRectangle(cornerRadius: 24, style: .continuous))
-        .overlay(
-            RoundedRectangle(cornerRadius: 24, style: .continuous)
-                .stroke(activity.color.opacity(0.25), lineWidth: 1)
-        )
-        .shadow(color: activity.color.opacity(0.12), radius: 16, x: 0, y: 8)
-    }
-
-    // MARK: Celebration Overlay
-    private var celebrationOverlay: some View {
-        ZStack {
-            Color.black.opacity(0.35)
-                .ignoresSafeArea()
-                .onTapGesture { withAnimation(.spring()) { showCelebration = false } }
-
-            VStack(spacing: 20) {
-                // Animated sparkle icons
-                ZStack {
-                    let icons = ["sparkle","star","sparkles","leaf","sun.min","moon.stars"]
-                    ForEach(0..<6, id: \.self) { i in
-                        Image(systemName: icons[i])
-                            .font(.system(size: 14, weight: .light))
-                            .foregroundStyle(activity.color.opacity(0.70))
-                            .offset(
-                                x: CGFloat([-60,-30,0,30,60,0][i]),
-                                y: CGFloat([-40,-60,-30,-50,-35,-65][i])
-                            )
-                            .scaleEffect(showCelebration ? 1 : 0)
-                            .animation(
-                                .spring(response: 0.5, dampingFraction: 0.6)
-                                    .delay(Double(i) * 0.08),
-                                value: showCelebration
-                            )
-                    }
-
-                    Circle()
-                        .fill(LinearGradient(
-                            colors: [activity.color, activity.color.opacity(0.70)],
-                            startPoint: .topLeading, endPoint: .bottomTrailing
-                        ))
-                        .frame(width: 88, height: 88)
-                        .overlay(
-                            Image(systemName: "checkmark")
-                                .font(.system(size: 32, weight: .semibold))
-                                .foregroundStyle(.white)
-                        )
-                        .shadow(color: activity.color.opacity(0.50), radius: 20)
-                        .scaleEffect(showCelebration ? 1 : 0.2)
-                        .animation(.spring(response: 0.6, dampingFraction: 0.6), value: showCelebration)
-                }
-                .frame(height: 100)
-                .padding(.top, 20)
-
-                Text("Activity Complete")
-                    .font(.system(size: 24, weight: .bold, design: .rounded))
-                    .foregroundStyle(.white)
-
-                Text("\(activity.title) finished.\nWell done — Grandma is proud of you.")
-                    .font(.system(size: 14, weight: .regular, design: .rounded))
-                    .foregroundStyle(.white.opacity(0.85))
-                    .multilineTextAlignment(.center)
-                    .lineSpacing(4)
-
-                Button(action: { withAnimation(.spring()) { showCelebration = false } }) {
-                    HStack(spacing: 6) {
-                        Image(systemName: "heart.fill")
-                            .font(.system(size: 13))
-                        Text("Wonderful")
-                            .font(.system(size: 15, weight: .semibold, design: .rounded))
-                    }
-                    .foregroundStyle(.white)
-                    .frame(maxWidth: .infinity)
-                    .padding(.vertical, 14)
-                    .background(activity.color)
-                    .clipShape(RoundedRectangle(cornerRadius: 14))
-                }
-                .padding(.top, 4)
-            }
-            .padding(28)
-            .background(.ultraThinMaterial)
-            .clipShape(RoundedRectangle(cornerRadius: 28, style: .continuous))
-            .padding(.horizontal, 24)
-            .scaleEffect(showCelebration ? 1 : 0.8)
-            .opacity(showCelebration ? 1 : 0)
-            .animation(.spring(response: 0.5, dampingFraction: 0.75), value: showCelebration)
-        }
-    }
+    // (Completion card and celebration overlay removed)
 
     // MARK: Actions
     private func nextStep() {
         UIImpactFeedbackGenerator(style: .medium).impactOccurred()
-        stepAppear = false
-        DispatchQueue.main.asyncAfter(deadline: .now() + 0.15) {
-            if currentStep < totalSteps - 1 {
+        if currentStep < totalSteps - 1 {
+            stepAppear = false
+            DispatchQueue.main.asyncAfter(deadline: .now() + 0.15) {
                 currentStep += 1
                 triggerStepAppear()
-            } else {
-                isComplete = true
-                UINotificationFeedbackGenerator().notificationOccurred(.success)
-                DispatchQueue.main.asyncAfter(deadline: .now() + 0.4) {
-                    withAnimation { showCelebration = true }
-                }
             }
+        } else {
+            // Last step done — dismiss back to activities list
+            UINotificationFeedbackGenerator().notificationOccurred(.success)
+            dismiss()
         }
     }
 
@@ -620,15 +467,6 @@ struct ActivityPlayerView: View {
                 triggerStepAppear()
             }
         }
-    }
-
-    private func restart() {
-        UIImpactFeedbackGenerator(style: .light).impactOccurred()
-        withAnimation(.spring()) {
-            currentStep = 0
-            isComplete = false
-        }
-        triggerStepAppear()
     }
 
     private func triggerStepAppear() {

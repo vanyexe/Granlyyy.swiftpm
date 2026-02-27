@@ -81,6 +81,7 @@ struct StoryView: View {
     @State private var artworkPulse   = false
     @State private var showFullLyrics = false
     @State private var showMoreMenu   = false
+    @State private var showTimerSheet = false
 
     // Sync engine
     @State private var syncEngine     = StorySyncEngine()
@@ -230,8 +231,12 @@ struct StoryView: View {
 
             // More-options button
             Menu {
-                Button { } label: { Label("Share Story", systemImage: "square.and.arrow.up") }
-                Button(role: .destructive) { audioService.stopAudio() } label: { Label("Stop Playback", systemImage: "stop.fill") }
+                if let s = story {
+                    ShareLink(item: "\(s.title)\n\n\(s.content)\n\n— From Granly") {
+                        Label(L10n.t(.shareStory), systemImage: "square.and.arrow.up")
+                    }
+                }
+                Button(role: .destructive) { audioService.stopAudio() } label: { Label(L10n.t(.stopPlayback), systemImage: "stop.fill") }
             } label: {
                 Image(systemName: "ellipsis")
                     .font(.system(size: 16, weight: .semibold))
@@ -444,6 +449,7 @@ struct StoryView: View {
             // Timer
             Button {
                 UIImpactFeedbackGenerator(style: .light).impactOccurred()
+                showTimerSheet = true
             } label: {
                 Image(systemName: "timer")
                     .font(.system(size: 20, weight: .medium))
@@ -451,6 +457,15 @@ struct StoryView: View {
                     .frame(width: 44, height: 44)
             }
             .frame(maxWidth: .infinity)
+            .confirmationDialog("Sleep Timer", isPresented: $showTimerSheet, titleVisibility: .visible) {
+                Button(L10n.t(.timer5Min)) { audioService.startSleepTimer(minutes: 5) }
+                Button(L10n.t(.timer15Min)) { audioService.startSleepTimer(minutes: 15) }
+                Button(L10n.t(.timer30Min)) { audioService.startSleepTimer(minutes: 30) }
+                Button(L10n.t(.turnOffTimer), role: .destructive) { audioService.cancelSleepTimer() }
+                Button(L10n.t(.cancel), role: .cancel) {}
+            } message: {
+                Text(L10n.t(.stopPlaybackAfter))
+            }
         }
     }
 
@@ -458,10 +473,15 @@ struct StoryView: View {
     private var utilityBar: some View {
         HStack(alignment: .center, spacing: 0) {
 
-            Image(systemName: "hifispeaker.2")
-                .font(.system(size: 18, weight: .medium))
-                .foregroundStyle(.white.opacity(0.50))
-                .frame(maxWidth: .infinity)
+            Button {
+                UIImpactFeedbackGenerator(style: .light).impactOccurred()
+                audioService.toggleMute()
+            } label: {
+                Image(systemName: audioService.isMuted ? "speaker.slash.fill" : "hifispeaker.2")
+                    .font(.system(size: 18, weight: .medium))
+                    .foregroundStyle(.white.opacity(0.50))
+                    .frame(maxWidth: .infinity)
+            }
 
             if let s = story {
                 ShareLink(item: "\(s.title)\n\n\(s.content)\n\n— From Granly") {

@@ -31,7 +31,7 @@ struct AboutView: View {
                             .overlay(Circle().stroke(Color.white.opacity(0.2), lineWidth: 1))
                             .shadow(color: Color.black.opacity(0.05), radius: 10)
 
-                        Text("Granly")
+                        Text(L10n.t(.appName))
                             .font(.system(size: 28, weight: .bold, design: .rounded))
                             .foregroundStyle(Color.themeText)
                     }
@@ -79,7 +79,7 @@ struct AboutView: View {
 
                     // ── Legal Links ──────────────────────────────────────
                     VStack(spacing: 0) {
-                        NavigationLink(destination: PrivacyPolicyView()) {
+                        NavigationLink(destination: PrivacyPolicyView().environmentObject(lang)) {
                             AboutRow(
                                 icon: "lock.shield.fill",
                                 iconColor: Color.themeGreen,
@@ -89,7 +89,7 @@ struct AboutView: View {
                         }
                         .buttonStyle(.plain)
 
-                        NavigationLink(destination: TermsOfServiceView()) {
+                        NavigationLink(destination: TermsOfServiceView().environmentObject(lang)) {
                             AboutRow(
                                 icon: "doc.text.fill",
                                 iconColor: Color.themeGold,
@@ -117,6 +117,7 @@ struct AboutView: View {
         }
         .navigationTitle(L10n.t(.aboutGranly))
         .navigationBarTitleDisplayMode(.inline)
+        .id(lang.selectedLanguage)
     }
 }
 

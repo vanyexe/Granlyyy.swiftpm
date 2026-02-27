@@ -144,6 +144,24 @@ enum L10nKey: String {
 
     // MARK: Home View
     case dailyQuoteText, home
+
+    // MARK: Missing translations (Timers, Buttons, MemBox, Activities)
+    case savedMemoriesTitle, storiesSavedCount, noMemoriesBody
+    case termsIntroBody, privacyIntroBody
+    case stopPlaybackAfter, timer5Min, timer15Min, timer30Min, turnOffTimer, shareStory, stopPlayback
+    case stepNoOfTotal, step, currentStep, back, nextStep, completeLabel, activityCompleteTitle, activityCompleteBody, tryAgain, activityComplete, activityFinishedBody, wonderful
+
+    // MARK: Notifications
+    case notificationsSection, notifications, reminderTime
+    case storyReminder, notifStorySubtitle
+    case activityReminder, notifActivitySubtitle
+    case progressUpdates, notifProgressSubtitle
+    case notifEmptyTitle, notifEmptyBody
+    case notifPermissionTitle, notifPermissionBody, notifPermissionButton
+    // Notification body copy (shown in the actual OS notification)
+    case notifStoryTitle, notifStoryBody, notifStoryBody2
+    case notifActivityTitle, notifActivityBody, notifActivityBody2
+    case notifStreakTitle, notifStreakBody
 }
 
 // MARK: - L10n Lookup Engine
@@ -153,6 +171,12 @@ struct L10n {
         let code = UserDefaults.standard.string(forKey: "selectedLanguage") ?? AppLanguage.english.rawValue
         let lang = AppLanguage(rawValue: code) ?? .english
         return strings[lang]?[key] ?? strings[.english]?[key] ?? key.rawValue
+    }
+
+    /// Interpolates formatted text (e.g. "Step %d of %d") using the current language
+    static func tf(_ key: L10nKey, _ args: CVarArg...) -> String {
+        let template = t(key)
+        return String(format: template, arguments: args)
     }
 
     // MARK: - Translation Dictionaries
@@ -342,7 +366,33 @@ struct L10n {
             .savedStories: "Saved Stories", .savedRecipes: "Saved Recipes", .savedQuotes: "Saved Quotes",
 
             .dailyQuoteText: "\"Keep your face always toward the sunshine and shadows will fall behind you.\"",
-            .home: "Home"
+            .home: "Home",
+
+            // NEW STRUCTURAL TEXT KEYS
+            .savedMemoriesTitle: "Saved Memories", .storiesSavedCount: "%d stories saved", .noMemoriesBody: "When grandma tells you a story you love,\ntap the heart to save it here forever.",
+            .termsIntroBody: "These terms govern your use of Granly. Please take a moment to read them — they're written with the same warmth and care as everything else in this app.",
+            .privacyIntroBody: "At Granly, your privacy is as sacred as grandma's secret recipe. Here's exactly what we do — and don't do — with your information.",
+            .stopPlaybackAfter: "Stop audio playback after...", .timer5Min: "5 Minutes", .timer15Min: "15 Minutes", .timer30Min: "30 Minutes", .turnOffTimer: "Turn Off Timer", .shareStory: "Share Story", .stopPlayback: "Stop Playback",
+            .stepNoOfTotal: "Step %d of %d", .step: "%d steps", .currentStep: "Current Step", .back: "Back", .nextStep: "Next Step", .completeLabel: "Complete", .activityCompleteTitle: "Activity Complete!", .activityCompleteBody: "You've completed all %d steps of %@. Well done.", .tryAgain: "Try Again", .activityComplete: "Activity Complete", .activityFinishedBody: "%@ finished.\nWell done — Grandma is proud of you.", .wonderful: "Wonderful",
+
+            // NOTIFICATIONS
+            .notificationsSection: "Notifications", .notifications: "Notifications", .reminderTime: "Reminder Time",
+            .storyReminder: "Story Reminder", .notifStorySubtitle: "Evening nudge for bedtime stories",
+            .activityReminder: "Activity Reminder", .notifActivitySubtitle: "Morning prompt for cozy activities",
+            .progressUpdates: "Progress Updates", .notifProgressSubtitle: "Streaks and milestone celebrations",
+            .notifEmptyTitle: "Your cozy moments will appear here 💛",
+            .notifEmptyBody: "Start a story or activity to receive updates.",
+            .notifPermissionTitle: "Allow Notifications",
+            .notifPermissionBody: "Let Granly remind you of story time and cozy activities.",
+            .notifPermissionButton: "Enable Notifications",
+            .notifStoryTitle: "Story Time",
+            .notifStoryBody: "It's story time! Let's continue where you left off.",
+            .notifStoryBody2: "A cozy bedtime story is waiting for you tonight.",
+            .notifActivityTitle: "Good Morning",
+            .notifActivityBody: "Try a 5-minute gratitude activity today.",
+            .notifActivityBody2: "Let's build emotional strength with today's activity.",
+            .notifStreakTitle: "You're on a roll!",
+            .notifStreakBody: "3 days of story bonding in a row — Grandma is so proud!"
         ],
 
         // ─────────────────────────── HINDI ──────────────────────────────
@@ -500,7 +550,32 @@ struct L10n {
             .savedStories: "सहेजी गई कहानियाँ", .savedRecipes: "सहेजे गए व्यंजन", .savedQuotes: "सहेजे गए विचार",
 
             .dailyQuoteText: "\"अपना चेहरा हमेशा धूप की ओर रखें और परछाइयाँ आपके पीछे पड़ेंगी।\"",
-            .home: "मुख्य पृष्ठ"
+            .home: "मुख्य पृष्ठ",
+
+            .savedMemoriesTitle: "सहेजी गई यादें", .storiesSavedCount: "%d कहानियाँ सहेजी गईं", .noMemoriesBody: "जब दादी आपको कोई ऐसी कहानी सुनाएं जो आपको पसंद हो,\nतो उसे हमेशा के लिए यहाँ सहेजने के लिए दिल पर टैप करें।",
+            .termsIntroBody: "ये शर्तें आपके Granly के उपयोग को नियंत्रित करती हैं। कृपया इन्हें पढ़ने के लिए कुछ समय लें—इन्हें उसी गर्मजोशी और प्यार से लिखा गया है जैसे कि इस ऐप की अन्य चीज़ें।",
+            .privacyIntroBody: "Granly में आपकी गोपनीयता दादी की गुप्त रेसिपी की तरह ही पवित्र है। यहाँ बताया गया है कि हम आपकी जानकारी के साथ क्या करते हैं—और क्या नहीं करते।",
+            .stopPlaybackAfter: "इसके बाद ऑडियो प्लेबैक बंद करें...", .timer5Min: "5 मिनट", .timer15Min: "15 मिनट", .timer30Min: "30 मिनट", .turnOffTimer: "टाइमर बंद करें", .shareStory: "कहानी साझा करें", .stopPlayback: "प्लेबैक रोकें",
+            .stepNoOfTotal: "चरण %d / %d", .step: "%d चरण", .currentStep: "वर्तमान चरण", .back: "पीछे", .nextStep: "अगला चरण", .completeLabel: "पूरा", .activityCompleteTitle: "गतिविधि पूरी हुई!", .activityCompleteBody: "आपने %@ के सभी %d चरण पूरे कर लिए हैं। बहुत बढ़िया।", .tryAgain: "फिर से प्रयास करें", .activityComplete: "गतिविधि पूरी", .activityFinishedBody: "%@ समाप्त हुई।\nबहुत बढ़िया — दादी को आप पर गर्व है।", .wonderful: "अद्भुत",
+
+            // NOTIFICATIONS (Hindi)
+            .notificationsSection: "सूचनाएँ", .notifications: "सूचनाएँ", .reminderTime: "अनुस्मारक समय",
+            .storyReminder: "कहानी अनुस्मारक", .notifStorySubtitle: "सोने की कहानियों के लिए शाम की याद",
+            .activityReminder: "गतिविधि अनुस्मारक", .notifActivitySubtitle: "आरामदायक गतिविधियों के लिए सुबह की याद",
+            .progressUpdates: "प्रगति अपडेट", .notifProgressSubtitle: "स्ट्रीक और मील के पत्थर",
+            .notifEmptyTitle: "आपके आरामदायक पल यहाँ दिखाई देंगे 💛",
+            .notifEmptyBody: "अपडेट पाने के लिए एक कहानी या गतिविधि शुरू करें।",
+            .notifPermissionTitle: "सूचनाएँ चालू करें",
+            .notifPermissionBody: "Granly को कहानी के समय और गतिविधियों की याद दिलाने दें।",
+            .notifPermissionButton: "सूचनाएँ सक्षम करें",
+            .notifStoryTitle: "कहानी का समय",
+            .notifStoryBody: "आज की कहानी तैयार है",
+            .notifStoryBody2: "अपने बच्चे के साथ 5 मिनट का समय बिताएं।",
+            .notifActivityTitle: "शुभ प्रभात",
+            .notifActivityBody: "आज एक 5 मिनट की कृतज्ञता गतिविधि करें।",
+            .notifActivityBody2: "आज की गतिविधि के साथ भावनात्मक शक्ति बनाएं।",
+            .notifStreakTitle: "बहुत अच्छे!",
+            .notifStreakBody: "3 दिन कहानी पढ़ी — दादी को आप पर गर्व है!"
         ],
 
         // ─────────────────────────── SPANISH ─────────────────────────────
@@ -600,7 +675,7 @@ struct L10n {
             .emotionalGarden: "Tu Jardín Emocional",
             .statEnergy: "Energía", .statPaths: "Caminos",
             .completeReflection: "Reflexión Completa",
-            .reflectionAckButton: "He reflexionado sobre esto",
+            .reflectionAckButton: "He reflejado sobre esto",
             .reflectionMessage: "Al marcar esto como completo, reconoces que has dedicado tiempo a enfocarte en esto.",
 
             .chatWithGrandma: "Charla con la Abuela",
@@ -657,7 +732,32 @@ struct L10n {
             .savedStories: "Historias Guardadas", .savedRecipes: "Recetas Guardadas", .savedQuotes: "Citas Guardadas",
 
             .dailyQuoteText: "\"Mantén siempre tu rostro hacia la luz del sol y las sombras caerán detrás de ti.\"",
-            .home: "Inicio"
+            .home: "Inicio",
+
+            .savedMemoriesTitle: "Recuerdos Guardados", .storiesSavedCount: "%d historias guardadas", .noMemoriesBody: "Cuando la abuela te cuente una historia que ames,\ntoca el corazón para guardarla aquí siempre.",
+            .termsIntroBody: "Estos términos rigen el uso de Granly. Tómese un momento para leerlos; están escritos con el mismo cuidado y calidez que todo en la aplicación.",
+            .privacyIntroBody: "En Granly, su privacidad es tan sagrada como la receta secreta de la abuela. Esto es exactamente lo que hacemos —y lo que no— con su información.",
+            .stopPlaybackAfter: "Detener reproducción de audio después...", .timer5Min: "5 minutos", .timer15Min: "15 minutos", .timer30Min: "30 minutos", .turnOffTimer: "Apagar el temporizador", .shareStory: "Compartir historia", .stopPlayback: "Detener reproducción",
+            .stepNoOfTotal: "Paso %d de %d", .step: "%d pasos", .currentStep: "Paso actual", .back: "Atrás", .nextStep: "Siguiente paso", .completeLabel: "Completar", .activityCompleteTitle: "¡Actividad completada!", .activityCompleteBody: "Ha completado todos los %d pasos de %@. Bien hecho.", .tryAgain: "Intentar otra vez", .activityComplete: "Actividad Completada", .activityFinishedBody: "%@ terminada.\nBien hecho — La abuela está orgullosa.", .wonderful: "Maravilloso",
+
+            // NOTIFICATIONS (Spanish)
+            .notificationsSection: "Notificaciones", .notifications: "Notificaciones", .reminderTime: "Hora del recordatorio",
+            .storyReminder: "Recordatorio de historia", .notifStorySubtitle: "Recordatorio vespertino para cuentos",
+            .activityReminder: "Recordatorio de actividad", .notifActivitySubtitle: "Recordatorio matutino para actividades",
+            .progressUpdates: "Actualizaciones de progreso", .notifProgressSubtitle: "Rachas y logros",
+            .notifEmptyTitle: "Tus momentos acogedores aparecerán aquí 💛",
+            .notifEmptyBody: "Comienza una historia o actividad para recibir actualizaciones.",
+            .notifPermissionTitle: "Activar notificaciones",
+            .notifPermissionBody: "Deja que Granly te recuerde la hora del cuento y las actividades.",
+            .notifPermissionButton: "Activar notificaciones",
+            .notifStoryTitle: "Hora del cuento",
+            .notifStoryBody: "Es la hora del cuento. Sigamos donde lo dejaste.",
+            .notifStoryBody2: "Esta noche te espera un cuento acogedor.",
+            .notifActivityTitle: "Buenos días",
+            .notifActivityBody: "Prueba una actividad de gratitud de 5 minutos hoy.",
+            .notifActivityBody2: "Construyamos fortaleza emocional con la actividad de hoy.",
+            .notifStreakTitle: "¡Sigue así!",
+            .notifStreakBody: "¡3 días de cuentos seguidos — la abuela está muy orgullosa!"
         ],
 
         // ─────────────────────────── FRENCH ─────────────────────────────
@@ -720,7 +820,7 @@ struct L10n {
             .thankYouForLove: "Merci pour votre amour!",
 
             .makeover: "Transformation", .hair: "Cheveux", .glasses: "Lunettes", .outfit: "Tenue",
-            .pattern: "Motif", .accessories: "Accessoires", .hats: "Chapeaux",
+            .pattern: "Motif", .accessories: "Accesorios", .hats: "Chapeaux",
             .earrings: "Boucles d'oreilles", .face: "Visage", .backgrounds: "Arrière-plans", .filters: "Filtres",
             .wrinkleIntensity: "Intensité des Rides", .greyIntensity: "Intensité des Cheveux Gris",
             .browThickness: "Épaisseur des Sourcils", .eyelashes: "Cils",
@@ -814,8 +914,34 @@ struct L10n {
             .savedStories: "Histoires Enregistrées", .savedRecipes: "Recettes Enregistrées", .savedQuotes: "Citations Enregistrées",
 
             .dailyQuoteText: "\"Gardez toujours votre visage tourné vers le soleil et les ombres tomberont derrière vous.\"",
-            .home: "Accueil"
+            .home: "Accueil",
+
+            .savedMemoriesTitle: "Souvenirs Enregistrés", .storiesSavedCount: "%d histoires enregistrées", .noMemoriesBody: "Quand grand-mère te raconte une histoire que tu aimes,\ntouche le cœur pour la sauvegarder ici pour toujours.",
+            .termsIntroBody: "Ces conditions régissent votre utilisation de Granly. Prenez un instant pour les lire — elles sont écrites avec autant de chaleur et de soin que tout le reste dans cette application.",
+            .privacyIntroBody: "Chez Granly, votre vie privée est aussi sacrée que la recette secrète de grand-mère. Voici très exactement ce que nous faisons — et ne faisons pas — avec vos informations.",
+            .stopPlaybackAfter: "Arrêter la lecture audio après...", .timer5Min: "5 Minutes", .timer15Min: "15 Minutes", .timer30Min: "30 Minutes", .turnOffTimer: "Éteindre le minuteur", .shareStory: "Partager l'histoire", .stopPlayback: "Arrêter la lecture",
+            .stepNoOfTotal: "Étape %d sur %d", .step: "%d étapes", .currentStep: "Étape actuelle", .back: "Retour", .nextStep: "Étape suivante", .completeLabel: "Terminer", .activityCompleteTitle: "Activité terminée !", .activityCompleteBody: "Vous avez terminé toutes les %d étapes de %@. Bien joué.", .tryAgain: "Réessayer", .activityComplete: "Activité Terminée", .activityFinishedBody: "%@ terminée.\nBien joué — Grand-mère est fière de toi.", .wonderful: "Formidable",
+
+            // NOTIFICATIONS (French)
+            .notificationsSection: "Notifications", .notifications: "Notifications", .reminderTime: "Heure du rappel",
+            .storyReminder: "Rappel d'histoire", .notifStorySubtitle: "Rappel du soir pour les histoires du coucher",
+            .activityReminder: "Rappel d'activité", .notifActivitySubtitle: "Rappel du matin pour les activités réconfortantes",
+            .progressUpdates: "Mises à jour de progression", .notifProgressSubtitle: "Séries et jalons",
+            .notifEmptyTitle: "Vos moments douillets apparaîtront ici 💛",
+            .notifEmptyBody: "Commencez une histoire ou une activité pour recevoir des mises à jour.",
+            .notifPermissionTitle: "Activer les notifications",
+            .notifPermissionBody: "Laissez Granly vous rappeler l'heure des histoires et des activités.",
+            .notifPermissionButton: "Activer les notifications",
+            .notifStoryTitle: "L'heure de l'histoire",
+            .notifStoryBody: "C'est l'heure de l'histoire! Continuons où vous en étiez.",
+            .notifStoryBody2: "Une histoire réconfortante vous attend ce soir.",
+            .notifActivityTitle: "Bonjour",
+            .notifActivityBody: "Essayez une activité de gratitude de 5 minutes aujourd'hui.",
+            .notifActivityBody2: "Construisons la force émotionnelle avec l'activité d'aujourd'hui.",
+            .notifStreakTitle: "Continuez!",
+            .notifStreakBody: "3 jours d'histoires de suite — Grand-mère est si fière!"
         ],
+
 
         // ─────────────────────────── MANDARIN (zh-CN) ───────────────────────────
         .mandarin: [
@@ -971,7 +1097,33 @@ struct L10n {
             .savedStories: "保存的故事", .savedRecipes: "保存的食谱", .savedQuotes: "保存的句子",
 
             .dailyQuoteText: "\"将你的脸永远朝向阳光，阴影就会落在你的身后。\"",
-            .home: "首页"
+            .home: "首页",
+
+            .savedMemoriesTitle: "已保存的记忆", .storiesSavedCount: "%d 个故事已保存", .noMemoriesBody: "当奶奶给你讲了一个你喜欢的故事时，\n点击心形图标永远保存在这里。",
+            .termsIntroBody: "这些条款规定了您对Granly的使用。花点时间阅读它们吧——它们在编写时融入了应用各处相同的温暖与关怀。",
+            .privacyIntroBody: "在Granly，您的隐私像奶奶的秘方一样神圣。这是关于我们对您信息的做法——以及绝不做的。",
+            .stopPlaybackAfter: "此后停止音频播放...", .timer5Min: "5 分钟", .timer15Min: "15 分钟", .timer30Min: "30 分钟", .turnOffTimer: "关闭定时器", .shareStory: "分享故事", .stopPlayback: "停止播放",
+            .stepNoOfTotal: "步骤 %d / %d", .step: "%d 步", .currentStep: "当前步骤", .back: "返回", .nextStep: "下一步", .completeLabel: "完成", .activityCompleteTitle: "活动完成！", .activityCompleteBody: "您已完成 %@ 的所有 %d 个步骤。做得好。", .tryAgain: "再试一次", .activityComplete: "活动完成", .activityFinishedBody: "活动 %@ 结束。\n做得好——奶奶为你感到骄傲。", .wonderful: "太棒了",
+
+            // NOTIFICATIONS (Mandarin)
+            .notificationsSection: "通知", .notifications: "通知", .reminderTime: "提醒时间",
+            .storyReminder: "故事提醒", .notifStorySubtitle: "睡前故事的晚间提示",
+            .activityReminder: "活动提醒", .notifActivitySubtitle: "温馨活动的早晨提示",
+            .progressUpdates: "进度更新", .notifProgressSubtitle: "连续记录和里程碑",
+            .notifEmptyTitle: "您的温馨时刻将会出现在这里 💛",
+            .notifEmptyBody: "开始一个故事或活动以接收更新。",
+            .notifPermissionTitle: "允许通知",
+            .notifPermissionBody: "让 Granly 提醒您讲故事时间和温馨活动。",
+            .notifPermissionButton: "启用通知",
+            .notifStoryTitle: "故事时间",
+            .notifStoryBody: "今天的故事已经准备好了",
+            .notifStoryBody2: "和孩子一起度过温暖时光。",
+            .notifActivityTitle: "早上好",
+            .notifActivityBody: "今天尝试一个5分钟的感恩活动。",
+            .notifActivityBody2: "用今天的活动建立情感力量。",
+            .notifStreakTitle: "继续加油！",
+            .notifStreakBody: "连续3天讲故事 — 奶奶为您感到非常骄傲！"
+
         ],
     ]
 }

@@ -2,7 +2,6 @@ import SwiftUI
 
 @MainActor
 struct ProfileView: View {
-    @StateObject private var languageManager = LanguageManager.shared
     @EnvironmentObject var lang: LanguageManager
     @AppStorage("grandmaName") private var grandmaName = "Granly"
     @AppStorage("darkMode") private var darkMode = false
@@ -49,17 +48,17 @@ struct ProfileView: View {
                             .buttonStyle(.plain)
                             
                             VStack(spacing: 6) {
-                                Text(L10n.t(.myDear))
-                                    .font(.granlyHeadline)
-                                    .foregroundStyle(Color.themeText)
-
-                                Text("\(L10n.t(.storiesRead)): \(storiesRead)")
-                                    .font(.granlySubheadline)
-                                    .foregroundStyle(.secondary)
-                                    .padding(.horizontal, 10)
-                                    .padding(.vertical, 3)
-                                    .background(.ultraThinMaterial)
-                                    .clipShape(Capsule())
+                                HStack {
+                                    Image(systemName: "book.pages.fill")
+                                        .foregroundStyle(Color.themeRose)
+                                    Text(L10n.tf(.storiesSavedCount, storiesRead))
+                                        .font(.granlySubheadline)
+                                        .foregroundStyle(.secondary)
+                                }
+                                .padding(.horizontal, 10)
+                                .padding(.vertical, 3)
+                                .background(.ultraThinMaterial)
+                                .clipShape(Capsule())
                             }
                         }
                         .padding(.top, 40)
@@ -84,24 +83,48 @@ struct ProfileView: View {
                         // Settings Section
                         VStack(spacing: 16) {
                             SectionHeader(title: L10n.t(.preferences))
-                            
-                            SettingsRow(icon: "globe", color: .green, title: L10n.t(.language), value: languageManager.selectedLanguage.displayName) {
+
+                            SettingsRow(icon: "globe", color: .green, title: L10n.t(.language), value: lang.selectedLanguage.displayName) {
                                 showLanguageSheet = true
                             }
-                            
+
                             ToggleRow(icon: "moon.fill", color: .purple, title: L10n.t(.darkMode), isOn: $darkMode)
-                            
+
+                            // Notifications row
+                            NavigationLink(destination: NotificationsView().environmentObject(lang)) {
+                                HStack {
+                                    ZStack {
+                                        RoundedRectangle(cornerRadius: 8, style: .continuous)
+                                            .fill(Color.orange.opacity(0.15))
+                                            .frame(width: 32, height: 32)
+                                        Image(systemName: "bell.fill")
+                                            .font(.system(size: 16))
+                                            .foregroundStyle(.orange)
+                                    }
+                                    Text(L10n.t(.notifications))
+                                        .font(.granlyBodyBold)
+                                        .foregroundStyle(Color.themeText)
+                                    Spacer()
+                                    Image(systemName: "chevron.right")
+                                        .font(.system(size: 14, weight: .semibold))
+                                        .foregroundStyle(.secondary)
+                                }
+                                .contentShape(Rectangle())
+                                .padding(.vertical, 6)
+                            }
+                            .buttonStyle(.plain)
 
                         }
-                        .padding(16) // 20 -> 16
+                        .padding(16)
                         .glassCard(cornerRadius: 16)
                         .padding(.horizontal)
+
                         
                         // Support Section
                         VStack(spacing: 16) {
                             SectionHeader(title: L10n.t(.support))
                             
-                            NavigationLink(destination: AboutView()) {
+                            NavigationLink(destination: AboutView().environmentObject(lang)) {
                                 HStack {
                                     Image(systemName: "info.circle").foregroundStyle(.blue).font(.system(size: 20)).frame(width: 28)
                                     Text(L10n.t(.aboutGrantly)).font(.granlyBodyBold).foregroundStyle(Color.themeText)
@@ -139,8 +162,19 @@ struct ProfileView: View {
                     }
                 }
             }
-            .navigationTitle("Profile")
-            .navigationBarHidden(true)
+            .navigationTitle(L10n.t(.profile))
+            .navigationBarTitleDisplayMode(.inline)
+            .toolbar {
+                ToolbarItem(placement: .topBarTrailing) {
+                    Button {
+                        showMakeover = true
+                    } label: {
+                        Image(systemName: "sparkles.rectangle.stack.fill")
+                            .font(.title2)
+                            .foregroundStyle(Color.themeRose)
+                    }
+                }
+            }
             .fullScreenCover(isPresented: $showMakeover) {
                 CustomizeGrandmaView()
             }
@@ -175,6 +209,7 @@ struct ProfileView: View {
             } message: {
                 Text(L10n.t(.resetDataMessage))
             }
+            .id(lang.selectedLanguage) // Force full rebuild when language changes
         }
     }
     

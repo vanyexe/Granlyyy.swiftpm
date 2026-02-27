@@ -25,6 +25,9 @@ final class AudioService: NSObject, ObservableObject, AVSpeechSynthesizerDelegat
     private var wasPlayingBeforeScrub = false
     private var currentText: String = ""
 
+    @Published var isMuted = false
+    private var sleepTimer: Timer?
+
     override init() {
         super.init()
         setupAudioSessionIfNeeded()
@@ -82,7 +85,7 @@ final class AudioService: NSObject, ObservableObject, AVSpeechSynthesizerDelegat
         utterance.voice = bestGrandmaVoice(for: language)
         utterance.rate = AVSpeechUtteranceDefaultSpeechRate * 0.65
         utterance.pitchMultiplier = 1.2
-        utterance.volume = 0.95
+        utterance.volume = isMuted ? 0.0 : 0.95
         utterance.preUtteranceDelay = 0.68
 
         setupAudioSessionIfNeeded()
@@ -140,7 +143,7 @@ final class AudioService: NSObject, ObservableObject, AVSpeechSynthesizerDelegat
             utterance.voice = bestGrandmaVoice(for: currentLanguage())
             utterance.rate = AVSpeechUtteranceDefaultSpeechRate * 0.78
             utterance.pitchMultiplier = 1.08
-            utterance.volume = 0.95
+            utterance.volume = isMuted ? 0.0 : 0.95
             synthesizer.speak(utterance)
         }
     }
@@ -159,6 +162,32 @@ final class AudioService: NSObject, ObservableObject, AVSpeechSynthesizerDelegat
     private func currentLanguage() -> AppLanguage {
         let code = UserDefaults.standard.string(forKey: "selectedLanguage") ?? AppLanguage.english.rawValue
         return AppLanguage(rawValue: code) ?? .english
+    }
+
+    // MARK: - New Controls
+
+    func toggleMute() {
+        isMuted.toggle()
+        // If we are currently playing, we must re-scrub to the exact point 
+        // to re-emit the utterance with the new volume parameter
+        if isPlaying {
+            let time = currentTime
+            scrub(to: time)
+        }
+    }
+
+    func startSleepTimer(minutes: Int) {
+        sleepTimer?.invalidate()
+        sleepTimer = Timer.scheduledTimer(withTimeInterval: TimeInterval(minutes * 60), repeats: false) { [weak self] _ in
+            Task { @MainActor in
+                self?.stopAudio()
+            }
+        }
+    }
+    
+    func cancelSleepTimer() {
+        sleepTimer?.invalidate()
+        sleepTimer = nil
     }
 
     // MARK: - Voice Selection

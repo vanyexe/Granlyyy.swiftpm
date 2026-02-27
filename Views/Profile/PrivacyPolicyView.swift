@@ -2,6 +2,7 @@ import SwiftUI
 
 struct PrivacyPolicyView: View {
     @Environment(\.dismiss) private var dismiss
+    @EnvironmentObject var lang: LanguageManager
 
     var body: some View {
         ZStack {
@@ -32,7 +33,7 @@ struct PrivacyPolicyView: View {
                         .shadow(color: .black.opacity(0.05), radius: 10)
 
                         VStack(spacing: 6) {
-                            Text("Privacy Policy")
+                            Text(L10n.t(.privacyPolicy))
                                 .font(.granlyTitle2)
                                 .foregroundStyle(Color.themeText)
 
@@ -48,7 +49,7 @@ struct PrivacyPolicyView: View {
                     .padding(.top, 40)
 
                     // ── Intro blurb ──────────────────────────────────────
-                    Text("At Granly, your privacy is as sacred as grandma's secret recipe. Here's exactly what we do — and don't do — with your information.")
+                    Text(L10n.t(.privacyIntroBody))
                         .font(.granlyBody)
                         .foregroundStyle(Color.themeText.opacity(0.85))
                         .multilineTextAlignment(.center)
@@ -103,8 +104,9 @@ struct PrivacyPolicyView: View {
                 }
             }
         }
-        .navigationTitle("Privacy Policy")
+        .navigationTitle(L10n.t(.privacyPolicy))
         .navigationBarTitleDisplayMode(.inline)
+        .id(lang.selectedLanguage)
     }
 }
 

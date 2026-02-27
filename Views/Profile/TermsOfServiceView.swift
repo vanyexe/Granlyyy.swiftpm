@@ -2,6 +2,7 @@ import SwiftUI
 
 struct TermsOfServiceView: View {
     @Environment(\.dismiss) private var dismiss
+    @EnvironmentObject var lang: LanguageManager
 
     var body: some View {
         ZStack {
@@ -32,7 +33,7 @@ struct TermsOfServiceView: View {
                         .shadow(color: .black.opacity(0.05), radius: 10)
 
                         VStack(spacing: 6) {
-                            Text("Terms of Service")
+                            Text(L10n.t(.termsOfService))
                                 .font(.granlyTitle2)
                                 .foregroundStyle(Color.themeText)
 
@@ -48,7 +49,7 @@ struct TermsOfServiceView: View {
                     .padding(.top, 40)
 
                     // ── Intro blurb ──────────────────────────────────────
-                    Text("These terms govern your use of Granly. Please take a moment to read them — they're written with the same warmth and care as everything else in this app.")
+                    Text(L10n.t(.termsIntroBody))
                         .font(.granlyBody)
                         .foregroundStyle(Color.themeText.opacity(0.85))
                         .multilineTextAlignment(.center)
@@ -109,7 +110,8 @@ struct TermsOfServiceView: View {
                 }
             }
         }
-        .navigationTitle("Terms of Service")
+        .navigationTitle(L10n.t(.termsOfService))
         .navigationBarTitleDisplayMode(.inline)
+        .id(lang.selectedLanguage)
     }
 }
