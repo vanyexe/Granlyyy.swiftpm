@@ -43,9 +43,9 @@ struct SplashView: View {
 
                 // ── "Granly" Script Title ──────────────────────────────
                 Text("Granly")
-                    .font(.custom("Snell Roundhand", size: 62))
+                    .font(.custom("Snell Roundhand", size: 70))
                     .foregroundStyle(Color(red: 0.35, green: 0.18, blue: 0.08))
-                    .shadow(color: Color(red: 0.35, green: 0.18, blue: 0.08).opacity(0.20), radius: 4, x: 0, y: 3)
+                    .shadow(color: Color(red: 0.35, green: 0.18, blue: 0.08).opacity(0.20), radius: 8, x: 0, y: 3)
                     .offset(y: titleOffset)
                     .opacity(titleOpacity)
 

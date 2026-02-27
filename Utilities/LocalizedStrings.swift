@@ -29,6 +29,7 @@ enum L10nKey: String {
 
     // MARK: Story
     case tellingFrom, readMin, shuffle, story, loading
+    case playingFromLibrary, grandmasStories, narratedByGrandma, preparingStory, storyPreview, showFullStory
 
     // MARK: Quick Toast messages (Grandma tap)
     case toastHehe, toastILoveYou, toastYoureDoing, toastAlwaysHere, toastOhMy
@@ -89,8 +90,22 @@ enum L10nKey: String {
     case whatHappened, lifeLessons, grandmaAsks, growthTakeaway, yourReflection, continueYourJourney, talkGrandmaAboutThis
 
     // MARK: About Granly
-    case aboutGranly, ourMission, missionBody, rateAppStore, privacyPolicy, termsOfService, designedWithCare, copyright
+    case aboutGranly, ourMission, missionBody, missionBody2, missionBody3
+    case rateAppStore, privacyPolicy, termsOfService, designedWithCare, copyright
     case websiteLabel
+    // Legal pages
+    case privacyDataWeCollect, privacyDataWeCollectBody
+    case privacyHowWeUse, privacyHowWeUseBody
+    case privacyChildren, privacyChildrenBody
+    case privacyStorage, privacyStorageBody
+    case privacyContact, privacyContactBody
+    case termsAcceptance, termsAcceptanceBody
+    case termsUse, termsUseBody
+    case termsIP, termsIPBody
+    case termsDisclaimer, termsDisclaimerBody
+    case termsChanges, termsChangesBody
+    case termsContact, termsContactBody
+    case legalLastUpdated
 
     // MARK: Grandma Makeover
     case saveLabel
@@ -178,6 +193,9 @@ struct L10n {
 
             .tellingFrom: "TELLING FROM", .readMin: "min read",
             .shuffle: "Shuffle", .story: "Story", .loading: "Loading...",
+            .playingFromLibrary: "PLAYING FROM YOUR LIBRARY", .grandmasStories: "Grandma's Stories",
+            .narratedByGrandma: "Narrated by Grandma", .preparingStory: "Preparing story…",
+            .storyPreview: "STORY PREVIEW", .showFullStory: "Show Full Story",
 
             .toastHehe: "Hehe!", .toastILoveYou: "I love you, dear!",
             .toastYoureDoing: "You're doing great!", .toastAlwaysHere: "Always here for you",
@@ -259,10 +277,39 @@ struct L10n {
             .talkGrandmaAboutThis: "Talk to Grandma about this",
 
             .aboutGranly: "About Granly", .ourMission: "Our Mission",
-            .missionBody: "Granly was built with a simple wish: to bring warmth, comfort, and timeless storytelling magic into your daily life. It is your quiet corner to pause, breathe, and feel loved.",
+            .missionBody: "Granly was born from a heartfelt wish — to keep the warmth of a grandmother's love alive in everyday moments. In a world that moves too fast, we believe everyone deserves a quiet place to pause, breathe, and feel held.",
+            .missionBody2: "We craft stories, wisdom, and gentle conversations that feel like a hug from someone who has lived, loved, and learned. Every feature in Granly is built with care, just the way a grandma bakes her favourite recipe — slowly, lovingly, and always for you.",
+            .missionBody3: "Our hope is simple: that Granly helps you feel a little less alone, a little more grounded, and a little closer to the wisdom that has carried generations forward.",
             .rateAppStore: "Rate on App Store", .privacyPolicy: "Privacy Policy",
             .termsOfService: "Terms of Service", .designedWithCare: "Designed & Developed with Care",
             .copyright: "© 2026 Granly App", .websiteLabel: "Website",
+
+            // Legal pages – English
+            .privacyDataWeCollect: "Data We Don't Collect",
+            .privacyDataWeCollectBody: "Granly is built entirely offline. We do not collect, transmit, or store any personal information on external servers. All data you create — memories, customisations, preferences — lives only on your device and is never shared.",
+            .privacyHowWeUse: "How Your Data Is Used",
+            .privacyHowWeUseBody: "Any information stored by Granly (such as your grandma's name, selected avatar, dark-mode preference, or favourite stories) is used solely to personalise your experience within the app. It is never sold, rented, or shared with any third party.",
+            .privacyChildren: "Children's Privacy",
+            .privacyChildrenBody: "Granly is designed to be safe for all ages. Because we collect no personal data, there is nothing to misuse. If you have concerns about a child's use of the app, please feel free to contact us anytime.",
+            .privacyStorage: "Data Storage & Deletion",
+            .privacyStorageBody: "Your data is stored locally on your device using Apple's secure UserDefaults and on-device storage. You can delete all data at any time by using the 'Reset All Data' option in your Profile, or by uninstalling the app entirely.",
+            .privacyContact: "Contact Us",
+            .privacyContactBody: "If you have any questions, concerns, or requests regarding this Privacy Policy, we would love to hear from you. You can reach us at: granlyapp@gmail.com",
+
+            .termsAcceptance: "Acceptance of Terms",
+            .termsAcceptanceBody: "By downloading and using Granly, you agree to these Terms of Service. If you do not agree with any part of these terms, please do not use the app. These terms may be updated from time to time and the latest version will always be available within the app.",
+            .termsUse: "Use of the App",
+            .termsUseBody: "Granly is intended for personal, non-commercial use. You agree to use the app in a way that is respectful and lawful. You must not attempt to reverse-engineer, copy, or reproduce any part of the app without written permission.",
+            .termsIP: "Intellectual Property",
+            .termsIPBody: "All stories, artwork, characters (including Granly the grandma), animations, and written content within the app are the intellectual property of Granly App © 2026. All rights are reserved. The stories and wisdom shared in the app are inspired by universal human experience and are created with love.",
+            .termsDisclaimer: "Disclaimer",
+            .termsDisclaimerBody: "Granly is provided 'as is', without warranty of any kind. While we strive to offer a comforting and reliable experience, we do not guarantee the app will be free of errors or interruptions. Granly is not a substitute for professional mental health support — if you are struggling, please reach out to a qualified professional.",
+            .termsChanges: "Changes to These Terms",
+            .termsChangesBody: "We may update these Terms of Service occasionally to reflect changes in the app or applicable law. We will notify you of significant changes through an in-app notice. Your continued use of Granly after any change constitutes your acceptance of the new terms.",
+            .termsContact: "Contact Us",
+            .termsContactBody: "For any questions about these Terms of Service, please contact us at: granlyapp@gmail.com",
+
+            .legalLastUpdated: "Last updated: February 2026",
 
             .saveLabel: "Save",
             .optionStyle: "Style", .optionColor: "Color", .optionFrames: "Frames",
@@ -333,6 +380,9 @@ struct L10n {
 
             .tellingFrom: "यह कहानी है", .readMin: "मिनट पढ़ें",
             .shuffle: "बदलें", .story: "कहानी", .loading: "लोड हो रहा है...",
+            .playingFromLibrary: "आपकी लाइब्रेरी से", .grandmasStories: "दादी की कहानियाँ",
+            .narratedByGrandma: "दादी द्वारा सुनाई गई", .preparingStory: "कहानी तैयार हो रही है...",
+            .storyPreview: "कहानी की झलक", .showFullStory: "पूरी कहानी देखें",
 
             .toastHehe: "हेहे!", .toastILoveYou: "मैं आपसे प्यार करती हूँ!",
             .toastYoureDoing: "आप बहुत अच्छा कर रहे हैं!", .toastAlwaysHere: "हमेशा आपके साथ हूँ",
@@ -488,6 +538,9 @@ struct L10n {
 
             .tellingFrom: "CONTANDO DESDE", .readMin: "min de lectura",
             .shuffle: "Aleatorio", .story: "Historia", .loading: "Cargando...",
+            .playingFromLibrary: "REPRODUCIENDO DE TU BIBLIOTECA", .grandmasStories: "Historias de la Abuela",
+            .narratedByGrandma: "Narrado por la Abuela", .preparingStory: "Preparando historia...",
+            .storyPreview: "VISTA PREVIA DE LA HISTORIA", .showFullStory: "Mostrar Historia Completa",
 
             .toastHehe: "¡Jeje!", .toastILoveYou: "¡Te quiero mucho!",
             .toastYoureDoing: "¡Lo estás haciendo genial!", .toastAlwaysHere: "Aquí estaré siempre",
@@ -642,6 +695,9 @@ struct L10n {
 
             .tellingFrom: "RACONTÉ DEPUIS", .readMin: "min de lecture",
             .shuffle: "Mélanger", .story: "Histoire", .loading: "Chargement...",
+            .playingFromLibrary: "LECTURE DEPUIS VOTRE BIBLIOTHÈQUE", .grandmasStories: "Histoires de Grand-mère",
+            .narratedByGrandma: "Raconté par Grand-mère", .preparingStory: "Préparation de l'histoire...",
+            .storyPreview: "APERÇU DE L'HISTOIRE", .showFullStory: "Afficher l'histoire complète",
 
             .toastHehe: "Hehe!", .toastILoveYou: "Je vous aime!",
             .toastYoureDoing: "Vous faites du bon travail!", .toastAlwaysHere: "Toujours là pour vous",
@@ -796,6 +852,9 @@ struct L10n {
 
             .tellingFrom: "倾听源自", .readMin: "分钟阅读",
             .shuffle: "随机", .story: "故事", .loading: "加载中...",
+            .playingFromLibrary: "正在播放你的库", .grandmasStories: "奶奶的故事",
+            .narratedByGrandma: "由奶奶讲述", .preparingStory: "正在准备故事...",
+            .storyPreview: "故事预览", .showFullStory: "显示完整故事",
 
             .toastHehe: "呵呵！", .toastILoveYou: "我爱你，亲爱的！",
             .toastYoureDoing: "你做得很棒！", .toastAlwaysHere: "永远在这里陪伴你",

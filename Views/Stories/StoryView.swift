@@ -123,39 +123,38 @@ struct StoryView: View {
 
                         // 1. TOP HEADER ─────────────────────────────────
                         topHeader
-                            .padding(.top, geo.safeAreaInsets.top + 4)
-                            .padding(.bottom, 16)
+                            .padding(.top, 16)
+                            .padding(.bottom, 8)
+                            .padding(.horizontal, 24)
 
-                        // 2. 3D MODEL (album-art area) ──────────────────
-                        let cardSize: CGFloat = {
-                            let w = max(geo.size.width, 0)
-                            return max(min(w - 64, 300), 120)
-                        }()
-                        avatarCard(size: cardSize)
-                            .padding(.horizontal, 32)
-                            .padding(.bottom, 24)
+                        // 2. 3D MODEL ───────────────────────────────────
+                        let avatarSize = min(geo.size.width - 48, 360)
+                        avatarCard(size: max(avatarSize, 100))
+                            .frame(maxWidth: .infinity)
+                            .padding(.horizontal, 24)
+                            .padding(.bottom, 28)
 
                         // 3. TITLE ROW ──────────────────────────────────
                         if let story = story {
                             titleRow(story: story)
-                                .padding(.horizontal, 28)
+                                .padding(.horizontal, 24)
                                 .padding(.bottom, 20)
                         }
 
                         // 4. SEEK BAR ───────────────────────────────────
                         seekBarSection
-                            .padding(.horizontal, 28)
+                            .padding(.horizontal, 24)
                             .padding(.bottom, 20)
 
                         // 5. PLAYBACK CONTROLS ──────────────────────────
                         controlsRow
-                            .padding(.horizontal, 20)
-                            .padding(.bottom, 16)
+                            .padding(.horizontal, 24)
+                            .padding(.bottom, 20)
 
                         // 6. UTILITY BAR ────────────────────────────────
                         utilityBar
-                            .padding(.horizontal, 28)
-                            .padding(.bottom, 24)
+                            .padding(.horizontal, 24)
+                            .padding(.bottom, 28)
 
                         // 7. STORY PREVIEW CARD ─────────────────────────
                         if let story = story, !syncEngine.lines.isEmpty {
@@ -164,10 +163,11 @@ struct StoryView: View {
                                 .padding(.bottom, geo.safeAreaInsets.bottom + 24)
                         }
                     }
+                    .frame(maxWidth: min(geo.size.width, 500))
+                    .frame(maxWidth: .infinity, alignment: .center)
                 }
             }
         }
-        .ignoresSafeArea(edges: .top)
         .navigationBarBackButtonHidden(true)
         .sheet(isPresented: $showFullLyrics) {
             if let story = story {
@@ -206,37 +206,40 @@ struct StoryView: View {
 
     // MARK: ── 1. Top Header ─────────────────────────────────────────
     private var topHeader: some View {
-        HStack {
+        HStack(alignment: .center, spacing: 0) {
+            // Back button
             Button { dismiss() } label: {
                 Image(systemName: "chevron.down")
                     .font(.system(size: 16, weight: .semibold))
                     .foregroundStyle(.white)
-                    .frame(width: 38, height: 38)
-                    .background(.white.opacity(0.10), in: Circle())
+                    .frame(width: 40, height: 40)
+                    .background(.white.opacity(0.12), in: Circle())
             }
-            Spacer()
+
+            // Centre title block
             VStack(spacing: 2) {
-                Text("PLAYING FROM YOUR LIBRARY")
+                Text(L10n.t(.playingFromLibrary))
                     .font(.system(size: 11, weight: .bold, design: .rounded))
-                    .foregroundStyle(.white.opacity(0.60))
+                    .foregroundStyle(.white.opacity(0.55))
                     .tracking(0.8)
-                Text("Grandma's Stories")
+                Text(L10n.t(.grandmasStories))
                     .font(.system(size: 15, weight: .bold, design: .rounded))
                     .foregroundStyle(.white)
             }
-            Spacer()
+            .frame(maxWidth: .infinity)
+
+            // More-options button
             Menu {
-                Button { showMoreMenu = false } label: { Label("Share Story", systemImage: "square.and.arrow.up") }
+                Button { } label: { Label("Share Story", systemImage: "square.and.arrow.up") }
                 Button(role: .destructive) { audioService.stopAudio() } label: { Label("Stop Playback", systemImage: "stop.fill") }
             } label: {
                 Image(systemName: "ellipsis")
                     .font(.system(size: 16, weight: .semibold))
                     .foregroundStyle(.white)
-                    .frame(width: 38, height: 38)
-                    .background(.white.opacity(0.10), in: Circle())
+                    .frame(width: 40, height: 40)
+                    .background(.white.opacity(0.12), in: Circle())
             }
         }
-        .padding(.horizontal, 20)
     }
 
     // MARK: ── 2. Avatar Card ─────────────────────────────────────────
@@ -281,14 +284,14 @@ struct StoryView: View {
 
     // MARK: ── 3. Title Row ───────────────────────────────────────────
     private func titleRow(story: Story) -> some View {
-        HStack(alignment: .top, spacing: 12) {
-            VStack(alignment: .leading, spacing: 6) {
+        HStack(alignment: .center, spacing: 12) {
+            VStack(alignment: .leading, spacing: 5) {
                 Text(story.title)
-                    .font(.system(size: 26, weight: .bold, design: .rounded))
+                    .font(.system(size: 24, weight: .bold, design: .rounded))
                     .foregroundStyle(.white)
                     .lineLimit(2)
-                Text("Narrated by Grandma")
-                    .font(.system(size: 16, weight: .medium))
+                Text(L10n.t(.narratedByGrandma))
+                    .font(.system(size: 15, weight: .medium))
                     .foregroundStyle(.white.opacity(0.60))
             }
             Spacer()
@@ -305,40 +308,37 @@ struct StoryView: View {
                     .scaleEffect(liked ? 1.12 : 1.0)
                     .animation(.spring(response: 0.3, dampingFraction: 0.5), value: liked)
             }
-            .padding(.top, 2)
         }
     }
 
     // MARK: ── 4. Seek Bar ────────────────────────────────────────────
     private var seekBarSection: some View {
-        VStack(spacing: 8) {
+        VStack(spacing: 6) {
             if audioService.isPreparingAudio {
                 HStack {
-                    Text("Preparing story…")
+                    Text(L10n.t(.preparingStory))
                         .font(.system(size: 12, weight: .medium))
                         .foregroundStyle(.white.opacity(0.50))
                     Spacer()
                     ProgressView().tint(.white.opacity(0.5)).scaleEffect(0.7)
                 }
+                .frame(height: 14)
             } else {
                 GeometryReader { g in
                     let totalW = max(g.size.width, 1)
                     let filled = totalW * CGFloat(max(0, min(1, currentRatio)))
                     ZStack(alignment: .leading) {
-                        // Track
                         Capsule()
                             .fill(.white.opacity(0.22))
                             .frame(height: 4)
-                        // Fill
                         Capsule()
                             .fill(.white)
-                            .frame(width: filled, height: 4)
-                        // Thumb
+                            .frame(width: max(0, filled), height: 4)
                         Circle()
                             .fill(.white)
                             .frame(width: 16, height: 16)
                             .shadow(color: .black.opacity(0.35), radius: 6)
-                            .offset(x: filled.isFinite ? max(0, filled - 8) : 0)
+                            .offset(x: (filled.isFinite && filled >= 8) ? filled - 8 : 0)
                             .scaleEffect(audioService.isScrubbing ? 1.45 : 1.0)
                             .animation(.spring(response: 0.25, dampingFraction: 0.6), value: audioService.isScrubbing)
                     }
@@ -353,7 +353,7 @@ struct StoryView: View {
                             .onEnded { _ in audioService.scrubbingEnded() }
                     )
                 }
-                .frame(height: 14)
+                .frame(height: 16)
             }
 
             HStack {
@@ -379,6 +379,7 @@ struct StoryView: View {
                 Image(systemName: "shuffle")
                     .font(.system(size: 20, weight: .medium))
                     .foregroundStyle(.white.opacity(0.70))
+                    .frame(width: 44, height: 44)
             }
             .frame(maxWidth: .infinity)
 
@@ -395,6 +396,7 @@ struct StoryView: View {
                 Image(systemName: "backward.end.fill")
                     .font(.system(size: 24, weight: .semibold))
                     .foregroundStyle(.white)
+                    .frame(width: 44, height: 44)
             }
             .frame(maxWidth: .infinity)
 
@@ -435,6 +437,7 @@ struct StoryView: View {
                 Image(systemName: "goforward.15")
                     .font(.system(size: 24, weight: .semibold))
                     .foregroundStyle(.white)
+                    .frame(width: 44, height: 44)
             }
             .frame(maxWidth: .infinity)
 
@@ -443,8 +446,9 @@ struct StoryView: View {
                 UIImpactFeedbackGenerator(style: .light).impactOccurred()
             } label: {
                 Image(systemName: "timer")
-                    .font(.system(size: 17, weight: .medium))
+                    .font(.system(size: 20, weight: .medium))
                     .foregroundStyle(.white.opacity(0.60))
+                    .frame(width: 44, height: 44)
             }
             .frame(maxWidth: .infinity)
         }
@@ -452,30 +456,30 @@ struct StoryView: View {
 
     // MARK: ── 6. Utility Bar ─────────────────────────────────────────
     private var utilityBar: some View {
-        HStack {
-            Image(systemName: "hifispeaker.2")
-                .font(.system(size: 16, weight: .medium))
-                .foregroundStyle(.white.opacity(0.50))
+        HStack(alignment: .center, spacing: 0) {
 
-            Spacer()
+            Image(systemName: "hifispeaker.2")
+                .font(.system(size: 18, weight: .medium))
+                .foregroundStyle(.white.opacity(0.50))
+                .frame(maxWidth: .infinity)
 
             if let s = story {
                 ShareLink(item: "\(s.title)\n\n\(s.content)\n\n— From Granly") {
                     Image(systemName: "square.and.arrow.up")
-                        .font(.system(size: 16, weight: .medium))
+                        .font(.system(size: 18, weight: .medium))
                         .foregroundStyle(.white.opacity(0.50))
                 }
+                .frame(maxWidth: .infinity)
+            } else {
+                Spacer().frame(maxWidth: .infinity)
             }
 
-            Spacer()
-
-            Button {
-                showFullLyrics = true
-            } label: {
+            Button { showFullLyrics = true } label: {
                 Image(systemName: "list.bullet")
-                    .font(.system(size: 16, weight: .medium))
+                    .font(.system(size: 18, weight: .medium))
                     .foregroundStyle(.white.opacity(0.50))
             }
+            .frame(maxWidth: .infinity)
         }
     }
 
@@ -484,7 +488,7 @@ struct StoryView: View {
         VStack(alignment: .leading, spacing: 0) {
             // Card header
             HStack {
-                Text("STORY PREVIEW")
+                Text(L10n.t(.storyPreview))
                     .font(.system(size: 11, weight: .bold, design: .rounded))
                     .foregroundStyle(.white.opacity(0.75))
                     .tracking(0.8)
@@ -518,7 +522,7 @@ struct StoryView: View {
                 showFullLyrics = true
                 UIImpactFeedbackGenerator(style: .light).impactOccurred()
             } label: {
-                Text("Show Full Story")
+                Text(L10n.t(.showFullStory))
                     .font(.system(size: 13, weight: .semibold, design: .rounded))
                     .foregroundStyle(cardAccent)
                     .padding(.horizontal, 20)

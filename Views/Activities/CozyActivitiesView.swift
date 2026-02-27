@@ -20,7 +20,7 @@ struct CozyActivitiesView: View {
                         // ── Hero Header ─────────────────────────────
                         VStack(alignment: .leading, spacing: 6) {
                             Text(L10n.t(.cozyActivities))
-                                .font(.system(size: 28, weight: .bold, design: .rounded))
+                                .font(.system(size: 35, weight: .bold, design: .rounded))
                                 .foregroundStyle(Color.themeText)
                             Text(L10n.t(.cozyActivitiesSubtitle))
                                 .font(.granlySubheadline)

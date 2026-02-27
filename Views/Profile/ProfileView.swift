@@ -14,7 +14,6 @@ struct ProfileView: View {
     @State private var showNameEditAlert = false
     @State private var tempName = ""
     @State private var showResetAlert = false
-    @State private var showRateAlert = false
     @State private var showAvatarSheet = false
     
     var body: some View {
@@ -114,7 +113,6 @@ struct ProfileView: View {
                             .buttonStyle(.plain)
                             
                             SettingsActionRow(icon: "sparkles", color: .purple, title: L10n.t(.viewOnboarding)) { showOnboarding = true }
-                            SettingsActionRow(icon: "star.fill", color: .yellow, title: L10n.t(.rateGrantly)) { showRateAlert = true }
                             
                             ShareLink(item: "Check out Granly! It's the sweetest storytelling app ever.") {
                                 HStack {
@@ -162,11 +160,6 @@ struct ProfileView: View {
                 TextField(L10n.t(.grandmasName), text: $tempName)
                 Button(L10n.t(.cancel), role: .cancel) { }
                 Button(L10n.t(.save)) { grandmaName = tempName }
-            }
-            .alert(L10n.t(.rateMessage), isPresented: $showRateAlert) {
-                Button(L10n.t(.ok), role: .cancel) { }
-            } message: {
-                Text(L10n.t(.thankYouForLove))
             }
             .alert(L10n.t(.resetDataQuestion), isPresented: $showResetAlert) {
                 Button(L10n.t(.cancel), role: .cancel) { }
