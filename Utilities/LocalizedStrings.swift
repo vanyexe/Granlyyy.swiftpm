@@ -145,6 +145,10 @@ enum L10nKey: String {
     // MARK: Home View
     case dailyQuoteText, home
 
+    // MARK: Avatar & Player UI
+    case currentPreview, themedIcons, resetToDefault, changeProfilePicture, chooseFromGallery
+    case sleepTimer, playing, paused
+
     // MARK: Missing translations (Timers, Buttons, MemBox, Activities)
     case savedMemoriesTitle, storiesSavedCount, noMemoriesBody
     case termsIntroBody, privacyIntroBody
@@ -162,6 +166,7 @@ enum L10nKey: String {
     case notifStoryTitle, notifStoryBody, notifStoryBody2
     case notifActivityTitle, notifActivityBody, notifActivityBody2
     case notifStreakTitle, notifStreakBody
+    case notifDisabledTitle, notifDisabledBody, notifSettingsButton
 }
 
 // MARK: - L10n Lookup Engine
@@ -392,7 +397,20 @@ struct L10n {
             .notifActivityBody: "Try a 5-minute gratitude activity today.",
             .notifActivityBody2: "Let's build emotional strength with today's activity.",
             .notifStreakTitle: "You're on a roll!",
-            .notifStreakBody: "3 days of story bonding in a row — Grandma is so proud!"
+            .notifStreakBody: "3 days of story bonding in a row — Grandma is so proud!",
+            .notifDisabledTitle: "Notifications disabled",
+            .notifDisabledBody: "Enable them in iOS Settings → Granly.",
+            .notifSettingsButton: "Settings",
+
+            // Avatar & Player
+            .currentPreview: "Current Preview",
+            .themedIcons: "Themed Icons",
+            .resetToDefault: "Reset to Default Grandma",
+            .changeProfilePicture: "Change Profile Picture",
+            .chooseFromGallery: "Choose from Gallery",
+            .sleepTimer: "Sleep Timer",
+            .playing: "Playing",
+            .paused: "Paused"
         ],
 
         // ─────────────────────────── HINDI ──────────────────────────────
@@ -604,7 +622,20 @@ struct L10n {
             .notifActivityBody: "आज एक 5 मिनट की कृतज्ञता गतिविधि करें।",
             .notifActivityBody2: "आज की गतिविधि के साथ भावनात्मक शक्ति बनाएं।",
             .notifStreakTitle: "बहुत अच्छे!",
-            .notifStreakBody: "3 दिन कहानी पढ़ी — दादी को आप पर गर्व है!"
+            .notifStreakBody: "3 दिन कहानी पढ़ी — दादी को आप पर गर्व है!",
+            .notifDisabledTitle: "सूचनाएँ अक्षम हैं",
+            .notifDisabledBody: "इन्हें iOS सेटिंग्स → ग्रैनली में सक्षम करें।",
+            .notifSettingsButton: "सेटिंग्स",
+
+            // Avatar & Player
+            .currentPreview: "वर्तमान पूर्वावलोकन",
+            .themedIcons: "थीम वाले आइकन",
+            .resetToDefault: "डिफ़ॉल्ट दादी पर रीसेट करें",
+            .changeProfilePicture: "प्रोफ़ाइल चित्र बदलें",
+            .chooseFromGallery: "गैलरी से चुनें",
+            .sleepTimer: "नींद टाइमर",
+            .playing: "चल रहा है",
+            .paused: "रुका हुआ"
         ],
 
         // ─────────────────────────── SPANISH ─────────────────────────────
@@ -816,7 +847,20 @@ struct L10n {
             .notifActivityBody: "Prueba una actividad de gratitud de 5 minutos hoy.",
             .notifActivityBody2: "Construyamos fortaleza emocional con la actividad de hoy.",
             .notifStreakTitle: "¡Sigue así!",
-            .notifStreakBody: "¡3 días de cuentos seguidos — la abuela está muy orgullosa!"
+            .notifStreakBody: "¡3 días de cuentos seguidos — la abuela está muy orgullosa!",
+            .notifDisabledTitle: "Notificaciones desactivadas",
+            .notifDisabledBody: "Habilítalas en Ajustes de iOS → Granly.",
+            .notifSettingsButton: "Ajustes",
+
+            // Avatar & Player
+            .currentPreview: "Vista previa actual",
+            .themedIcons: "Iconos temáticos",
+            .resetToDefault: "Restablecer a la abuela por defecto",
+            .changeProfilePicture: "Cambiar foto de perfil",
+            .chooseFromGallery: "Elegir de la galería",
+            .sleepTimer: "Temporizador de apagado",
+            .playing: "Reproduciendo",
+            .paused: "En pausa"
         ],
 
         // ─────────────────────────── FRENCH ─────────────────────────────
@@ -1028,7 +1072,20 @@ struct L10n {
             .notifActivityBody: "Essayez une activité de gratitude de 5 minutes aujourd'hui.",
             .notifActivityBody2: "Construisons la force émotionnelle avec l'activité d'aujourd'hui.",
             .notifStreakTitle: "Continuez!",
-            .notifStreakBody: "3 jours d'histoires de suite — Grand-mère est si fière!"
+            .notifStreakBody: "3 jours d'histoires de suite — Grand-mère est si fière!",
+            .notifDisabledTitle: "Notifications désactivées",
+            .notifDisabledBody: "Activez-les dans les Réglages iOS → Granly.",
+            .notifSettingsButton: "Réglages",
+
+            // Avatar & Player
+            .currentPreview: "Aperçu actuel",
+            .themedIcons: "Icônes thématiques",
+            .resetToDefault: "Réinitialiser à la grand-mère par défaut",
+            .changeProfilePicture: "Modifier la photo de profil",
+            .chooseFromGallery: "Choisir dans la galerie",
+            .sleepTimer: "Minuteur de sommeil",
+            .playing: "Lecture en cours",
+            .paused: "En pause"
         ],
 
 
@@ -1044,7 +1101,7 @@ struct L10n {
             .onboarding1Title: "欢迎来到 格兰利",
             .onboarding1Description: "一个充满温馨故事和奶奶智慧的舒适角落。",
             .onboarding2Title: "适合各种心情的故事",
-            .onboarding2Description: "开心、难过、还是只需要一个拥抱？Granly 都有适合你的故事。",
+            .onboarding2Description: "开心、难过、还是只需要一个拥抱？格兰利 都有适合你的故事。",
             .onboarding3Title: "每日智慧",
             .onboarding3Description: "用温柔的建议和永恒的人生哲理开始你的一天。",
             .onboarding4Title: "永远在这里陪伴你",
@@ -1085,7 +1142,7 @@ struct L10n {
             .aboutGrantly: "关于 格兰利", .viewOnboarding: "查看引导",
             .rateGrantly: "评价 格兰利", .shareWithFriends: "分享给朋友",
             .resetAllData: "重置所有数据", .storiesRead: "阅读的故事",
-            .renameGrandma: "重命名奶奶", .shareMessage: "来看看Granly吧！这是有史以来最温馨的故事应用。",
+            .renameGrandma: "重命名奶奶", .shareMessage: "来看看格兰利吧！这是有史以来最温馨的故事应用。",
 
             .resetDataQuestion: "重置数据?",
             .resetDataMessage: "这将清除您的阅读历史、收藏库和个性化设置。此操作无法撤销。",
@@ -1151,7 +1208,7 @@ struct L10n {
             .talkGrandmaAboutThis: "就此与奶奶交流",
 
             .aboutGranly: "关于格兰利", .ourMission: "我们的使命",
-            .missionBody: "Granly的诞生源于一个简单的愿望：将温暖、安慰和永恒的故事魔力带入您的日常生活。",
+            .missionBody: "格兰利的诞生源于一个简单的愿望：将温暖、安慰和永恒的故事魔力带入您的日常生活。",
             .missionBody2: "我们创作故事、智慧和温柔的对话，感觉就像一个曾经生活、爱过和学习过的人给你的拥抱。格兰利中的每个功能都是精心打造的，就像奶奶烤她最爱的食谱一样——慢慢地、充满爱意地，永远为了你。",
             .missionBody3: "我们的希望很简单：让格兰利帮助您感到少一点孤独，多一点踏实，更接近那些让一代又一代人前进的智慧。",
             .rateAppStore: "在应用商店评分", .privacyPolicy: "隐私政策",
@@ -1160,26 +1217,26 @@ struct L10n {
 
             // Legal pages – Mandarin
             .privacyDataWeCollect: "我们不收集的数据",
-            .privacyDataWeCollectBody: "Granly完全在离线状态下运行。我们不会在外部服务器上收集、传输或存储任何个人信息。您创建的所有数据——回忆、个性化设置、偏好——只保存在您的设备上，从不共享。",
+            .privacyDataWeCollectBody: "格兰利完全在离线状态下运行。我们不会在外部服务器上收集、传输或存储任何个人信息。您创建的所有数据——回忆、个性化设置、偏好——只保存在您的设备上，从不共享。",
             .privacyHowWeUse: "您的数据如何使用",
-            .privacyHowWeUseBody: "Granly存储的任何信息（如奶奶的名字、选择的头像、深色模式偏好或最喜欢的故事）仅用于在应用内个性化您的体验。这些信息永远不会被出售、出租或与任何第三方共享。",
+            .privacyHowWeUseBody: "格兰利存储的任何信息（如奶奶的名字、选择的头像、深色模式偏好或最喜欢的故事）仅用于在应用内个性化您的体验。这些信息永远不会被出售、出租或与任何第三方共享。",
             .privacyChildren: "儿童隐私",
-            .privacyChildrenBody: "Granly专为所有年龄段的用户设计。因为我们不收集任何个人数据，所以没有任何可被滥用的信息。如果您对孩子使用此应用程序有任何疑虑，请随时联系我们。",
+            .privacyChildrenBody: "格兰利专为所有年龄段的用户设计。因为我们不收集任何个人数据，所以没有任何可被滥用的信息。如果您对孩子使用此应用程序有任何疑虑，请随时联系我们。",
             .privacyStorage: "数据存储与删除",
             .privacyStorageBody: "您的数据通过Apple安全的本地存储机制存储在您的设备上。您可以随时通过个人资料中的'重置所有数据'选项，或卸载应用程序来删除所有数据。",
             .privacyContact: "联系我们",
             .privacyContactBody: "如果您对本隐私政策有任何问题、疑虑或请求，我们很乐意听取您的意见。您可以通过以下方式联系我们",
 
             .termsAcceptance: "条款接受",
-            .termsAcceptanceBody: "通过下载和使用Granly，您同意这些服务条款。如果您不同意这些条款的任何部分，请不要使用该应用程序。这些条款可能会不时更新，最新版本将始终在应用程序内提供。",
+            .termsAcceptanceBody: "通过下载和使用格兰利，您同意这些服务条款。如果您不同意这些条款的任何部分，请不要使用该应用程序。这些条款可能会不时更新，最新版本将始终在应用程序内提供。",
             .termsUse: "应用程序的使用",
-            .termsUseBody: "Granly仅供个人和非商业用途。您同意以尊重和合法的方式使用该应用程序。未经书面许可，您不得尝试对应用程序的任何部分进行逆向工程、复制或再现。",
+            .termsUseBody: "格兰利仅供个人和非商业用途。您同意以尊重和合法的方式使用该应用程序。未经书面许可，您不得尝试对应用程序的任何部分进行逆向工程、复制或再现。",
             .termsIP: "知识产权",
-            .termsIPBody: "应用程序中的所有故事、艺术作品、角色（包括Granly奶奶）、动画和书面内容均为Granly App © 2026的知识产权。保留所有权利。",
+            .termsIPBody: "应用程序中的所有故事、艺术作品、角色（包括格兰利奶奶）、动画和书面内容均为格兰利应用程序 © 2026的知识产权。保留所有权利。",
             .termsDisclaimer: "免责声明",
-            .termsDisclaimerBody: "Granly按原样提供，不提供任何形式的保证。虽然我们努力提供舒适可靠的体验，但我们不保证应用程序不会出现错误或中断。Granly不能替代专业的心理健康支持。",
+            .termsDisclaimerBody: "格兰利按原样提供，不提供任何形式的保证。虽然我们努力提供舒适可靠的体验，但我们不保证应用程序不会出现错误或中断。格兰利不能替代专业的心理健康支持。",
             .termsChanges: "条款变更",
-            .termsChangesBody: "我们可能会偶尔更新这些服务条款，以反映应用程序或适用法律的变化。我们将通过应用内通知告知您重大变更。您在任何变更后继续使用Granly，即表示您接受新条款。",
+            .termsChangesBody: "我们可能会偶尔更新这些服务条款，以反映应用程序或适用法律的变化。我们将通过应用内通知告知您重大变更。您在任何变更后继续使用格兰利，即表示您接受新条款。",
             .termsContact: "联系我们",
             .termsContactBody: "如有关于这些服务条款的任何问题，请联系我们",
 
@@ -1219,7 +1276,7 @@ struct L10n {
             .home: "首页",
 
             .savedMemoriesTitle: "已保存的记忆", .storiesSavedCount: "%d 个故事已保存", .noMemoriesBody: "当奶奶给你讲了一个你喜欢的故事时，\n点击心形图标永远保存在这里。",
-            .termsIntroBody: "这些条款规定了您对Granly的使用。花点时间阅读它们吧——它们在编写时融入了应用各处相同的温暖与关怀。",
+            .termsIntroBody: "这些条款规定了您对的使用。花点时间阅读它们吧——它们在编写时融入了应用各处相同的温暖与关怀。",
             .privacyIntroBody: "在格兰利，您的隐私像奶奶的秘方一样神圣。这是关于我们对您信息的做法——以及绝不做的。",
             .stopPlaybackAfter: "此后停止音频播放...", .timer5Min: "5 分钟", .timer15Min: "15 分钟", .timer30Min: "30 分钟", .turnOffTimer: "关闭定时器", .shareStory: "分享故事", .stopPlayback: "停止播放",
             .stepNoOfTotal: "步骤 %d / %d", .step: "%d 步", .currentStep: "当前步骤", .back: "返回", .nextStep: "下一步", .completeLabel: "完成", .activityCompleteTitle: "活动完成！", .activityCompleteBody: "您已完成 %@ 的所有 %d 个步骤。做得好。", .tryAgain: "再试一次", .activityComplete: "活动完成", .activityFinishedBody: "活动 %@ 结束。\n做得好——奶奶为你感到骄傲。", .wonderful: "太棒了",
@@ -1241,7 +1298,20 @@ struct L10n {
             .notifActivityBody: "今天尝试一个5分钟的感恩活动。",
             .notifActivityBody2: "用今天的活动建立情感力量。",
             .notifStreakTitle: "继续加油！",
-            .notifStreakBody: "连续3天讲故事 — 奶奶为您感到非常骄傲！"
+            .notifStreakBody: "连续3天讲故事 — 奶奶为您感到非常骄傲！",
+            .notifDisabledTitle: "通知已禁用",
+            .notifDisabledBody: "在 iOS 设置 → Granly 中启用它们。",
+            .notifSettingsButton: "设置",
+
+            // Avatar & Player
+            .currentPreview: "当前预览",
+            .themedIcons: "主题图标",
+            .resetToDefault: "重置为默认奶奶",
+            .changeProfilePicture: "更改资料图片",
+            .chooseFromGallery: "从相册中选择",
+            .sleepTimer: "睡眠阶段定时器",
+            .playing: "正在播放",
+            .paused: "已暂停"
 
         ],
     ]

@@ -472,7 +472,7 @@ struct StoryView: View {
                     .frame(width: 44, height: 44)
             }
             .frame(maxWidth: .infinity)
-            .confirmationDialog("Sleep Timer", isPresented: $showTimerSheet, titleVisibility: .visible) {
+            .confirmationDialog(L10n.t(.sleepTimer), isPresented: $showTimerSheet, titleVisibility: .visible) {
                 Button(L10n.t(.timer5Min)) { audioService.startSleepTimer(minutes: 5) }
                 Button(L10n.t(.timer15Min)) { audioService.startSleepTimer(minutes: 15) }
                 Button(L10n.t(.timer30Min)) { audioService.startSleepTimer(minutes: 30) }
@@ -695,7 +695,7 @@ struct StoryLyricsFullView: View {
                                 .font(.system(size: 14, weight: .semibold))
                                 .foregroundStyle(accentColor)
                         }
-                        Text(audioService.isPlaying ? "Playing" : "Paused")
+                        Text(audioService.isPlaying ? L10n.t(.playing) : L10n.t(.paused))
                             .font(.system(size: 13, weight: .medium))
                             .foregroundStyle(.white.opacity(0.55))
                     }

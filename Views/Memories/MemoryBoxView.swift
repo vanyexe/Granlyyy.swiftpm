@@ -8,7 +8,7 @@ struct MemoryBoxView: View {
     @EnvironmentObject var lang: LanguageManager
     
     private var historicalStories: [HistoricalStory] {
-        HistoricalStoriesData.top10Stories(for: AppLanguage(rawValue: selectedLanguage) ?? .english)
+        HistoricalStoriesData.top10Stories(for: lang.selectedLanguage)
     }
     
     var body: some View {

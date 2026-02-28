@@ -125,10 +125,10 @@ struct NotificationsView: View {
                 .font(.system(size: 20))
                 .foregroundStyle(.red)
             VStack(alignment: .leading, spacing: 2) {
-                Text("Notifications disabled")
+                Text(L10n.t(.notifDisabledTitle))
                     .font(.granlyHeadline)
                     .foregroundStyle(Color.themeText)
-                Text("Enable them in iOS Settings → Granly.")
+                Text(L10n.t(.notifDisabledBody))
                     .font(.granlyBody)
                     .foregroundStyle(.secondary)
             }
@@ -138,7 +138,7 @@ struct NotificationsView: View {
                     UIApplication.shared.open(url)
                 }
             } label: {
-                Text("Settings")
+                Text(L10n.t(.notifSettingsButton))
                     .font(.granlyBodyBold)
                     .foregroundStyle(Color.themeRose)
             }

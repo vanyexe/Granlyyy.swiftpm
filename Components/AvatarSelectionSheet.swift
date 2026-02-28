@@ -25,7 +25,7 @@ struct AvatarSelectionSheet: View {
                     VStack(spacing: 24) {
                         // ── Current Avatar Preview ───────────────────────────
                         VStack(spacing: 12) {
-                            Text("Current Preview")
+                            Text(L10n.t(.currentPreview))
                                 .font(.granlyCaption)
                                 .foregroundStyle(.secondary)
                             
@@ -52,7 +52,7 @@ struct AvatarSelectionSheet: View {
                             
                             // 2. Themed Symbols
                             VStack(alignment: .leading, spacing: 12) {
-                                Text("Themed Icons")
+                                Text(L10n.t(.themedIcons))
                                     .font(.granlyCaption)
                                     .foregroundStyle(.secondary)
                                     .padding(.leading, 10)
@@ -77,7 +77,7 @@ struct AvatarSelectionSheet: View {
                                 avatarType = "default"
                                 dismiss()
                             }) {
-                                Text("Reset to Default Grandma")
+                                Text(L10n.t(.resetToDefault))
                                     .font(.granlyBodyBold)
                                     .foregroundStyle(.secondary)
                                     .padding()
@@ -90,11 +90,11 @@ struct AvatarSelectionSheet: View {
                     }
                 }
             }
-            .navigationTitle("Change Profile Picture")
+            .navigationTitle(L10n.t(.changeProfilePicture))
             .navigationBarTitleDisplayMode(.inline)
             .toolbar {
                 ToolbarItem(placement: .topBarLeading) {
-                    Button("Cancel") { dismiss() }
+                    Button(L10n.t(.cancel)) { dismiss() }
                         .foregroundStyle(Color.themeRose)
                 }
             }
@@ -108,7 +108,7 @@ struct AvatarSelectionSheet: View {
         HStack {
             Image(systemName: "photo.on.rectangle")
                 .foregroundStyle(.blue)
-            Text("Choose from Gallery")
+            Text(L10n.t(.chooseFromGallery))
                 .font(.granlyBodyBold)
             Spacer()
             Image(systemName: "chevron.right")
