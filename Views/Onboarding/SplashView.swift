@@ -14,17 +14,15 @@ struct SplashView: View {
 
     var body: some View {
         ZStack {
-            // ── Warm Parchment Background ──────────────────────────────
+
             ParchmentBackground()
                 .ignoresSafeArea()
 
-            // ── Centered Content ───────────────────────────────────────
             VStack(spacing: 28) {
                 Spacer()
 
-                // ── Grandma Image with Glow ────────────────────────────
                 ZStack {
-                    // Soft glow behind the image
+
                     Circle()
                         .fill(Color(red: 1.0, green: 0.85, blue: 0.50).opacity(0.5))
                         .frame(width: 180, height: 180)
@@ -41,43 +39,43 @@ struct SplashView: View {
                         .opacity(avatarOpacity)
                 }
 
-                // ── "Granly" Script Title ──────────────────────────────
                 Text(L10n.t(.appName))
                     .font(.custom("Snell Roundhand", size: 70))
+                    .multilineTextAlignment(.center)
                     .foregroundStyle(Color(red: 0.35, green: 0.18, blue: 0.08))
                     .shadow(color: Color(red: 0.35, green: 0.18, blue: 0.08).opacity(0.20), radius: 8, x: 0, y: 3)
+                    .frame(maxWidth: .infinity, alignment: .center)
                     .offset(y: titleOffset)
                     .opacity(titleOpacity)
 
                 Spacer()
 
-                // ── Subtle Loading Dots ────────────────────────────────
                 LoadingDots()
                     .opacity(dotOpacity)
                     .padding(.bottom, 50)
             }
         }
         .onAppear {
-            // 1. Glow up first
+
             withAnimation(.easeOut(duration: 1.2)) {
                 glowOpacity = 1
                 glowScale = 1.1
             }
-            // 2. Avatar fades & scales in softly
+
             withAnimation(.easeOut(duration: 1.0).delay(0.2)) {
                 avatarScale = 1.0
                 avatarOpacity = 1
             }
-            // 3. Title slides up and fades in
+
             withAnimation(.easeOut(duration: 0.8).delay(0.6)) {
                 titleOffset = 0
                 titleOpacity = 1
             }
-            // 4. Loading dots fade in gracefully
+
             withAnimation(.easeIn(duration: 0.6).delay(1.2)) {
                 dotOpacity = 1
             }
-            // 5. Auto-transition to next screen
+
             DispatchQueue.main.asyncAfter(deadline: .now() + 3.2) {
                 withAnimation(.easeInOut(duration: 0.6)) {
                     isActive = true
@@ -87,7 +85,6 @@ struct SplashView: View {
     }
 }
 
-// MARK: - Animated Loading Dots
 @MainActor
 struct LoadingDots: View {
     @State private var animate = false
@@ -111,15 +108,13 @@ struct LoadingDots: View {
     }
 }
 
-// MARK: - Parchment / Paper Texture Background
 @MainActor
 struct ParchmentBackground: View {
     var body: some View {
         ZStack {
-            // Base warm cream
+
             Color(red: 0.965, green: 0.915, blue: 0.835)
 
-            // Subtle noise grain overlay
             Canvas { ctx, size in
                 for _ in 0..<7000 {
                     let x = CGFloat.random(in: 0..<size.width)
@@ -133,7 +128,6 @@ struct ParchmentBackground: View {
             }
             .blendMode(.multiply)
 
-            // Edge vignette
             RadialGradient(
                 colors: [
                     Color.clear,

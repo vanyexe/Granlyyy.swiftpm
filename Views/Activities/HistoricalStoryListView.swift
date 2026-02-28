@@ -5,10 +5,10 @@ struct HistoricalStoryListView: View {
     @EnvironmentObject var lang: LanguageManager
 
     private var stories: [HistoricalStory] {
-        // Uses lang.selectedLanguage directly so view re-renders reactively
+
         HistoricalStoriesData.top10Stories(for: lang.selectedLanguage)
     }
-    
+
     var body: some View {
         if #available(iOS 17.0, *) {
             ScrollView {
@@ -18,12 +18,12 @@ struct HistoricalStoryListView: View {
                         .foregroundStyle(Color.themeText)
                         .padding(.horizontal)
                         .padding(.top, 10)
-                    
+
                     Text(L10n.t(.storiesThatShapedUsSubtitle))
                         .font(.granlySubheadline)
                         .foregroundStyle(.secondary)
                         .padding(.horizontal)
-                    
+
                     LazyVStack(spacing: 16) {
                         ForEach(stories) { story in
                             Button(action: {
@@ -42,39 +42,39 @@ struct HistoricalStoryListView: View {
                 HistoricalStoryDetailView(story: story)
             }
         } else {
-            // Fallback on earlier versions
+
         }
     }
 }
 
 struct HistoricalStoryCard: View {
     let story: HistoricalStory
-    
+
     var body: some View {
         HStack(spacing: 16) {
             ZStack {
                 Circle()
                     .fill(Color.themeRose.opacity(0.15))
                     .frame(width: 60, height: 60)
-                
+
                 Image(systemName: story.iconName)
                     .font(.granlyTitle2)
                     .foregroundStyle(Color.themeRose)
             }
-            
+
             VStack(alignment: .leading, spacing: 4) {
                 Text(story.title)
                     .font(.granlyHeadline)
                     .foregroundStyle(Color.themeText)
                     .multilineTextAlignment(.leading)
-                
+
                 Text(story.era)
                     .font(.granlyCaption)
                     .foregroundStyle(.secondary)
             }
-            
+
             Spacer()
-            
+
             Image(systemName: "chevron.right")
                 .foregroundStyle(.tertiary)
         }

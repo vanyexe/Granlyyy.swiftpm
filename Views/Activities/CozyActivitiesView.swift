@@ -1,7 +1,5 @@
 import SwiftUI
 
-// MARK: - Activities List Screen
-
 struct CozyActivitiesView: View {
     @EnvironmentObject var lang: LanguageManager
     private var activities: [CozyActivity] {
@@ -17,7 +15,6 @@ struct CozyActivitiesView: View {
                 ScrollView(showsIndicators: false) {
                     VStack(alignment: .leading, spacing: 28) {
 
-                        // ── Hero Header ─────────────────────────────
                         VStack(alignment: .leading, spacing: 6) {
                             Text(L10n.t(.cozyActivities))
                                 .font(.system(size: 35, weight: .bold, design: .rounded))
@@ -29,7 +26,6 @@ struct CozyActivitiesView: View {
                         .padding(.horizontal, 20)
                         .padding(.top, 16)
 
-                        // ── Activity Grid ────────────────────────────
                         LazyVGrid(
                             columns: [GridItem(.flexible(), spacing: 12), GridItem(.flexible(), spacing: 12)],
                             spacing: 12
@@ -50,8 +46,6 @@ struct CozyActivitiesView: View {
     }
 }
 
-// MARK: - Activity Card
-
 struct CozyActivityCard: View {
     let activity: CozyActivity
     let index: Int
@@ -59,7 +53,7 @@ struct CozyActivityCard: View {
 
     var body: some View {
         VStack(alignment: .leading, spacing: 0) {
-            // Gradient top band
+
             ZStack {
                 LinearGradient(
                     colors: [activity.color.opacity(0.85), activity.color.opacity(0.5)],
@@ -67,7 +61,6 @@ struct CozyActivityCard: View {
                 )
                 .frame(height: 88)
 
-                // Decorative circle
                 Circle()
                     .fill(.white.opacity(0.10))
                     .frame(width: 70, height: 70)
@@ -85,7 +78,6 @@ struct CozyActivityCard: View {
                 bottomTrailingRadius: 0, topTrailingRadius: 16
             ))
 
-            // Info band
             VStack(alignment: .leading, spacing: 4) {
                 Text(activity.title)
                     .font(.system(size: 13, weight: .semibold, design: .rounded))
@@ -117,8 +109,6 @@ struct CozyActivityCard: View {
     }
 }
 
-// MARK: - Immersive Activity Player
-
 struct ActivityPlayerView: View {
     let activity: CozyActivity
     @Environment(\.dismiss) private var dismiss
@@ -132,33 +122,28 @@ struct ActivityPlayerView: View {
 
     var body: some View {
         ZStack {
-            // ── Cinematic background ─────────────────────────
+
             activityBackground
 
-            // ── Main content ─────────────────────────────────
             VStack(spacing: 0) {
                 topBar
                     .padding(.top, 4)
 
                 ScrollView(showsIndicators: false) {
                     VStack(spacing: 24) {
-                        // Animated visual hero
+
                         activityVisual
                             .padding(.top, 8)
 
-                        // Progress bar
                         progressTracker
                             .padding(.horizontal, 24)
 
-                        // Step content card
                         stepCard
                             .padding(.horizontal, 16)
 
-                        // Navigation buttons
                         navigationButtons
                             .padding(.horizontal, 24)
 
-                        // Grandma tip
                         grandmaTipCard
                             .padding(.horizontal, 16)
                     }
@@ -175,7 +160,6 @@ struct ActivityPlayerView: View {
         }
     }
 
-    // MARK: Background
     private var activityBackground: some View {
         ZStack {
             activity.color.opacity(0.12).ignoresSafeArea()
@@ -191,7 +175,6 @@ struct ActivityPlayerView: View {
         }
     }
 
-    // MARK: Top Bar
     private var topBar: some View {
         HStack {
             Button(action: { dismiss() }) {
@@ -220,7 +203,6 @@ struct ActivityPlayerView: View {
 
             Spacer()
 
-            // Category badge
             Text(activity.category)
                 .font(.system(size: 11, weight: .bold, design: .rounded))
                 .foregroundStyle(activity.color)
@@ -233,24 +215,21 @@ struct ActivityPlayerView: View {
         .padding(.bottom, 8)
     }
 
-    // MARK: Animated Visual Hero
     private var activityVisual: some View {
         ZStack {
-            // Outer glow ring
+
             Circle()
                 .stroke(activity.color.opacity(visualPulse ? 0.25 : 0.10), lineWidth: 28)
                 .frame(width: 180, height: 180)
                 .scaleEffect(visualPulse ? 1.06 : 0.96)
                 .animation(.easeInOut(duration: 2.5).repeatForever(autoreverses: true), value: visualPulse)
 
-            // Mid ring
             Circle()
                 .stroke(activity.color.opacity(visualPulse ? 0.35 : 0.15), lineWidth: 14)
                 .frame(width: 148, height: 148)
                 .scaleEffect(visualPulse ? 1.04 : 0.98)
                 .animation(.easeInOut(duration: 2.0).repeatForever(autoreverses: true), value: visualPulse)
 
-            // Core circle
             Circle()
                 .fill(LinearGradient(
                     colors: [activity.color.opacity(0.88), activity.color.opacity(0.60)],
@@ -261,7 +240,6 @@ struct ActivityPlayerView: View {
                 .scaleEffect(visualPulse ? 1.03 : 0.98)
                 .animation(.easeInOut(duration: 1.8).repeatForever(autoreverses: true), value: visualPulse)
 
-            // Icon
             Image(systemName: activity.iconName)
                 .font(.system(size: 40, weight: .light))
                 .foregroundStyle(.white)
@@ -272,10 +250,9 @@ struct ActivityPlayerView: View {
         .padding(.vertical, 8)
     }
 
-    // MARK: Progress Tracker
     private var progressTracker: some View {
         VStack(spacing: 8) {
-            // Step label
+
             HStack(alignment: .bottom) {
                 Text(L10n.tf(.stepNoOfTotal, currentStep + 1, totalSteps))
                     .font(.system(size: 14, weight: .semibold, design: .rounded))
@@ -286,7 +263,6 @@ struct ActivityPlayerView: View {
                     .foregroundStyle(.secondary)
             }
 
-            // Progress bar
             GeometryReader { geo in
                 ZStack(alignment: .leading) {
                     Capsule()
@@ -307,7 +283,6 @@ struct ActivityPlayerView: View {
             }
             .frame(height: 6)
 
-            // Step dots
             HStack(spacing: 8) {
                 ForEach(0..<totalSteps, id: \.self) { i in
                     Circle()
@@ -325,10 +300,9 @@ struct ActivityPlayerView: View {
         }
     }
 
-    // MARK: Step Card
     private var stepCard: some View {
         VStack(alignment: .leading, spacing: 20) {
-            // Step number badge
+
             HStack(spacing: 12) {
                 ZStack {
                     Circle()
@@ -345,7 +319,6 @@ struct ActivityPlayerView: View {
 
                 Spacer()
 
-                // Breathing indicator dot
                 Circle()
                     .fill(activity.color)
                     .frame(width: 10, height: 10)
@@ -353,8 +326,6 @@ struct ActivityPlayerView: View {
                     .animation(.easeInOut(duration: 1.2).repeatForever(autoreverses: true), value: visualPulse)
             }
 
-
-            // Instruction text
             Text(activity.steps[currentStep])
                 .font(.system(size: 18, weight: .regular, design: .rounded))
                 .foregroundStyle(Color.themeText)
@@ -375,10 +346,9 @@ struct ActivityPlayerView: View {
         .shadow(color: activity.color.opacity(0.10), radius: 12, x: 0, y: 6)
     }
 
-    // MARK: Navigation Buttons
     private var navigationButtons: some View {
         HStack(spacing: 16) {
-            // Back button
+
             if currentStep > 0 {
                 Button(action: previousStep) {
                     HStack(spacing: 6) {
@@ -395,7 +365,6 @@ struct ActivityPlayerView: View {
                 }
             }
 
-            // Next / Complete button
             Button(action: nextStep) {
                 HStack(spacing: 8) {
                     Text(currentStep == totalSteps - 1 ? L10n.t(.completeLabel) : L10n.t(.nextStep))
@@ -413,7 +382,6 @@ struct ActivityPlayerView: View {
         }
     }
 
-    // MARK: Grandma Tip Card
     private var grandmaTipCard: some View {
         VStack(alignment: .leading, spacing: 14) {
             HStack(spacing: 8) {
@@ -440,9 +408,6 @@ struct ActivityPlayerView: View {
         )
     }
 
-    // (Completion card and celebration overlay removed)
-
-    // MARK: Actions
     private func nextStep() {
         UIImpactFeedbackGenerator(style: .medium).impactOccurred()
         if currentStep < totalSteps - 1 {
@@ -452,7 +417,7 @@ struct ActivityPlayerView: View {
                 triggerStepAppear()
             }
         } else {
-            // Last step done — dismiss back to activities list
+
             UINotificationFeedbackGenerator().notificationOccurred(.success)
             dismiss()
         }
@@ -476,8 +441,6 @@ struct ActivityPlayerView: View {
         }
     }
 }
-
-// MARK: - Helpers
 
 private struct CardTopShape: Shape {
     var topLeadingRadius: CGFloat = 0

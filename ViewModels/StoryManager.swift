@@ -31,8 +31,6 @@ public class StoryManager: ObservableObject {
         likedStoryIDs = current
     }
 
-    // MARK: - Public API (language-aware)
-
     func getStory(for mood: Mood) -> Story {
         getStories(for: mood).randomElement()
             ?? Story(title: L10n.t(.appName), content: "Hello dear, I'm so happy to see you!", category: "General", readTime: 1)
@@ -66,8 +64,6 @@ public class StoryManager: ObservableObject {
         Mood.allMoods.flatMap { getStories(for: $0) }
     }
 
-    // MARK: - Language routing
-
     private func localizedStories(mood: String, language: AppLanguage) -> [Story] {
         switch language {
         case .mandarin: return mandarinStories[mood] ?? englishStories[mood] ?? []
@@ -77,8 +73,6 @@ public class StoryManager: ObservableObject {
         case .english:  return englishStories[mood] ?? []
         }
     }
-
-    // MARK: - English Stories
 
     private lazy var englishStories: [String: [Story]] = [
         "Happy": [
@@ -123,8 +117,6 @@ public class StoryManager: ObservableObject {
         ]
     ]
 
-    // MARK: - Hindi Stories (हिन्दी कहानियाँ)
-
     private lazy var hindiStories: [String: [Story]] = [
         "Happy": [
             Story(title: "खुशी का बगीचा", content: "अरे, मेरे प्यारे! तुम्हें मुस्कुराते देखकर मेरा दिल खिल उठता है। खुशी वैसी ही होती है जैसे बसंत में मेरा पुराना बगीचा। मैं घुटनों के बल बैठकर घास उखाड़ती और छोटे-छोटे बीज बोती थी। कभी-कभी सोचती — क्या कुछ उगेगा भी? लेकिन फिर एक सुबह, पूरा आँगन पीले गेंदों, गुलाबी गुलाबों और लाल ट्यूलिप से भर जाता था। यही तो खुशी है — उन सारी अच्छी चीज़ों का अचानक खिल जाना जो तुम अपने अंदर चुपचाप पाल रहे थे। आज उस धूप में भीगो। तुमने हर पंखुड़ी कमाई है।", category: "Nature", readTime: 3),
@@ -167,8 +159,6 @@ public class StoryManager: ObservableObject {
             Story(title: "बेकरी की खुशबू", content: "सुबह-सुबह किसी छोटी बेकरी के पास से गुज़रना — मक्खन और चीनी की मीठी खुशबू! उस पहले गर्म टुकड़े का इंतज़ार — वो खुमारी अलग होती है। ज़िंदगी भी ऐसी ही है — हर मोड़ पर कोई मीठा पल इंतज़ार कर रहा है। इस उत्साह को जी भर के जियो!", category: "Funny", readTime: 2)
         ]
     ]
-
-    // MARK: - Mandarin Stories (中文故事)
 
     private lazy var mandarinStories: [String: [Story]] = [
         "Happy": [
@@ -213,8 +203,6 @@ public class StoryManager: ObservableObject {
         ]
     ]
 
-    // MARK: - Spanish Stories (Cuentos en Español)
-
     private lazy var spanishStories: [String: [Story]] = [
         "Happy": [
             Story(title: "El Jardín de la Alegría", content: "¡Oh, hola querido mío! Me alegra tanto el corazón verte sonreír. Sabes, la felicidad es como mi viejo jardín en primavera. Pasaba horas de rodillas, arrancando malas hierbas y plantando semillas diminutas y sin pretensiones. A veces me preguntaba si algo crecería. Pero entonces, una mañana brillante, todo el patio estallaba de color: narcisos amarillos, suaves rosas rosadas y radiantes tulipanes rojos meciéndose con la brisa. Así se siente la alegría. Es el florecimiento repentino de todas las cosas buenas que has estado cultivando en silencio dentro de ti. Déjate bañar por esa luz hoy. Te has ganado cada pétalo.", category: "Nature", readTime: 3),
@@ -257,8 +245,6 @@ public class StoryManager: ObservableObject {
             Story(title: "Olores de Panadería", content: "¿Resulta equiparable a cruzar las angosturas empedradas transitando mañanas adormilantes rodeándose esquinas por los arrabales vecinales rumbo un despacho horneadas bollerías ? Resultante emanaciones embriagadoras invaden pesadas densidades azucaradas tibias levaduras enlazándolas mantecosidades saturantemente acariciantes exhalando de aperturas y resquicios cobijando un trance al paso del transeúnte; dejándole suspendido. Ese gozo expectante por aproximarse ansiosamente entrar adquiriendo esa crocante calidez al tacto bocadillos crujientes saboreando deleitable primer pedazo resulta embrujador inebriando placenteramente. Comprende esto queridísima vida; provee un torrente surtido colmándose dulzonas inmensurables maravillosidades esquivándose las rendijas cruces giratorias acechándole tú probatoria curiosidad de un mordisco engalanado la vida. Degusta con ansiosa gozosa vida su alboroto esperanzador y vibrante presentimiento festejador inagotable !.", category: "Funny", readTime: 2)
         ]
     ]
-
-    // MARK: - French Stories (Histoires en Français)
 
     private lazy var frenchStories: [String: [Story]] = [
         "Happy": [

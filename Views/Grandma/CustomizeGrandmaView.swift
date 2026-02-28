@@ -9,21 +9,20 @@ struct CustomizeGrandmaView: View {
     @State private var grandmaAction: GrandmaAction = .idle
     @State private var grandmaExpression: GrandmaExpression = .neutral
     @State private var showPresetToast = false
-    
-    // Tab selection
+
     @State private var selectedTab = 0
-    // Tab icons are static — only the text label localizes
+
     let tabIcons = ["comb.fill", "eyeglasses", "tshirt.fill", "paintpalette.fill", "sparkles", "graduationcap.fill", "circle.fill", "face.smiling", "photo.fill", "camera.filters"]
-    // Computed so SwiftUI re-evaluates when `lang` changes
+
     var tabs: [String] {
         [L10n.t(.hair), L10n.t(.glasses), L10n.t(.outfit), L10n.t(.pattern),
          L10n.t(.accessories), L10n.t(.hats), L10n.t(.earrings), L10n.t(.face),
          L10n.t(.backgrounds), L10n.t(.filters)]
     }
-    
+
     var body: some View {
         ZStack {
-            // Dynamic Background based on theme / filter
+
             if settings.filter == .noir {
                 Color.black.ignoresSafeArea()
             } else if settings.filter == .sepia {
@@ -31,14 +30,13 @@ struct CustomizeGrandmaView: View {
             } else {
                 backgroundForTheme(settings.backgroundTheme)
             }
-            
-            // Subtle frosted overlay so the UI stays readable (Adaptive for Light/Dark Mode)
+
             Color(UIColor.systemBackground).opacity(0.15)
                 .background(.ultraThinMaterial)
                 .ignoresSafeArea()
-            
+
             VStack(spacing: 0) {
-                // Header (Save & Reset)
+
                 HStack(alignment: .center) {
                     Button(action: {
                         let generator = UIImpactFeedbackGenerator(style: .medium)
@@ -49,10 +47,9 @@ struct CustomizeGrandmaView: View {
                             .font(.system(size: 28))
                             .foregroundStyle(Color.themeText.opacity(0.7))
                     }
-                    
+
                     Spacer()
-                    
-                    // Undo
+
                     Button(action: {
                         let generator = UIImpactFeedbackGenerator(style: .light)
                         generator.impactOccurred()
@@ -63,13 +60,12 @@ struct CustomizeGrandmaView: View {
                             .foregroundStyle(settings.canUndo ? Color.themeText : Color.gray.opacity(0.3))
                     }
                     .disabled(!settings.canUndo)
-                    
+
                     Text(L10n.t(.makeover))
                         .font(.granlyHeadline)
                         .foregroundStyle(Color.themeText)
                         .padding(.horizontal, 8)
-                    
-                    // Redo
+
                     Button(action: {
                         let generator = UIImpactFeedbackGenerator(style: .light)
                         generator.impactOccurred()
@@ -80,18 +76,17 @@ struct CustomizeGrandmaView: View {
                             .foregroundStyle(settings.canRedo ? Color.themeText : Color.gray.opacity(0.3))
                     }
                     .disabled(!settings.canRedo)
-                    
+
                     Spacer()
-                    
+
                     Button(action: {
                         let generator = UINotificationFeedbackGenerator()
                         generator.notificationOccurred(.success)
                         showConfetti = true
-                        
-                        // Share-ready Pose
+
                         grandmaAction = .celebrate
                         grandmaExpression = .happy
-                        
+
                         DispatchQueue.main.asyncAfter(deadline: .now() + 2.5) {
                             showConfetti = false
                             grandmaAction = .idle
@@ -111,10 +106,9 @@ struct CustomizeGrandmaView: View {
                 .padding(.horizontal, 20)
                 .padding(.top, 16)
                 .padding(.bottom, 8)
-                
+
                 Spacer()
-                
-                // 3D Preview (Live)
+
                 ZStack {
                     GrandmaSceneView(
                         action: $grandmaAction,
@@ -123,9 +117,8 @@ struct CustomizeGrandmaView: View {
                         settings: settings
                     )
                     .scaleEffect(1.2)
-                    .offset(y: 40) // Shove her down slightly so she fills the frame
-                    
-                    // Close button at top-left, Wand button at bottom-right
+                    .offset(y: 40)
+
                     VStack {
                         HStack {
                             Button(action: { dismiss() }) {
@@ -137,12 +130,11 @@ struct CustomizeGrandmaView: View {
                             Spacer()
                         }
                         Spacer()
-                        
-                        // ── Magic Wand Preset Cycler ──────────────────
+
                         HStack {
                             Spacer()
                             VStack(spacing: 6) {
-                                // Preset name toast (no emoji, fades in then out)
+
                                 if showPresetToast {
                                     Text(settings.currentPresetName)
                                         .font(.system(size: 13, weight: .bold, design: .rounded))
@@ -157,7 +149,7 @@ struct CustomizeGrandmaView: View {
                                         .shadow(color: Color.themeRose.opacity(0.4), radius: 8)
                                         .transition(.opacity.combined(with: .scale(scale: 0.85, anchor: .bottom)))
                                 }
-                                
+
                                 Button(action: {
                                     UIImpactFeedbackGenerator(style: .heavy).impactOccurred()
                                     settings.applyPreset()
@@ -169,7 +161,7 @@ struct CustomizeGrandmaView: View {
                                     }
                                 }) {
                                     ZStack {
-                                        // Static glow ring (no animation tied to tap)
+
                                         Circle()
                                             .fill(
                                                 RadialGradient(
@@ -178,8 +170,7 @@ struct CustomizeGrandmaView: View {
                                                 )
                                             )
                                             .frame(width: 62, height: 62)
-                                        
-                                        // Button circle
+
                                         Circle()
                                             .fill(
                                                 LinearGradient(
@@ -189,8 +180,7 @@ struct CustomizeGrandmaView: View {
                                             )
                                             .frame(width: 54, height: 54)
                                             .shadow(color: Color.themeRose.opacity(0.55), radius: 12, x: 0, y: 5)
-                                        
-                                        // Wand icon — fixed, never rotates or scales
+
                                         Image(systemName: "wand.and.stars")
                                             .font(.system(size: 24, weight: .bold))
                                             .foregroundStyle(.white)
@@ -200,7 +190,7 @@ struct CustomizeGrandmaView: View {
                         }
                     }
                     .padding(16)
-                    
+
                     if showConfetti {
                         ConfettiView()
                             .allowsHitTesting(false)
@@ -211,11 +201,9 @@ struct CustomizeGrandmaView: View {
                 .shadow(color: .black.opacity(0.15), radius: 20, x: 0, y: 10)
                 .padding(.horizontal, 20)
                 .padding(.bottom, 24)
-                
-                // Bottom Dock
+
                 VStack(spacing: 0) {
-                    
-                    // Category Icons (Horizontal Scroll)
+
                     ScrollView(.horizontal, showsIndicators: false) {
                         HStack(spacing: 24) {
                             ForEach(0..<tabs.count, id: \.self) { index in
@@ -235,9 +223,9 @@ struct CustomizeGrandmaView: View {
                                                 Circle()
                                                     .fill(selectedTab == index ? Color.themeRose.opacity(0.15) : Color.white.opacity(0.8))
                                             )
-                                            // Scale animation
+
                                             .scaleEffect(selectedTab == index ? 1.15 : 1.0)
-                                            
+
                                         Text(tabs[index])
                                             .font(.system(size: 10, weight: selectedTab == index ? .bold : .semibold, design: .rounded))
                                             .foregroundStyle(selectedTab == index ? Color.themeText : Color.themeText.opacity(0.6))
@@ -251,50 +239,49 @@ struct CustomizeGrandmaView: View {
                     }
                     .padding(.top, 12)
                     .padding(.bottom, 8)
-                    
-                    // Options Area for the Selected Category
+
                     ScrollView(.horizontal, showsIndicators: false) {
                         HStack(spacing: 16) {
                             switch selectedTab {
-                            case 0: // Hair
+                            case 0:
                                 OptionGroup(title: L10n.t(.optionStyle)) { TextGrid(options: HairStyle.allCases, selected: $settings.hairStyle, settings: settings) }
                                 OptionGroup(title: L10n.t(.optionColor)) { ColorGrid(options: HairColor.allCases, selected: $settings.hairColor, settings: settings) }
                                 SnapshotSlider(title: L10n.t(.greyIntensity), value: $settings.greyIntensity, settings: settings)
-                            case 1: // Glasses
+                            case 1:
                                 OptionGroup(title: L10n.t(.optionFrames)) { TextGrid(options: GlassesStyle.allCases, selected: $settings.glassesStyle, settings: settings) }
-                            case 2: // Outfit
+                            case 2:
                                 OptionGroup(title: L10n.t(.optionStyle)) { TextGrid(options: OutfitStyle.allCases, selected: $settings.outfitStyle, settings: settings) }
                                 OptionGroup(title: L10n.t(.optionColor)) { ColorGrid(options: OutfitColor.allCases, selected: $settings.outfitColor, settings: settings) }
-                            case 3: // Pattern
+                            case 3:
                                 OptionGroup(title: L10n.t(.pattern)) { TextGrid(options: OutfitPattern.allCases, selected: $settings.outfitPattern, settings: settings) }
-                            case 4: // Accessories
+                            case 4:
                                 OptionGroup(title: L10n.t(.optionNecklace)) { TextGrid(options: AccessoryType.allCases, selected: $settings.accessory, settings: settings) }
-                            case 5: // Hats
+                            case 5:
                                 OptionGroup(title: L10n.t(.optionHatStyle)) { TextGrid(options: HatStyle.allCases, selected: $settings.hatStyle, settings: settings) }
-                            case 6: // Earrings
+                            case 6:
                                 OptionGroup(title: L10n.t(.earrings)) { TextGrid(options: EarringStyle.allCases, selected: $settings.earringStyle, settings: settings) }
-                            case 7: // Face
+                            case 7:
                                 OptionGroup(title: L10n.t(.optionSkinTone)) { SkinToneGrid(options: SkinTone.allCases, selected: $settings.skinTone, settings: settings) }
                                 OptionGroup(title: L10n.t(.optionEyeColor)) { ColorGrid(options: EyeColor.allCases, selected: $settings.eyeColor, settings: settings) }
                                 OptionGroup(title: L10n.t(.optionExpression)) { TextGrid(options: FacialExpression.allCases, selected: $settings.facialExpression, settings: settings) }
                                 SnapshotSlider(title: L10n.t(.wrinkleIntensity), value: $settings.wrinkleIntensity, settings: settings)
                                 SnapshotSlider(title: L10n.t(.browThickness), value: $settings.browThickness, settings: settings)
                                 OptionGroup(title: L10n.t(.optionLashes)) { SnapshotToggle(title: L10n.t(.eyelashes), isOn: $settings.hasLashes, settings: settings) }
-                            case 8: // Backgrounds
+                            case 8:
                                 OptionGroup(title: L10n.t(.optionTheme)) { TextGrid(options: BackgroundTheme.allCases, selected: $settings.backgroundTheme, settings: settings) }
-                            case 9: // Filters
+                            case 9:
                                 OptionGroup(title: L10n.t(.optionCameraFilter)) { TextGrid(options: CameraFilter.allCases, selected: $settings.filter, settings: settings) }
                             default: EmptyView()
                             }
                         }
                         .padding(.horizontal, 24)
-                        .padding(.bottom, 32) // Safe area padding
+                        .padding(.bottom, 32)
                     }
-                    .frame(height: 120) // Fixed height for the options tray to prevent jumping
+                    .frame(height: 120)
                 }
                 .background(
                     RoundedRectangle(cornerRadius: 32, style: .continuous)
-                        // Adaptive background for light/dark mode drawer
+
                         .fill(Color(UIColor.secondarySystemGroupedBackground).opacity(0.95))
                         .shadow(color: Color(UIColor.label).opacity(0.1), radius: 10, x: 0, y: -5)
                 )
@@ -302,7 +289,7 @@ struct CustomizeGrandmaView: View {
             }
         }
     }
-    
+
     @ViewBuilder
     private func backgroundForTheme(_ theme: BackgroundTheme) -> some View {
         switch theme {
@@ -318,7 +305,6 @@ struct CustomizeGrandmaView: View {
     }
 }
 
-// Confetti Overlay
 struct ConfettiView: View {
     var body: some View {
         ZStack {
@@ -334,23 +320,21 @@ struct ConfettiView: View {
     }
 }
 
-// MARK: - Components
-
 struct OptionGroup<Content: View>: View {
     let title: String
     let content: Content
-    
+
     init(title: String, @ViewBuilder content: () -> Content) {
         self.title = title
         self.content = content()
     }
-    
+
     var body: some View {
         VStack(spacing: 12) {
             Text(title.uppercased())
                 .font(.system(size: 11, weight: .bold, design: .rounded))
                 .foregroundStyle(.secondary)
-            
+
             content
         }
         .padding(.vertical, 8)
@@ -361,7 +345,7 @@ struct ColorGrid<T: Identifiable & RawRepresentable>: View where T.RawValue == S
     let options: [T]
     @Binding var selected: T
     var settings: GrandmaSettings?
-    
+
     var body: some View {
         HStack(spacing: 16) {
             ForEach(options) { option in
@@ -376,7 +360,7 @@ struct ColorGrid<T: Identifiable & RawRepresentable>: View where T.RawValue == S
                             .fill(getColor(for: option))
                             .frame(width: 44, height: 44)
                             .shadow(color: .black.opacity(0.1), radius: 3, x: 0, y: 2)
-                        
+
                         if selected.id == option.id {
                             Circle()
                                 .stroke(Color.themeRose, lineWidth: 3)
@@ -388,7 +372,7 @@ struct ColorGrid<T: Identifiable & RawRepresentable>: View where T.RawValue == S
         }
         .padding(.horizontal, 8)
     }
-    
+
     func getColor(for option: T) -> Color {
         if let h = option as? HairColor { return Color(uiColor: h.uiColor) }
         if let o = option as? OutfitColor { return Color(uiColor: o.uiColor) }
@@ -401,7 +385,7 @@ struct SkinToneGrid: View {
     let options: [SkinTone]
     @Binding var selected: SkinTone
     var settings: GrandmaSettings?
-    
+
     var body: some View {
         HStack(spacing: 16) {
             ForEach(options) { option in
@@ -416,7 +400,7 @@ struct SkinToneGrid: View {
                             .fill(Color(uiColor: option.uiColor))
                             .frame(width: 44, height: 44)
                             .shadow(color: .black.opacity(0.1), radius: 3, x: 0, y: 2)
-                        
+
                         if selected == option {
                             Circle()
                                 .stroke(Color.themeRose, lineWidth: 3)
@@ -434,7 +418,7 @@ struct TextGrid<T: LocalizedOption>: View {
     let options: [T]
     @Binding var selected: T
     var settings: GrandmaSettings?
-    
+
     var body: some View {
         HStack(spacing: 12) {
             ForEach(options) { option in
@@ -452,7 +436,7 @@ struct TextGrid<T: LocalizedOption>: View {
                         .foregroundStyle(selected.id == option.id ? .white : Color.themeText)
                         .clipShape(Capsule())
                         .shadow(color: selected.id == option.id ? Color.themeRose.opacity(0.3) : .black.opacity(0.05), radius: 4, x: 0, y: 2)
-                        // Slight scale on selection
+
                         .scaleEffect(selected.id == option.id ? 1.05 : 1.0)
                 }
             }
@@ -465,7 +449,7 @@ struct SnapshotSlider: View {
     let title: String
     @Binding var value: Double
     var settings: GrandmaSettings?
-    
+
     var body: some View {
         VStack(alignment: .leading, spacing: 5) {
             Text(title)
@@ -488,7 +472,7 @@ struct SnapshotSlider: View {
         }
         .padding(.horizontal, 8)
         .frame(width: 180)
-        // Center slider in OptionGroup height
+
         .padding(.vertical, 8)
     }
 }
@@ -497,7 +481,7 @@ struct SnapshotToggle: View {
     let title: String
     @Binding var isOn: Bool
     var settings: GrandmaSettings?
-    
+
     var body: some View {
         Toggle(title, isOn: Binding(
             get: { isOn },

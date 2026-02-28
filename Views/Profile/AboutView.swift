@@ -12,7 +12,6 @@ struct AboutView: View {
             ScrollView {
                 VStack(spacing: 28) {
 
-                    // ── Header ───────────────────────────────────────────
                     VStack(spacing: 16) {
                         Image(systemName: "eyeglasses")
                             .font(.system(size: 48, weight: .light))
@@ -37,9 +36,8 @@ struct AboutView: View {
                     }
                     .padding(.top, 40)
 
-                    // ── Our Mission ──────────────────────────────────────
                     VStack(alignment: .leading, spacing: 14) {
-                        // Section label
+
                         Label(L10n.t(.ourMission), systemImage: "heart.fill")
                             .font(.granlyHeadline)
                             .foregroundStyle(Color.themeRose)
@@ -47,19 +45,16 @@ struct AboutView: View {
                         Divider()
                             .background(Color.themeRose.opacity(0.3))
 
-                        // Paragraph 1
                         Text(L10n.t(.missionBody))
                             .font(.granlyBody)
                             .lineSpacing(6)
                             .foregroundStyle(Color.themeText.opacity(0.85))
 
-                        // Paragraph 2
                         Text(L10n.t(.missionBody2))
                             .font(.granlyBody)
                             .lineSpacing(6)
                             .foregroundStyle(Color.themeText.opacity(0.85))
 
-                        // Paragraph 3 — closing sentiment
                         HStack(alignment: .top, spacing: 10) {
                             Image(systemName: "sparkles")
                                 .font(.system(size: 14))
@@ -77,7 +72,6 @@ struct AboutView: View {
                     .glassCard(cornerRadius: 16)
                     .padding(.horizontal)
 
-                    // ── Legal Links ──────────────────────────────────────
                     VStack(spacing: 0) {
                         NavigationLink(destination: PrivacyPolicyView().environmentObject(lang)) {
                             AboutRow(
@@ -102,7 +96,6 @@ struct AboutView: View {
                     .glassCard(cornerRadius: 16)
                     .padding(.horizontal)
 
-                    // ── Footer ───────────────────────────────────────────
                     VStack(spacing: 6) {
                         Text(L10n.t(.designedWithCare))
                             .font(.granlyCaption)

@@ -33,7 +33,7 @@ struct UniversalQuotesData {
             dailyPractice: "Write down one thing you strongly desire today. Notice if your actions this afternoon move you closer to it or further away.",
             iconColor: .orange
         ),
-        
+
         UniversalQuote(
             originalQuote: "Love your neighbor as yourself.",
             source: "Leviticus 19:18 & Mark 12:31 (Torah / Bible)",
@@ -43,7 +43,7 @@ struct UniversalQuotesData {
             dailyPractice: "When someone annoys you today, pause and ask: 'If I was in their shoes, how would I want to be treated right now?'",
             iconColor: Color.themeRose
         ),
-        
+
         UniversalQuote(
             originalQuote: "Hatred does not cease by hatred, but only by love; this is the eternal rule.",
             source: "The Dhammapada (Buddhist)",
@@ -53,7 +53,7 @@ struct UniversalQuotesData {
             dailyPractice: "Think of a small grudge you are holding. Visualize opening your hand and letting it fly away like a bird. You don't need to carry it anymore.",
             iconColor: .purple
         ),
-        
+
         UniversalQuote(
             originalQuote: "Whoever saves one life, it is as if he had saved mankind entirely.",
             source: "Quran 5:32 (Islamic)",
@@ -63,7 +63,7 @@ struct UniversalQuotesData {
             dailyPractice: "Do one totally unseen, anonymous act of kindness today. Pick up a piece of trash, leave a nice note, let someone merge in traffic.",
             iconColor: .green
         ),
-        
+
         UniversalQuote(
             originalQuote: "Recognize the human race as one.",
             source: "Guru Gobind Singh (Sikh)",
@@ -73,7 +73,7 @@ struct UniversalQuotesData {
             dailyPractice: "When you interact with a stranger today (like a cashier), look them in the eyes and remember: they have a family, hopes, and worries, just like you.",
             iconColor: .blue
         ),
-        
+
         UniversalQuote(
             originalQuote: "You have the right to work, but never to the fruit of work.",
             source: "Bhagavad Gita (Hindu)",
@@ -83,7 +83,7 @@ struct UniversalQuotesData {
             dailyPractice: "Do a chore today (dishes, sweeping) not just to 'get it done,' but to do it beautifully. Appreciate the act of doing.",
             iconColor: .yellow
         ),
-        
+
         UniversalQuote(
             originalQuote: "Nature does not hurry, yet everything is accomplished.",
             source: "Lao Tzu (Tao Te Ching)",
@@ -93,7 +93,7 @@ struct UniversalQuotesData {
             dailyPractice: "For just five minutes today, sit completely still with no screens, no music, no talking. Just watch the world happen around you.",
             iconColor: Color.themeGreen
         ),
-        
+
         UniversalQuote(
             originalQuote: "The earth is but one country, and mankind its citizens.",
             source: "Bahá'u'lláh (Bahá'í Faith)",
@@ -103,7 +103,7 @@ struct UniversalQuotesData {
             dailyPractice: "Read one positive news story today from a country you have never visited and know very little about.",
             iconColor: Color.themeRose
         ),
-        
+
         UniversalQuote(
             originalQuote: "Good thoughts, good words, good deeds.",
             source: "Zoroaster (Zoroastrianism)",
@@ -113,7 +113,7 @@ struct UniversalQuotesData {
             dailyPractice: "Catch yourself before you speak a complaint today. Change the thought, speak a kinder word, or take a tiny action to fix the problem instead.",
             iconColor: Color.themeWarm
         ),
-        
+
         UniversalQuote(
             originalQuote: "Do not do to others what you do not want done to yourself.",
             source: "Confucius (Confucianism)",
@@ -123,7 +123,7 @@ struct UniversalQuotesData {
             dailyPractice: "The next time you are frustrated with someone (like a slow driver), ask yourself how you'd want someone to react to you if you were the one making a mistake.",
             iconColor: .purple
         ),
-        
+
         UniversalQuote(
             originalQuote: "We do not inherit the earth from our ancestors, we borrow it from our children.",
             source: "Indigenous Proverb (Native American)",
@@ -133,7 +133,7 @@ struct UniversalQuotesData {
             dailyPractice: "Make one conscious choice to reduce waste today—use a reusable cup, turn off the lights, or pick up a piece of litter on your walk.",
             iconColor: .green
         ),
-        
+
         UniversalQuote(
             originalQuote: "Do not injure, abuse, oppress, enslave, insult, torment, torture, or kill any creature or living being.",
             source: "Mahavira (Jainism)",
@@ -155,7 +155,7 @@ struct UniversalQuotesData {
             dailyPractice: "今天写下一件你强烈渴望的事情。注意你今天下午的行动是让你离它更近还是更远。",
             iconColor: .orange
         ),
-        
+
         UniversalQuote(
             originalQuote: "爱人如己。",
             source: "《利未记》19:18 & 《马可福音》12:31（妥拉/圣经）",
@@ -165,7 +165,7 @@ struct UniversalQuotesData {
             dailyPractice: "当你今天对某人感到烦躁时，停下来问问：‘如果我处于他们的位置，我现在希望别人如何对待我？’",
             iconColor: Color.themeRose
         ),
-        
+
         UniversalQuote(
             originalQuote: "仇恨不能平息仇恨，唯有爱能平息仇恨；这是永恒的法则。",
             source: "《法句经》（佛教）",
@@ -175,7 +175,7 @@ struct UniversalQuotesData {
             dailyPractice: "想想一个让你轻微恼火的人。不要想着自己有多生气，试着向他们发送一个无声的好愿望。",
             iconColor: .pink
         ),
-        
+
         UniversalQuote(
             originalQuote: "你拥有控制自己思想的力量，而非外部事件。认识到这一点，你就会找到力量。",
             source: "马可·奥勒留《沉思录》（斯多葛学派）",
@@ -185,7 +185,7 @@ struct UniversalQuotesData {
             dailyPractice: "当今天发生不顺心的事情时，深吸一口气，这样说：‘我无法控制这件事，但我能控制我接下来的做法。’",
             iconColor: Color.themeGold
         ),
-        
+
         UniversalQuote(
             originalQuote: "伤口是光进入你内心的地方。",
             source: "鲁米（苏菲神秘主义）",
@@ -195,7 +195,7 @@ struct UniversalQuotesData {
             dailyPractice: "回想一个曾经让你痛苦，但使你变得更坚强的过去挑战。对那份力量说声谢谢。",
             iconColor: .yellow
         ),
-        
+
         UniversalQuote(
             originalQuote: "大自然从不匆忙，但万物皆成。",
             source: "老子《道德经》（道教）",
@@ -205,7 +205,7 @@ struct UniversalQuotesData {
             dailyPractice: "选择一项你今天会做的日常杂务（如洗碗或散步），并专注于以平时一半的速度仔细完成它。",
             iconColor: Color.themeGreen
         ),
-        
+
         UniversalQuote(
             originalQuote: "你要专心仰赖耶和华，不可倚靠自己的聪明。",
             source: "《箴言》3:5-6（犹太-基督教）",
@@ -215,7 +215,7 @@ struct UniversalQuotesData {
             dailyPractice: "指认一个你正在压力下试图去‘弄清楚’的情况。今天练习放弃对那件事的控制力。",
             iconColor: .purple
         ),
-        
+
         UniversalQuote(
             originalQuote: "因为我们存在，所以我存在。",
             source: "乌班图哲学（南部非洲）",
@@ -225,7 +225,7 @@ struct UniversalQuotesData {
             dailyPractice: "今天主动联系某个人，不要问他们最近怎么样，而要告诉他们一个你感激他们生活在你生命中的具体原因。",
             iconColor: .brown
         ),
-        
+
         UniversalQuote(
             originalQuote: "我们在想象中受的苦，往往多于现实中的苦。",
             source: "塞内卡（斯多葛学派）",
@@ -235,7 +235,7 @@ struct UniversalQuotesData {
             dailyPractice: "每当你今天感到自己往最坏的方面想时，停下来，列出三个此时此刻绝对存在的真实事物。",
             iconColor: Color.themeText
         ),
-        
+
         UniversalQuote(
             originalQuote: "真理是最高的德行，但更高的是真实的生活。",
             source: "《阿迪格兰特》（锡克教）",
@@ -246,7 +246,7 @@ struct UniversalQuotesData {
             iconColor: .orange
         )
     ]
-    
+
     private static let hindiQuotes: [UniversalQuote] = [
         UniversalQuote(
             originalQuote: "आप वही हैं जो आपकी गहरी, प्रबल इच्छा है। जैसी आपकी इच्छा है, वैसी ही आपकी संकल्प शक्ति है। जैसा आपका संकल्प है, वैसा ही आपका कर्म है। और जैसा आपका कर्म है, वैसा ही आपका भाग्य है।",
@@ -257,7 +257,7 @@ struct UniversalQuotesData {
             dailyPractice: "आज किसी एक ऐसी चीज़ को लिखें जिसकी आप बहुत इच्छा रखते हैं। ध्यान दें कि क्या आपके आज के काम आपको उसके करीब ले जा रहे हैं या दूर।",
             iconColor: .orange
         ),
-        
+
         UniversalQuote(
             originalQuote: "अपने पड़ोसी से अपने समान प्रेम रखो।",
             source: "लैव्यव्यवस्था 19:18 और मरकुस 12:31 (तोराह / बाइबिल)",
@@ -267,7 +267,7 @@ struct UniversalQuotesData {
             dailyPractice: "जब आज कोई आपको गुस्सा दिलाए, तो रुकें और पूछें: 'यदि मैं उनकी जगह होता, तो मैं क्या चाहता कि वो मुझसे कैसे पेश आएं?'",
             iconColor: Color.themeRose
         ),
-        
+
         UniversalQuote(
             originalQuote: "नफ़रत से नफ़रत कभी खत्म नहीं होती, यह केवल प्यार से खत्म होती है; यह शाश्वत नियम है।",
             source: "धम्मपद (बौद्ध)",
@@ -277,7 +277,7 @@ struct UniversalQuotesData {
             dailyPractice: "उस व्यक्ति के बारे में सोचें जिसने आपको थोड़ा गुस्सा दिलाया हो। अपने गुस्से पर ध्यान देने के बजाय, मन ही मन उनके भले की कामना करें।",
             iconColor: .pink
         ),
-        
+
         UniversalQuote(
             originalQuote: "आपके मन पर आपका नियंत्रण है - बाहरी घटनाओं पर नहीं। इसे समझें, और आप ताकत पाएंगे।",
             source: "मार्कस ऑरेलियस, मेडिटेशंस (स्टोइकवाद)",
@@ -287,7 +287,7 @@ struct UniversalQuotesData {
             dailyPractice: "आज जब कुछ आपकी उम्मीद के मुताबिक न हो, तो गहरी साँस लें और कहें: 'मैं इसे नहीं बदल सकता, लेकिन मैं यह तय कर सकता हूँ कि मैं आगे क्या करूँगा।'",
             iconColor: Color.themeGold
         ),
-        
+
         UniversalQuote(
             originalQuote: "घाव वो जगह है जहाँ से रोशनी आपके अंदर प्रवेश करती है।",
             source: "रूमी (सूफी रहस्यवाद)",
@@ -297,7 +297,7 @@ struct UniversalQuotesData {
             dailyPractice: "किसी पुरानी चुनौती को याद करें जिससे दर्द हुआ लेकिन आपको मजबूत बनाया। उस ताकत के लिए मन में धन्यवाद कहें।",
             iconColor: .yellow
         ),
-        
+
         UniversalQuote(
             originalQuote: "प्रकृति कभी जल्दबाजी नहीं करती, फिर भी सब कुछ पूरा हो जाता है।",
             source: "लाओ त्सू, ताओ ते चिंग (ताओवाद)",
@@ -307,7 +307,7 @@ struct UniversalQuotesData {
             dailyPractice: "आज कोई ऐसा छोटा काम चुनें (जैसे बर्तन धोना या टहलना), और उसे अपनी सामान्य गति से आधी गति में ध्यान से करने की कोशिश करें।",
             iconColor: Color.themeGreen
         ),
-        
+
         UniversalQuote(
             originalQuote: "संपूर्ण हृदय से ईश्वर पर भरोसा रखें और अपनी समझ पर निर्भर न रहें।",
             source: "नीतिवचन 3:5-6 (यहूदी-ईसाई)",
@@ -317,7 +317,7 @@ struct UniversalQuotesData {
             dailyPractice: "किसी ऐसी स्थिति के बारे में सोचें जिसे आप तनाव में आकर 'सुलझाने' की कोशिश कर रहे हैं। आज उस बात पर से अपना नियंत्रण छोड़ने का अभ्यास करें।",
             iconColor: .purple
         ),
-        
+
         UniversalQuote(
             originalQuote: "मैं हूँ क्योंकि हम हैं।",
             source: "उबंटू दर्शन (दक्षिणी अफ्रीकी)",
@@ -327,7 +327,7 @@ struct UniversalQuotesData {
             dailyPractice: "आज किसी से बात करें, सिर्फ यह पूछने के लिए नहीं कि वे कैसे हैं, बल्कि उन्हें यह बताने के लिए कि आप अपनी ज़िंदगी में उनके होने के लिए आभारी क्यों हैं।",
             iconColor: .brown
         ),
-        
+
         UniversalQuote(
             originalQuote: "हम वास्तविकता से कहीं ज़्यादा अपनी कल्पनाओं में पीड़ित होते हैं।",
             source: "सेनेका (स्टोइकवाद)",
@@ -337,7 +337,7 @@ struct UniversalQuotesData {
             dailyPractice: "जब भी आप आज महसूस करें कि आप 'क्या होगा अगर' वाली सोच में पड़ गए हैं, तो रुकें और उस पल की 3 'वास्तविक' चीज़ें अपने आस-पास देखें।",
             iconColor: Color.themeText
         ),
-        
+
         UniversalQuote(
             originalQuote: "सच्चाई सबसे बड़ा गुण है, लेकिन सच्चा जीवन जीना उससे भी बड़ा है।",
             source: "गुरु ग्रंथ साहिब (सिख धर्म)",
@@ -358,7 +358,7 @@ struct UniversalQuotesData {
             dailyPractice: "Anota hoy una cosa que deseas con fuerza. Observa si tus acciones de esta tarde te acercan o te alejan de ella.",
             iconColor: .orange
         ),
-        
+
         UniversalQuote(
             originalQuote: "Ama a tu prójimo como a ti mismo.",
             source: "Levítico 19:18 y Marcos 12:31 (Torá / Biblia)",
@@ -368,7 +368,7 @@ struct UniversalQuotesData {
             dailyPractice: "Cuando alguien te moleste hoy, haz una pausa y pregúntate: 'Si yo estuviera en su lugar, ¿cómo me gustaría ser tratado en este momento?'",
             iconColor: Color.themeRose
         ),
-        
+
         UniversalQuote(
             originalQuote: "El odio no cesa con el odio, sino sólo con el amor; esta es la regla eterna.",
             source: "El Dhammapada (Budismo)",
@@ -378,7 +378,7 @@ struct UniversalQuotesData {
             dailyPractice: "Piensa en alguien que te haya molestado un poco. En lugar de detenerte en lo frustrado que estás, intenta enviarle un buen deseo en silencio.",
             iconColor: .pink
         ),
-        
+
         UniversalQuote(
             originalQuote: "Tienes poder sobre tu mente, no sobre los acontecimientos externos. Date cuenta de esto, y encontrarás fuerza.",
             source: "Marco Aurelio, Meditaciones (Estoicismo)",
@@ -388,7 +388,7 @@ struct UniversalQuotesData {
             dailyPractice: "Cuando algo salga mal hoy, respira hondo y di: 'No puedo controlar esto, pero decido lo que haré a continuación'.",
             iconColor: Color.themeGold
         ),
-        
+
         UniversalQuote(
             originalQuote: "La herida es el lugar por donde la Luz entra en ti.",
             source: "Rumi (Misticismo Sufí)",
@@ -398,7 +398,7 @@ struct UniversalQuotesData {
             dailyPractice: "Recuerda un desafío pasado que te dolió pero te hizo más fuerte. Da las gracias en silencio por esa fuerza.",
             iconColor: .yellow
         ),
-        
+
         UniversalQuote(
             originalQuote: "La naturaleza no se apresura, y sin embargo todo se logra.",
             source: "Lao Tse, Tao Te Ching (Taoísmo)",
@@ -408,7 +408,7 @@ struct UniversalQuotesData {
             dailyPractice: "Elige una pequeña tarea física que harás hoy (como lavar los platos o dar un paseo) y concéntrate en hacerla a la mitad de tu velocidad normal, con toda la atención.",
             iconColor: Color.themeGreen
         ),
-        
+
         UniversalQuote(
             originalQuote: "Confía en el Señor de todo corazón, y no te apoyes en tu propio entendimiento.",
             source: "Proverbios 3:5-6 (Judeocristiano)",
@@ -418,7 +418,7 @@ struct UniversalQuotesData {
             dailyPractice: "Identifica una situación que estés tratando de 'resolver' bajo estrés. Practica soltar conscientemente tu control parcial de eso por hoy.",
             iconColor: .purple
         ),
-        
+
         UniversalQuote(
             originalQuote: "Yo soy porque nosotros somos.",
             source: "Filosofía Ubuntu (Sudáfrica)",
@@ -428,7 +428,7 @@ struct UniversalQuotesData {
             dailyPractice: "Comunícate hoy con alguien, no para preguntarle cómo está, sino para decirle una razón específica por la que estás agradecido de que esté en tu vida.",
             iconColor: .brown
         ),
-        
+
         UniversalQuote(
             originalQuote: "Sufrimos más a menudo en la imaginación que en la realidad.",
             source: "Séneca (Estoicismo)",
@@ -438,7 +438,7 @@ struct UniversalQuotesData {
             dailyPractice: "Siempre que sientas que entras en la espiral de los 'y si…' el día de hoy, detente y nombra 3 cosas físicas reales que son absolutamente seguras justo frente a ti.",
             iconColor: Color.themeText
         ),
-        
+
         UniversalQuote(
             originalQuote: "La verdad es la virtud más elevada, pero aún más elevada es la vida verdadera.",
             source: "Guru Granth Sahib (Sikhismo)",
@@ -449,7 +449,7 @@ struct UniversalQuotesData {
             iconColor: .orange
         )
     ]
-    
+
     private static let frenchQuotes: [UniversalQuote] = [
         UniversalQuote(
             originalQuote: "Vous êtes ce qu'est votre profond désir. Tel est votre désir, telle est votre volonté. Telle est votre volonté, tels sont vos actes. Tels sont vos actes, tel est votre destin.",
@@ -460,7 +460,7 @@ struct UniversalQuotesData {
             dailyPractice: "Écrivez une chose que vous désirez fortement aujourd'hui. Remarquez si vos actions de cet après-midi vous en rapprochent ou vous en éloignent.",
             iconColor: .orange
         ),
-        
+
         UniversalQuote(
             originalQuote: "Tu aimeras ton prochain comme toi-même.",
             source: "Lévitique 19:18 & Marc 12:31 (Torah / Bible)",
@@ -470,7 +470,7 @@ struct UniversalQuotesData {
             dailyPractice: "Quand quelqu'un vous agace aujourd'hui, arrêtez-vous et demandez-vous : 'Si j'étais à sa place, comment voudrais-je être traité en ce moment ?'",
             iconColor: Color.themeRose
         ),
-        
+
         UniversalQuote(
             originalQuote: "La haine ne cesse jamais par la haine, elle ne cesse que par l'amour ; c'est là une loi éternelle.",
             source: "Le Dhammapada (Bouddhisme)",
@@ -480,7 +480,7 @@ struct UniversalQuotesData {
             dailyPractice: "Pensez à une personne qui vous a légèrement agacé. Au lieu de vous attarder sur votre frustration, essayez de lui envoyer silencieusement de bonnes pensées.",
             iconColor: .pink
         ),
-        
+
         UniversalQuote(
             originalQuote: "Vous avez le pouvoir sur votre esprit - pas sur les événements extérieurs. Réalisez ceci, et vous trouverez la force.",
             source: "Marc Aurèle, Pensées pour moi-même (Stoïcisme)",
@@ -490,7 +490,7 @@ struct UniversalQuotesData {
             dailyPractice: "Quand quelque chose de travers arrive aujourd'hui, prenez une grande respiration et dites : 'Je ne peux pas contrôler cela, mais je choisis ce que je ferai ensuite'.",
             iconColor: Color.themeGold
         ),
-        
+
         UniversalQuote(
             originalQuote: "La blessure est l'endroit par lequel la Lumière entre en vous.",
             source: "Rûmî (Mysticisme Soufi)",
@@ -500,7 +500,7 @@ struct UniversalQuotesData {
             dailyPractice: "Rappelez-vous un défi passé qui a fait mal mais qui vous a rendu plus fort. Remerciez silencieusement pour cette force.",
             iconColor: .yellow
         ),
-        
+
         UniversalQuote(
             originalQuote: "La nature ne se presse pas, et pourtant tout est accompli.",
             source: "Lao Tseu, Tao Tö King (Taoïsme)",
@@ -510,7 +510,7 @@ struct UniversalQuotesData {
             dailyPractice: "Choisissez une petite tâche physique que vous ferez aujourd'hui (comme faire la vaisselle ou vous promener) et concentrez-vous pour le faire à moitié de votre vitesse normale, en pleine conscience.",
             iconColor: Color.themeGreen
         ),
-        
+
         UniversalQuote(
             originalQuote: "Confie-toi en l'Éternel de tout ton cœur, et ne t'appuie pas sur ta sagesse.",
             source: "Proverbes 3:5-6 (Judéo-chrétien)",
@@ -520,7 +520,7 @@ struct UniversalQuotesData {
             dailyPractice: "Identifiez une situation que vous essayez de 'résoudre' sous l'effet du stress. Entraînez-vous à lâcher prise de ce contrôle partiel juste pour aujourd'hui.",
             iconColor: .purple
         ),
-        
+
         UniversalQuote(
             originalQuote: "Je suis parce que nous sommes.",
             source: "Philosophie Ubuntu (Sud-Africaine)",
@@ -530,7 +530,7 @@ struct UniversalQuotesData {
             dailyPractice: "Contactez quelqu'un aujourd'hui, non pas pour lui demander comment il va, mais pour lui donner une raison spécifique pour laquelle vous êtes reconnaissant qu'il fasse partie de votre vie.",
             iconColor: .brown
         ),
-        
+
         UniversalQuote(
             originalQuote: "Nous souffrons plus souvent dans l'imagination que dans la réalité.",
             source: "Sénèque (Stoïcisme)",
@@ -540,7 +540,7 @@ struct UniversalQuotesData {
             dailyPractice: "Chaque fois que vous vous sentez partir dans la spirale des pensées du type 'et si' aujourd'hui, arrêtez-vous et nommez 3 choses physiques réelles qui sont absolument vraies sous vos yeux.",
             iconColor: Color.themeText
         ),
-        
+
         UniversalQuote(
             originalQuote: "La vérité est la plus haute vertu, mais plus haute encore est la vie véritable.",
             source: "Guru Granth Sahib (Sikhisme)",

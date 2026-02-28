@@ -243,7 +243,7 @@ struct RecipeData {
             color: .themeGreen
         )
     ]
-    
+
     private static let hindiRecipes: [Recipe] = [
         Recipe(
             title: "बरसात के दिन का टमाटर सूप",
@@ -462,7 +462,7 @@ struct RecipeData {
             color: .themeGreen
         )
     ]
-    
+
     private static let frenchRecipes: [Recipe] = [
         Recipe(
             title: "Soupe aux Tomates des Jours de Pluie",

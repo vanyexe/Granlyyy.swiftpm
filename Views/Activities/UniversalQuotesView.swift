@@ -5,20 +5,20 @@ struct UniversalQuotesView: View {
     @EnvironmentObject var lang: LanguageManager
 
     private var quotes: [UniversalQuote] {
-        // Reads lang.selectedLanguage so SwiftUI re-evaluates when language changes
+
         UniversalQuotesData.quotes(for: lang.selectedLanguage)
     }
-    
+
     var body: some View {
         ZStack {
             MeshGradientBackground()
                 .ignoresSafeArea()
-            
+
             VStack(spacing: 0) {
-                // Header
+
                 VStack(alignment: .leading, spacing: 4) {
                     Text(L10n.t(.universalWisdom))
-                        .font(.granlyTitle2) // Title -> Title2
+                        .font(.granlyTitle2)
                         .foregroundStyle(Color.themeText)
                     Text(L10n.t(.timelessTruthsSubtitle))
                         .font(.granlySubheadline)
@@ -27,10 +27,9 @@ struct UniversalQuotesView: View {
                 .frame(maxWidth: .infinity, alignment: .leading)
                 .padding(.horizontal, 24)
                 .padding(.top, 16)
-                
+
                 Spacer()
-                
-                // Card View Carousel
+
                 TabView(selection: $currentIndex) {
                     ForEach(0..<quotes.count, id: \.self) { index in
                         QuoteDetailCard(quote: quotes[index])
@@ -39,10 +38,9 @@ struct UniversalQuotesView: View {
                 }
                 .tabViewStyle(.page(indexDisplayMode: .never))
                 .animation(.easeInOut, value: currentIndex)
-                
+
                 Spacer()
-                
-                // Indicators
+
                 HStack(spacing: 8) {
                     ForEach(0..<quotes.count, id: \.self) { index in
                         Circle()
@@ -59,11 +57,11 @@ struct UniversalQuotesView: View {
 
 struct QuoteDetailCard: View {
     let quote: UniversalQuote
-    
+
     var body: some View {
         ScrollView {
             VStack(spacing: 24) {
-                // Core Principle Badge
+
                 Text(quote.corePrinciple)
                     .font(.granlyCaption)
                     .foregroundStyle(.white)
@@ -71,34 +69,32 @@ struct QuoteDetailCard: View {
                     .padding(.vertical, 8)
                     .background(quote.iconColor)
                     .clipShape(Capsule())
-                
-                // Original Quote & Source
+
                 VStack(spacing: 12) {
                     Text("\"\(quote.originalQuote)\"")
-                        .font(.system(size: 20, weight: .medium, design: .serif)) // 24 -> 20
+                        .font(.system(size: 20, weight: .medium, design: .serif))
                         .foregroundStyle(Color.themeText)
                         .multilineTextAlignment(.center)
                         .lineSpacing(4)
-                    
+
                     Text("— \(quote.source)")
                         .font(.subheadline.italic().bold())
                         .foregroundStyle(.secondary)
                 }
                 .padding()
-                
+
                 Divider()
-                
-                // Modern Meaning
+
                 VStack(alignment: .leading, spacing: 8) {
                     HStack {
                         Image(systemName: "globe")
                             .foregroundStyle(Color.themeRose)
                         Text(L10n.t(.simpleMeaning))
-                            .font(.granlyBodyBold) // Headline -> BodyBold
+                            .font(.granlyBodyBold)
                             .foregroundStyle(Color.themeText)
                     }
                     Text(quote.modernMeaning)
-                        .font(.granlyCaption) // Subheadline -> Caption
+                        .font(.granlyCaption)
                         .foregroundStyle(Color.themeText.opacity(0.8))
                         .lineSpacing(4)
                 }
@@ -106,8 +102,7 @@ struct QuoteDetailCard: View {
                 .padding()
                 .background(Color.themeRose.opacity(0.1))
                 .clipShape(RoundedRectangle(cornerRadius: 16))
-                
-                // Grandma Interpret
+
                 VStack(alignment: .leading, spacing: 8) {
                     HStack {
                         Image(systemName: "heart.fill")
@@ -125,18 +120,17 @@ struct QuoteDetailCard: View {
                 .padding()
                 .background(Color.themeWarm.opacity(0.2))
                 .clipShape(RoundedRectangle(cornerRadius: 16))
-                
-                // Daily Practice
+
                 VStack(alignment: .leading, spacing: 8) {
                     HStack {
                         Image(systemName: "leaf.fill")
                             .foregroundStyle(Color.themeGreen)
                         Text(L10n.t(.dailyPractice))
-                            .font(.granlyBodyBold) // Headline -> BodyBold
+                            .font(.granlyBodyBold)
                             .foregroundStyle(Color.themeText)
                     }
                     Text(quote.dailyPractice)
-                        .font(.granlyCaption) // Subheadline -> Caption
+                        .font(.granlyCaption)
                         .foregroundStyle(Color.themeText.opacity(0.8))
                         .lineSpacing(4)
                 }
@@ -144,52 +138,50 @@ struct QuoteDetailCard: View {
                 .padding()
                 .background(Color.themeGreen.opacity(0.15))
                 .clipShape(RoundedRectangle(cornerRadius: 16))
-                
-                // Next Steps Linking
+
                 VStack(spacing: 12) {
                     Text(L10n.t(.continueAction))
                         .font(.granlyHeadline)
                         .foregroundStyle(Color.themeText)
                         .padding(.top, 10)
-                    
+
                     NavigationLink(destination: AskGrandmaView()) {
                         DetailActionRow(title: L10n.t(.discussThisQuote), icon: "person.wave.2.fill")
                     }
-                    
+
                     NavigationLink(destination: GrowthPathView()) {
                         DetailActionRow(title: L10n.t(.updateGrowthPath), icon: "chart.line.uptrend.xyaxis")
                     }
                 }
                 .padding(.top, 8)
-                
+
             }
-            .padding(16) // 24 -> 16
+            .padding(16)
             .background(.thickMaterial)
-            .clipShape(RoundedRectangle(cornerRadius: 24)) // 32 -> 24
-            .shadow(color: Color.black.opacity(0.05), radius: 10, y: 5) // 20 -> 10
-            .padding(.horizontal, 20) // 24 -> 20
-            .padding(.vertical, 8) // 10 -> 8
+            .clipShape(RoundedRectangle(cornerRadius: 24))
+            .shadow(color: Color.black.opacity(0.05), radius: 10, y: 5)
+            .padding(.horizontal, 20)
+            .padding(.vertical, 8)
         }
         .scrollIndicators(.hidden)
     }
 }
 
-// Private helper to avoid re-declaring ActionRow which exists in the main hub
 private struct DetailActionRow: View {
     let title: String
     let icon: String
-    
+
     var body: some View {
         HStack {
             Image(systemName: icon)
                 .foregroundStyle(Color.themeRose)
-            
+
             Text(title)
                 .font(.granlySubheadline)
                 .foregroundStyle(Color.themeText)
-            
+
             Spacer()
-            
+
             Image(systemName: "chevron.right.circle.fill")
                 .foregroundStyle(Color.themeText.opacity(0.5))
                 .font(.granlyHeadline)

@@ -14,7 +14,6 @@ struct LanguageSelectionView: View {
             VStack(spacing: 20) {
                 Spacer()
 
-                // Title section
                 VStack(spacing: 8) {
                     Image(systemName: "globe")
                         .font(.system(size: 40))
@@ -35,7 +34,6 @@ struct LanguageSelectionView: View {
 
                 Spacer()
 
-                // Language cards
                 VStack(spacing: 12) {
                     ForEach(Array(AppLanguage.allCases.enumerated()), id: \.element.id) { index, language in
                         let isEnabled = language.isFullySupported
@@ -52,7 +50,7 @@ struct LanguageSelectionView: View {
                             }
                         }) {
                             HStack(spacing: 14) {
-                                // Language icon
+
                                 ZStack {
                                     Circle()
                                         .fill(isEnabled ? Color.themeRose.opacity(0.15) : Color.gray.opacity(0.1))

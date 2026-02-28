@@ -2,15 +2,13 @@ import SwiftUI
 import AVFoundation
 @preconcurrency import SceneKit
 
-// MARK: - Story Line Model (for binary-search sync engine)
 struct StoryLine: Identifiable, Sendable {
     let id: Int
     let text: String
-    let startRatio: Double   // 0.0 – 1.0 of total chars
+    let startRatio: Double
     let endRatio: Double
 }
 
-// MARK: - Sync Engine
 @MainActor
 final class StorySyncEngine {
 
@@ -21,7 +19,7 @@ final class StorySyncEngine {
         guard !text.isEmpty else { lines = []; startRatios = []; return }
         let totalChars = Double(text.count)
         var result: [StoryLine] = []
-        // Split into sentences using natural language boundaries
+
         let raw = text.components(separatedBy: CharacterSet(charactersIn: "।.!?।\n"))
                       .map { $0.trimmingCharacters(in: .whitespaces) }
                       .filter { !$0.isEmpty }
@@ -29,7 +27,7 @@ final class StorySyncEngine {
         var charCursor = 0
         for (i, sentence) in raw.enumerated() {
             let start = Double(charCursor) / totalChars
-            charCursor += sentence.count + 1   // +1 for the delimiter
+            charCursor += sentence.count + 1
             let end   = Double(min(charCursor, text.count)) / totalChars
             result.append(StoryLine(id: i, text: sentence, startRatio: start, endRatio: min(end, 1.0)))
         }
@@ -37,7 +35,6 @@ final class StorySyncEngine {
         startRatios = result.map { $0.startRatio }
     }
 
-    /// O(log n) binary search
     func findIndex(for ratio: Double) -> Int {
         guard !startRatios.isEmpty else { return 0 }
         var lo = 0, hi = startRatios.count - 1
@@ -57,7 +54,6 @@ final class StorySyncEngine {
     }
 }
 
-// MARK: - Story Player View  (Spotify-inspired)
 struct StoryView: View {
     let mood: Mood
     var storyToLoad: Story?
@@ -71,44 +67,36 @@ struct StoryView: View {
     @EnvironmentObject var lang:          LanguageManager
     @Environment(\.colorScheme)  private var colorScheme
 
-    // Avatar state
     @State private var action:     GrandmaAction    = .idle
     @State private var expression: GrandmaExpression = .neutral
     @State private var waveTrigger    = false
     @State private var showHeartToast = false
 
-    // UI state
     @State private var artworkPulse   = false
     @State private var showFullLyrics = false
     @State private var showMoreMenu   = false
     @State private var showTimerSheet = false
 
-    // Sync engine
     @State private var syncEngine     = StorySyncEngine()
     @State private var currentLineIdx = 0
     @State private var lastScrolledIndex = -1
     @State private var isUserScrolling   = false
 
-    // MARK: Color helpers
     private var primaryColor: Color  { mood.baseColor }
     private var bgColors:    [Color] { mood.gradientColors(for: colorScheme) }
 
-    // Card background — soft warm walnut, elevated but not harsh
     private var cardAccent: Color {
         Color(red: 0.45, green: 0.28, blue: 0.14)
     }
 
-    // Soft ivory — primary text, easier on the eye than pure white
     private var softWhite: Color {
         Color(red: 0.98, green: 0.95, blue: 0.90)
     }
 
-    // Warm cream — secondary / muted text
     private var creamMuted: Color {
         Color(red: 0.94, green: 0.88, blue: 0.78)
     }
 
-    // Derived current char ratio from AudioService
     private var currentRatio: Double {
         guard audioService.duration > 0 else { return 0 }
         return min(1, max(0, audioService.currentTime / audioService.duration))
@@ -118,10 +106,9 @@ struct StoryView: View {
         GeometryReader { geo in
             ZStack(alignment: .top) {
 
-                // ── Cinematic Mood Canvas ──────────────────────────────
                 MoodBackgroundView(colors: bgColors, accentColor: primaryColor)
                     .ignoresSafeArea()
-                // Warm veil — caramel dark, not flat black
+
                 LinearGradient(
                     colors: [
                         Color(red: 0.10, green: 0.06, blue: 0.03).opacity(0.40),
@@ -131,46 +118,38 @@ struct StoryView: View {
                 )
                 .ignoresSafeArea()
 
-                // ── Main scroll content ────────────────────────────────
                 ScrollView(showsIndicators: false) {
                     VStack(spacing: 0) {
 
-                        // 1. TOP HEADER ─────────────────────────────────
                         topHeader
                             .padding(.top, 16)
                             .padding(.bottom, 8)
                             .padding(.horizontal, 24)
 
-                        // 2. 3D MODEL ───────────────────────────────────
                         let avatarSize = min(geo.size.width - 48, 360)
                         avatarCard(size: max(avatarSize, 100))
                             .frame(maxWidth: .infinity)
                             .padding(.horizontal, 24)
                             .padding(.bottom, 28)
 
-                        // 3. TITLE ROW ──────────────────────────────────
                         if let story = story {
                             titleRow(story: story)
                                 .padding(.horizontal, 24)
                                 .padding(.bottom, 20)
                         }
 
-                        // 4. SEEK BAR ───────────────────────────────────
                         seekBarSection
                             .padding(.horizontal, 24)
                             .padding(.bottom, 20)
 
-                        // 5. PLAYBACK CONTROLS ──────────────────────────
                         controlsRow
                             .padding(.horizontal, 24)
                             .padding(.bottom, 20)
 
-                        // 6. UTILITY BAR ────────────────────────────────
                         utilityBar
                             .padding(.horizontal, 24)
                             .padding(.bottom, 28)
 
-                        // 7. STORY PREVIEW CARD ─────────────────────────
                         if let story = story, !syncEngine.lines.isEmpty {
                             storyPreviewCard(story: story)
                                 .padding(.horizontal, 16)
@@ -218,10 +197,9 @@ struct StoryView: View {
         .onDisappear { audioService.stopAudio() }
     }
 
-    // MARK: ── 1. Top Header ─────────────────────────────────────────
     private var topHeader: some View {
         HStack(alignment: .center, spacing: 0) {
-            // Back button
+
             Button { dismiss() } label: {
                 Image(systemName: "chevron.down")
                     .font(.system(size: 16, weight: .semibold))
@@ -230,7 +208,6 @@ struct StoryView: View {
                     .background(.white.opacity(0.16), in: Circle())
             }
 
-            // Centre title block
             VStack(spacing: 2) {
                 Text(L10n.t(.playingFromLibrary))
                     .font(.system(size: 11, weight: .bold, design: .rounded))
@@ -242,7 +219,6 @@ struct StoryView: View {
             }
             .frame(maxWidth: .infinity)
 
-            // More-options button
             Menu {
                 if let s = story {
                     ShareLink(item: "\(s.title)\n\n\(s.content)\n\n— From Granly") {
@@ -260,10 +236,9 @@ struct StoryView: View {
         }
     }
 
-    // MARK: ── 2. Avatar Card ─────────────────────────────────────────
     private func avatarCard(size: CGFloat) -> some View {
         ZStack {
-            // Ambient glow
+
             RoundedRectangle(cornerRadius: 20, style: .continuous)
                 .fill(primaryColor.opacity(artworkPulse ? 0.22 : 0.10))
                 .frame(width: size + 24, height: size + 24)
@@ -289,7 +264,6 @@ struct StoryView: View {
             .animation(.easeInOut(duration: 2.2).repeatForever(autoreverses: true), value: artworkPulse)
             .onTapGesture { handleGrandmaTap() }
 
-            // Heart pop-up toast
             if showHeartToast {
                 Image(systemName: "heart.fill")
                     .font(.system(size: 34))
@@ -300,7 +274,6 @@ struct StoryView: View {
         }
     }
 
-    // MARK: ── 3. Title Row ───────────────────────────────────────────
     private func titleRow(story: Story) -> some View {
         HStack(alignment: .center, spacing: 12) {
             VStack(alignment: .leading, spacing: 5) {
@@ -329,7 +302,6 @@ struct StoryView: View {
         }
     }
 
-    // MARK: ── 4. Seek Bar ────────────────────────────────────────────
     private var seekBarSection: some View {
         VStack(spacing: 6) {
             if audioService.isPreparingAudio {
@@ -384,11 +356,9 @@ struct StoryView: View {
         }
     }
 
-    // MARK: ── 5. Controls ────────────────────────────────────────────
     private var controlsRow: some View {
         HStack(alignment: .center, spacing: 0) {
 
-            // Shuffle
             Button {
                 UIImpactFeedbackGenerator(style: .light).impactOccurred()
                 audioService.stopAudio(); animateAvatar = false
@@ -401,7 +371,6 @@ struct StoryView: View {
             }
             .frame(maxWidth: .infinity)
 
-            // Restart
             Button {
                 UIImpactFeedbackGenerator(style: .medium).impactOccurred()
                 audioService.stopAudio(); animateAvatar = false
@@ -418,7 +387,6 @@ struct StoryView: View {
             }
             .frame(maxWidth: .infinity)
 
-            // Play / Pause
             Button {
                 guard !audioService.isPreparingAudio else { return }
                 UIImpactFeedbackGenerator(style: .medium).impactOccurred()
@@ -449,7 +417,6 @@ struct StoryView: View {
             }
             .frame(maxWidth: .infinity)
 
-            // +15s forward
             Button {
                 UIImpactFeedbackGenerator(style: .medium).impactOccurred()
                 audioService.scrub(to: min(audioService.duration, audioService.currentTime + 15))
@@ -461,7 +428,6 @@ struct StoryView: View {
             }
             .frame(maxWidth: .infinity)
 
-            // Timer
             Button {
                 UIImpactFeedbackGenerator(style: .light).impactOccurred()
                 showTimerSheet = true
@@ -484,7 +450,6 @@ struct StoryView: View {
         }
     }
 
-    // MARK: ── 6. Utility Bar ─────────────────────────────────────────
     private var utilityBar: some View {
         HStack(alignment: .center, spacing: 0) {
 
@@ -518,10 +483,9 @@ struct StoryView: View {
         }
     }
 
-    // MARK: ── 7. Story Preview Card ──────────────────────────────────
     private func storyPreviewCard(story: Story) -> some View {
         VStack(alignment: .leading, spacing: 0) {
-            // Card header
+
             HStack {
                 Text(L10n.t(.storyPreview))
                     .font(.system(size: 11, weight: .bold, design: .rounded))
@@ -533,7 +497,6 @@ struct StoryView: View {
             .padding(.top, 18)
             .padding(.bottom, 14)
 
-            // Lines preview (5 lines max)
             let previewLines = Array(syncEngine.lines.prefix(currentLineIdx + 5).suffix(5))
             VStack(alignment: .leading, spacing: 8) {
                 ForEach(previewLines) { line in
@@ -553,7 +516,6 @@ struct StoryView: View {
             .padding(.horizontal, 16)
             .padding(.bottom, 20)
 
-            // Show Full Story button
             Button {
                 showFullLyrics = true
                 UIImpactFeedbackGenerator(style: .light).impactOccurred()
@@ -575,7 +537,6 @@ struct StoryView: View {
         )
     }
 
-    // MARK: - Line state helper
     private enum LineState { case passed, active, upcoming }
     private func lineState(for id: Int) -> LineState {
         if id < currentLineIdx  { return .passed }
@@ -583,7 +544,6 @@ struct StoryView: View {
         return .upcoming
     }
 
-    // MARK: - Helpers
     private func fmtTime(_ t: TimeInterval) -> String {
         let s = max(0, Int(t)); return String(format: "%d:%02d", s / 60, s % 60)
     }
@@ -618,7 +578,6 @@ struct StoryView: View {
     }
 }
 
-// MARK: - Full-Screen Story Lyrics Sheet
 struct StoryLyricsFullView: View {
     let story: Story
     @ObservedObject var audioService: AudioService
@@ -638,7 +597,7 @@ struct StoryLyricsFullView: View {
     var body: some View {
         NavigationStack {
             ZStack {
-                // Warm espresso dark — cosy, not harsh pure black
+
                 Color(red: 0.08, green: 0.05, blue: 0.03).ignoresSafeArea()
 
                 ScrollViewReader { proxy in
@@ -650,10 +609,10 @@ struct StoryLyricsFullView: View {
                                     .font(.system(size: 28, weight: state == .active ? .heavy : .bold, design: .rounded))
                                     .foregroundStyle(
                                         state == .active
-                                            ? Color(red:0.98,green:0.95,blue:0.90)          // soft ivory
+                                            ? Color(red:0.98,green:0.95,blue:0.90)
                                             : state == .passed
-                                                ? Color(red:0.90,green:0.82,blue:0.70).opacity(0.38) // muted cream
-                                                : Color(red:0.94,green:0.88,blue:0.78).opacity(0.60) // cream
+                                                ? Color(red:0.90,green:0.82,blue:0.70).opacity(0.38)
+                                                : Color(red:0.94,green:0.88,blue:0.78).opacity(0.60)
                                     )
                                     .multilineTextAlignment(.leading)
                                     .animation(.easeInOut(duration: 0.25), value: currentLineIdx)
@@ -663,7 +622,7 @@ struct StoryLyricsFullView: View {
                         .padding(.horizontal, 24)
                         .padding(.vertical, 32)
                         .frame(maxWidth: .infinity, alignment: .leading)
-                        // User scroll suppression gesture
+
                         .gesture(
                             DragGesture()
                                 .onChanged { _ in isUserScrolling = true }
@@ -723,7 +682,6 @@ struct StoryLyricsFullView: View {
     }
 }
 
-// MARK: - Mood Background (reusable)
 struct MoodBackgroundView: View {
     let colors:      [Color]
     let accentColor: Color
@@ -763,7 +721,6 @@ struct MoodBackgroundView: View {
     }
 }
 
-// MARK: - Visual Effect Blur
 struct VisualEffectBlur: UIViewRepresentable {
     var blurStyle: UIBlurEffect.Style
     func makeUIView(context: Context) -> UIVisualEffectView {
@@ -771,5 +728,4 @@ struct VisualEffectBlur: UIViewRepresentable {
     }
     func updateUIView(_ uiView: UIVisualEffectView, context: Context) {}
 }
-
 

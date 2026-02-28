@@ -5,20 +5,20 @@ struct GrowthPathView: View {
     @State private var showCompletionAlert = false
     @State private var activeNode: GrowthNode?
     @EnvironmentObject var lang: LanguageManager
-    
+
     var body: some View {
         ZStack {
             MeshGradientBackground()
                 .ignoresSafeArea()
-            
+
             ScrollView {
                 VStack(spacing: 24) {
-                    // Header Stats
+
                     VStack(spacing: 16) {
                         Text(L10n.t(.emotionalGarden))
                             .font(.granlyTitle2)
                             .foregroundStyle(Color.themeText)
-                        
+
                         HStack(spacing: 30) {
                             StatRing(icon: "heart.fill", value: "\(tracker.emotionalScore)", label: L10n.t(.statEnergy), color: Color.themeRose)
                             StatRing(icon: "leaf.fill", value: "\(tracker.completedPaths)", label: L10n.t(.statPaths), color: Color.themeGreen)
@@ -26,38 +26,36 @@ struct GrowthPathView: View {
                     }
                     .padding(.top, 20)
                     .padding(.bottom, 10)
-                    
-                    // The Path
+
                     VStack(spacing: 0) {
                         ForEach(tracker.nodes.indices, id: \.self) { index in
                             let node = tracker.nodes[index]
                             let isLast = index == tracker.nodes.count - 1
-                            
+
                             VStack(spacing: 0) {
-                                // Node
+
                                 Button(action: {
                                     if !node.isCompleted {
                                         activeNode = node
                                         showCompletionAlert = true
                                     }
                                 }) {
-                                    HStack(spacing: 16) { // 20 -> 16
-                                        // Icon
+                                    HStack(spacing: 16) {
+
                                         ZStack {
                                             Circle()
                                                 .fill(node.isCompleted ? Color.themeGreen : Color.gray.opacity(0.2))
-                                                .frame(width: 48, height: 48) // 60 -> 48
-                                                .shadow(color: node.isCompleted ? Color.themeGreen.opacity(0.4) : .clear, radius: 6) // 8 -> 6
-                                            
+                                                .frame(width: 48, height: 48)
+                                                .shadow(color: node.isCompleted ? Color.themeGreen.opacity(0.4) : .clear, radius: 6)
+
                                             Image(systemName: node.icon)
-                                                .font(.granlyHeadline) // Title2 -> Headline
+                                                .font(.granlyHeadline)
                                                 .foregroundStyle(node.isCompleted ? .white : .gray)
                                         }
-                                        
-                                        // Text
-                                        VStack(alignment: .leading, spacing: 2) { // 4 -> 2
+
+                                        VStack(alignment: .leading, spacing: 2) {
                                             Text(node.title)
-                                                .font(.granlyBodyBold) // Headline -> BodyBold
+                                                .font(.granlyBodyBold)
                                                 .foregroundStyle(Color.themeText)
                                             Text(node.description)
                                                 .font(.granlyCaption)
@@ -65,23 +63,22 @@ struct GrowthPathView: View {
                                                 .multilineTextAlignment(.leading)
                                         }
                                         Spacer()
-                                        
+
                                         if !node.isCompleted {
                                             Image(systemName: "lock.fill")
-                                                .font(.granlySubheadline) // Add slightly smaller lock
+                                                .font(.granlySubheadline)
                                                 .foregroundStyle(.secondary.opacity(0.5))
                                         } else {
                                             Image(systemName: "checkmark.circle.fill")
-                                                .font(.granlySubheadline) // Add slightly smaller check
+                                                .font(.granlySubheadline)
                                                 .foregroundStyle(Color.themeGreen)
                                         }
                                     }
-                                    .padding(14) // default padding -> 14
+                                    .padding(14)
                                     .glassCard(cornerRadius: 16)
                                 }
                                 .disabled(node.isCompleted)
-                                
-                                // Connector Line
+
                                 if !isLast {
                                     Rectangle()
                                         .fill(node.isCompleted ? Color.themeGreen : Color.gray.opacity(0.3))
@@ -114,26 +111,26 @@ struct StatRing: View {
     let value: String
     let label: String
     let color: Color
-    
+
     var body: some View {
         VStack(spacing: 8) {
             ZStack {
                 Circle()
-                    .stroke(color.opacity(0.2), lineWidth: 5) // 6 -> 5
-                    .frame(width: 64, height: 64) // 80 -> 64
-                
+                    .stroke(color.opacity(0.2), lineWidth: 5)
+                    .frame(width: 64, height: 64)
+
                 Circle()
                     .trim(from: 0, to: 0.7)
-                    .stroke(color, style: StrokeStyle(lineWidth: 5, lineCap: .round)) // 6 -> 5
-                    .frame(width: 64, height: 64) // 80 -> 64
+                    .stroke(color, style: StrokeStyle(lineWidth: 5, lineCap: .round))
+                    .frame(width: 64, height: 64)
                     .rotationEffect(.degrees(-90))
-                
+
                 VStack(spacing: 2) {
                     Image(systemName: icon)
-                        .font(.granlyCaption) // Body -> Caption
+                        .font(.granlyCaption)
                         .foregroundStyle(color)
                     Text(value)
-                        .font(.granlyBodyBold) // Headline -> BodyBold
+                        .font(.granlyBodyBold)
                         .foregroundStyle(Color.themeText)
                 }
             }

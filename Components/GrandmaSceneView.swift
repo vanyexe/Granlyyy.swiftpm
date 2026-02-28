@@ -1,16 +1,9 @@
 
-//
-//  GrandmaSceneView.swift
-//  Granlyyy
-//
-//  Created for 3D Interactive Onboarding & Expressions
-//
 
 import SwiftUI
 @preconcurrency import SceneKit
 import AVFoundation
 
-// MARK: - Enums for Actions & Expressions
 enum GrandmaAction: String {
     case idle
     case wave
@@ -33,10 +26,9 @@ struct GrandmaSceneView: UIViewRepresentable {
     @Binding var expression: GrandmaExpression
     @Binding var isSpeaking: Bool
     @ObservedObject var settings: GrandmaSettings
-    
-    // Internal state for lip sync
+
     @State private var lipSyncTimer: Timer?
-    
+
     class Coordinator: NSObject, @unchecked Sendable {
         var scene: SCNScene?
         var gestureTimer: Timer?
@@ -44,9 +36,9 @@ struct GrandmaSceneView: UIViewRepresentable {
         var gestureIdx = 0
         var currentExpression: GrandmaExpression = .neutral
     }
-    
+
     func makeCoordinator() -> Coordinator { Coordinator() }
-    
+
     func makeUIView(context: Context) -> SCNView {
         let v = SCNView()
         v.backgroundColor = .clear
@@ -55,66 +47,57 @@ struct GrandmaSceneView: UIViewRepresentable {
         v.antialiasingMode = .multisampling4X
         let scene = SCNScene()
         scene.background.contents = UIColor.clear
-        
+
         let root = SCNNode()
         root.name = "root"
         scene.rootNode.addChildNode(root)
-        
-        // Build Grandma
+
         buildGrandma(root, settings: settings)
-        
-        // Lighting
+
         addLights(scene)
         addCamera(scene)
-        
-        // Start Idle Animation
+
         startIdle(root)
-        
+
         v.scene = scene
         context.coordinator.scene = scene
         return v
     }
-    
+
     func updateUIView(_ uiView: SCNView, context: Context) {
         guard let scene = context.coordinator.scene,
               let root = scene.rootNode.childNode(withName: "root", recursively: false) else { return }
-        
-        // 1. Update Appearance (Settings)
-        // Flagship Avatar Engine: Non-destructive layered updates!
+
         buildGrandma(root, settings: settings)
-        
-        // 2. Update Action (Body Language)
+
         updateAction(root, action: action, context: context)
-        
-        // 3. Update Expression (Face)
+
         updateExpression(root, expression: expression, context: context)
-        
-        // 4. Lip Sync (Jaw Movement)
+
         updateLipSync(root, isSpeaking: isSpeaking, context: context)
     }
-    
-    // MARK: - Action Engine (Body Language)
+
     private func updateAction(_ root: SCNNode, action: GrandmaAction, context: Context) {
-        // Simple distinct actions:
+
         switch action {
         case .idle:
             context.coordinator.gestureTimer?.invalidate()
             restArms(root)
             startIdle(root)
-            
+
         case .wave:
             if root.childNode(withName: "rightSh", recursively: true)?.action(forKey: "wave") == nil {
                 performWave(root)
             }
-            
+
         case .tellStory:
             if context.coordinator.gestureTimer == nil || !context.coordinator.gestureTimer!.isValid {
                startGestures(root, context.coordinator)
             }
-            
+
         case .listen:
             context.coordinator.gestureTimer?.invalidate()
-            // Lean forward slightly
+
              restArms(root)
              if let head = root.childNode(withName: "head", recursively: true) {
                  head.runAction(.rotateTo(x: 0.1, y: 0.1, z: 0, duration: 0.5))
@@ -123,68 +106,65 @@ struct GrandmaSceneView: UIViewRepresentable {
         case .celebrate:
             context.coordinator.gestureTimer?.invalidate()
             performCelebrate(root)
-            
+
         case .love:
              context.coordinator.gestureTimer?.invalidate()
              performLove(root)
         }
     }
-    
-    // MARK: - Expression Engine (Face)
+
     private func updateExpression(_ root: SCNNode, expression: GrandmaExpression, context: Context) {
-        // Always apply expression update in case of rebuild
+
         context.coordinator.currentExpression = expression
-        
+
         guard let head = root.childNode(withName: "head", recursively: true) else { return }
-        
-        // MOUTH
+
         if let mouth = head.childNode(withName: "mouth", recursively: true) {
              switch expression {
              case .happy:
-                 mouth.scale = SCNVector3(1.2, 0.8, 1) // Smile
+                 mouth.scale = SCNVector3(1.2, 0.8, 1)
                  mouth.eulerAngles = SCNVector3(0, 0, 0.2)
-                 
+
              case .sad:
                  mouth.scale = SCNVector3(1, 0.8, 1)
-                 mouth.eulerAngles = SCNVector3(0, 0, -0.2) // Frown
-                 
+                 mouth.eulerAngles = SCNVector3(0, 0, -0.2)
+
              case .surprised:
-                 mouth.scale = SCNVector3(0.5, 1.5, 1) // 'O' shape
+                 mouth.scale = SCNVector3(0.5, 1.5, 1)
                  mouth.eulerAngles = SCNVector3(0, 0, 0)
-                 
+
              case .angry:
-                  mouth.scale = SCNVector3(1, 0.2, 1) // Thin line
+                  mouth.scale = SCNVector3(1, 0.2, 1)
                   mouth.eulerAngles = SCNVector3(0, 0, 0)
-                  
+
              case .neutral:
                  mouth.scale = SCNVector3(1, 1, 1)
                  mouth.eulerAngles = SCNVector3(0, 0, 0)
              }
         }
-        
-        // EYEBROWS
+
         for s in ["L", "R"] {
             if let brow = head.childNode(withName: "brow_\(s)", recursively: true) {
                 let isLeft = (s == "L")
                 let sign: Float = isLeft ? 1 : -1
-                
+
                 switch expression {
                 case .happy:
-                    brow.position.y = 0.24 // Raised slightly
+                    brow.position.y = 0.24
                     brow.eulerAngles.z = Float.pi/2
-                    
+
                 case .sad:
                    brow.position.y = 0.22
-                   brow.eulerAngles.z = Float.pi/2 - (0.2 * sign) // Inner up
-                    
+                   brow.eulerAngles.z = Float.pi/2 - (0.2 * sign)
+
                 case .surprised:
-                    brow.position.y = 0.28 // Way up
+                    brow.position.y = 0.28
                     brow.eulerAngles.z = Float.pi/2
-                    
+
                 case .angry:
-                    brow.position.y = 0.20 // Low
-                    brow.eulerAngles.z = Float.pi/2 + (0.3 * sign) // Inner down
-                    
+                    brow.position.y = 0.20
+                    brow.eulerAngles.z = Float.pi/2 + (0.3 * sign)
+
                 case .neutral:
                     brow.position.y = 0.22
                     brow.eulerAngles.z = Float.pi/2
@@ -192,17 +172,16 @@ struct GrandmaSceneView: UIViewRepresentable {
             }
         }
     }
-    
-    // MARK: - Lip Sync
+
     private func updateLipSync(_ root: SCNNode, isSpeaking: Bool, context: Context) {
         guard let head = root.childNode(withName: "head", recursively: true) else { return }
-        
+
         if isSpeaking {
              if context.coordinator.lipSyncTimer == nil {
                  context.coordinator.lipSyncTimer = Timer.scheduledTimer(withTimeInterval: 0.15, repeats: true) { _ in
                      if let mouth = head.childNode(withName: "mouth", recursively: true) {
                          let s = Float.random(in: 0.5...1.5)
-                         // Non-uniform scale animation using runBlock or SCNTransaction
+
                          mouth.runAction(SCNAction.run { node in
                              let current = node.scale
                              SCNTransaction.begin()
@@ -216,23 +195,22 @@ struct GrandmaSceneView: UIViewRepresentable {
         } else {
             context.coordinator.lipSyncTimer?.invalidate()
             context.coordinator.lipSyncTimer = nil
-            // Reset mouth to expression state
+
             updateExpression(root, expression: context.coordinator.currentExpression, context: context)
         }
     }
-    
-    // MARK: - Animations
+
     private func performWave(_ root: SCNNode) {
         guard let body = root.childNode(withName: "body", recursively: true),
               let ra = body.childNode(withName: "rightSh", recursively: true),
               let re = body.childNode(withName: "rightEl", recursively: true) else { return }
-        
+
         let raise = SCNAction.rotateTo(x: -0.8, y: 0, z: -0.4, duration: 0.4)
         let waveL = SCNAction.rotateBy(x: 0, y: 0, z: -0.4, duration: 0.2)
         let waveR = SCNAction.rotateBy(x: 0, y: 0, z: 0.4, duration: 0.2)
         let waveSeq = SCNAction.sequence([waveL, waveR, waveL, waveR, waveL, waveR])
         let lower = SCNAction.rotateTo(x: 0, y: 0, z: 0, duration: 0.5)
-        
+
         ra.runAction(.sequence([raise, waveSeq, lower]), forKey: "wave")
         re.runAction(.sequence([
             SCNAction.rotateTo(x: -2.0, y: 0, z: 0, duration: 0.4),
@@ -240,31 +218,31 @@ struct GrandmaSceneView: UIViewRepresentable {
             SCNAction.rotateTo(x: -0.28, y: 0, z: 0, duration: 0.5)
         ]))
     }
-    
+
     private func performCelebrate(_ root: SCNNode) {
          guard let body = root.childNode(withName: "body", recursively: true),
               let la = body.childNode(withName: "leftSh", recursively: true),
               let ra = body.childNode(withName: "rightSh", recursively: true) else { return }
-              
+
         let raiseL = SCNAction.rotateTo(x: -2.5, y: 0, z: 0.2, duration: 0.5)
         let raiseR = SCNAction.rotateTo(x: -2.5, y: 0, z: -0.2, duration: 0.5)
-        
+
         la.runAction(raiseL)
         ra.runAction(raiseR)
     }
-    
+
      private func performLove(_ root: SCNNode) {
           guard let body = root.childNode(withName: "body", recursively: true),
               let la = body.childNode(withName: "leftSh", recursively: true),
               let ra = body.childNode(withName: "rightSh", recursively: true) else { return }
-              
+
         let hugL = SCNAction.rotateTo(x: -1.2, y: 0.5, z: 0, duration: 0.6)
         let hugR = SCNAction.rotateTo(x: -1.2, y: -0.5, z: 0, duration: 0.6)
-        
+
         la.runAction(hugL)
         ra.runAction(hugR)
     }
-    
+
     private func startGestures(_ root: SCNNode, _ c: Coordinator) {
         c.gestureTimer = Timer.scheduledTimer(withTimeInterval: 2.5, repeats: true) { [weak c] _ in
             guard let c = c else { return }
@@ -274,11 +252,11 @@ struct GrandmaSceneView: UIViewRepresentable {
             }
         }
     }
-    
+
      private func gesture(_ i: Int, _ root: SCNNode) {
           guard let body = root.childNode(withName: "body", recursively: true) else { return }
          restArms(root)
-         
+
          if i == 0 {
              if let la = body.childNode(withName: "leftSh", recursively: true),
                 let ra = body.childNode(withName: "rightSh", recursively: true) {
@@ -291,7 +269,7 @@ struct GrandmaSceneView: UIViewRepresentable {
               }
          }
      }
-     
+
     private func restArms(_ root: SCNNode) {
          guard let body = root.childNode(withName: "body", recursively: true) else { return }
         if let la = body.childNode(withName: "leftSh", recursively: true),
@@ -300,7 +278,7 @@ struct GrandmaSceneView: UIViewRepresentable {
             ra.runAction(.rotateTo(x: 0, y: 0, z: 0, duration: 0.5))
         }
     }
-    
+
     private func startIdle(_ root: SCNNode) {
          let tilt = SCNAction.sequence([
              .rotateTo(x: 0, y: 0, z: 0.03, duration: 2.0),
@@ -308,12 +286,10 @@ struct GrandmaSceneView: UIViewRepresentable {
          ])
          if let head = root.childNode(withName: "head", recursively: true) {
              head.runAction(.repeatForever(tilt), forKey: "headTilt")
-             
-             // Start Blink Routine
+
              scheduleBlink(head)
          }
-         
-         // Breathing
+
          if let body = root.childNode(withName: "body", recursively: true) {
              let breathe = SCNAction.sequence([
                  .scale(to: 1.01, duration: 2.0),
@@ -322,10 +298,10 @@ struct GrandmaSceneView: UIViewRepresentable {
              body.runAction(.repeatForever(breathe), forKey: "breathing")
          }
     }
-    
+
     private func scheduleBlink(_ head: SCNNode) {
         let delay = Double.random(in: 2.0...6.0)
-        
+
         let blinkAction = SCNAction.sequence([
             SCNAction.wait(duration: delay),
             SCNAction.run { _ in
@@ -358,12 +334,10 @@ struct GrandmaSceneView: UIViewRepresentable {
                 }
             }
         ])
-        
-        // Use a unique key to prevent compounding of blink actions if startIdle is called again
+
         head.runAction(blinkAction, forKey: "blinkCycle")
     }
 
-    // MARK: - Build 3D Model
     private func buildGrandma(_ root: SCNNode, settings: GrandmaSettings) {
         let body: SCNNode
         if let existing = root.childNode(withName: "body", recursively: false) {
@@ -372,12 +346,11 @@ struct GrandmaSceneView: UIViewRepresentable {
             body = SCNNode(geometry: SCNCapsule(capRadius: 0.52, height: 1.8))
             body.name = "body"; body.position = SCNVector3(0, 0, 0)
             root.addChildNode(body)
-            
+
             let head = SCNNode(geometry: SCNSphere(radius: 0.48))
             head.name = "head"; head.position = SCNVector3(0, 1.35, 0)
             body.addChildNode(head)
-            
-            // Add Non-Destructive Layer Containers
+
             for c in ["faceLayer", "earLayer", "hairLayer", "hatLayer", "glassesLayer"] {
                 let n = SCNNode(); n.name = c; head.addChildNode(n)
             }
@@ -385,22 +358,19 @@ struct GrandmaSceneView: UIViewRepresentable {
                 let n = SCNNode(); n.name = c; body.addChildNode(n)
             }
         }
-        
+
         let head = body.childNode(withName: "head", recursively: false)!
-        
-        // Update Global Body/Head Materials
+
         let outfitColor = UIColor(cgColor: settings.outfitColor.uiColor.cgColor)
         var patternImage = TextureGenerator.shared.generateTexture(pattern: settings.outfitPattern, baseColor: outfitColor)
-        
-        // Festive Override
+
         if settings.outfitStyle == .festive {
             patternImage = TextureGenerator.shared.generateTexture(pattern: .floral, baseColor: UIColor(red: 0.8, green: 0.2, blue: 0.2, alpha: 1))
         }
-        
+
         body.geometry?.materials = [mat(image: patternImage, rough: 0.85)]
         head.geometry?.materials = [mat(UIColor(cgColor: settings.skinTone.uiColor.cgColor), rough: 0.5)]
-        
-        // Rebuild Individual Layers
+
         rebuildLayer(head, layerName: "faceLayer") { buildFace($0, settings: settings) }
         rebuildLayer(head, layerName: "earLayer") { buildEars($0, settings: settings) }
         rebuildLayer(head, layerName: "hairLayer") { buildHair($0, settings: settings) }
@@ -410,13 +380,13 @@ struct GrandmaSceneView: UIViewRepresentable {
         rebuildLayer(body, layerName: "accessoryLayer") { buildAccessories($0, settings: settings) }
         rebuildLayer(body, layerName: "outfitLayer") { buildOutfitExtras($0, settings: settings) }
     }
-    
+
     private func rebuildLayer(_ parent: SCNNode, layerName: String, buildBlock: (SCNNode) -> Void) {
         guard let layer = parent.childNode(withName: layerName, recursively: false) else { return }
         layer.enumerateChildNodes { (node, _) in node.removeFromParentNode() }
         buildBlock(layer)
     }
-    
+
     private func buildOutfitExtras(_ layer: SCNNode, settings: GrandmaSettings) {
         if settings.outfitStyle == .saree {
             let drape = SCNNode(geometry: SCNCylinder(radius: 0.54, height: 1.4))
@@ -427,11 +397,10 @@ struct GrandmaSceneView: UIViewRepresentable {
             layer.addChildNode(drape)
         }
     }
-    
+
     private func buildFace(_ h: SCNNode, settings: GrandmaSettings) {
         let skin = UIColor(cgColor: settings.skinTone.uiColor.cgColor)
-        
-        // Wrinkles Overlay
+
         if settings.wrinkleIntensity > 0 {
             let wColor = skin.blended(with: .black, weight: 0.2).withAlphaComponent(CGFloat(settings.wrinkleIntensity * 0.4))
             for wy in [0.28, 0.32, 0.36] {
@@ -442,14 +411,14 @@ struct GrandmaSceneView: UIViewRepresentable {
                 h.addChildNode(w)
             }
         }
-        
+
         let greyInt = CGFloat(settings.greyIntensity)
         let hairColor = UIColor(cgColor: settings.hairColor.uiColor.cgColor).blended(with: .lightGray, weight: greyInt)
-        
+
         for s: Float in [-1, 1] {
              let x = s * 0.16
              let sc = SCNNode(geometry: SCNSphere(radius: 0.10))
-             sc.geometry?.materials = [mat(.white, rough: 0.05, metal: 0.1)] // PBR Glossy Eye
+             sc.geometry?.materials = [mat(.white, rough: 0.05, metal: 0.1)]
              sc.position = SCNVector3(x, 0.08, 0.38)
              sc.name = "eye_\(s > 0 ? "R" : "L")"
              h.addChildNode(sc)
@@ -458,8 +427,7 @@ struct GrandmaSceneView: UIViewRepresentable {
              ir.position = SCNVector3(0, 0, 0.06); sc.addChildNode(ir)
              let pu = SCNNode(geometry: SCNSphere(radius: 0.028))
              pu.geometry?.materials = [mat(.black, rough: 0.05)]; pu.position = SCNVector3(0, 0, 0.04); ir.addChildNode(pu)
-             
-             // EYEBROWS
+
              let thickness = CGFloat(0.01 + settings.browThickness * 0.02)
              let brow = SCNNode(geometry: SCNCapsule(capRadius: thickness, height: 0.14))
              brow.geometry?.materials = [mat(hairColor)]
@@ -467,8 +435,7 @@ struct GrandmaSceneView: UIViewRepresentable {
              brow.eulerAngles = SCNVector3(0, 0, Float.pi/2)
              brow.name = "brow_\(s > 0 ? "R" : "L")"
              h.addChildNode(brow)
-             
-             // EYELASHES
+
              if settings.hasLashes {
                  let lash = SCNNode(geometry: SCNBox(width: 0.12, height: 0.012, length: 0.015, chamferRadius: 0.005))
                  lash.geometry?.materials = [mat(.black)]
@@ -479,8 +446,7 @@ struct GrandmaSceneView: UIViewRepresentable {
         let nose = SCNNode(geometry: SCNSphere(radius: 0.065))
         nose.geometry?.materials = [mat(skin)]
         nose.position = SCNVector3(0, -0.02, 0.44); h.addChildNode(nose)
-        
-        // Mouth
+
         let mouth = SCNNode(geometry: SCNCapsule(capRadius: 0.032, height: 0.20))
         mouth.geometry?.materials = [mat(UIColor(red: 0.82, green: 0.52, blue: 0.50, alpha: 1))]
         mouth.position = SCNVector3(0, -0.15, 0.40)
@@ -497,8 +463,7 @@ struct GrandmaSceneView: UIViewRepresentable {
             ear.position = SCNVector3(s * 0.44, 0.05, 0.02)
             ear.scale = SCNVector3(0.6, 0.9, 0.5)
             h.addChildNode(ear)
-            
-            // New Earring System
+
             switch settings.earringStyle {
             case .pearl:
                 let earring = SCNNode(geometry: SCNSphere(radius: 0.035))
@@ -521,7 +486,7 @@ struct GrandmaSceneView: UIViewRepresentable {
             }
          }
     }
-    
+
     private func buildHair(_ h: SCNNode, settings: GrandmaSettings) {
          let greyInt = CGFloat(settings.greyIntensity)
          let hairColor = UIColor(cgColor: settings.hairColor.uiColor.cgColor).blended(with: .lightGray, weight: greyInt)
@@ -531,7 +496,7 @@ struct GrandmaSceneView: UIViewRepresentable {
          top.position = SCNVector3(0, 0.1, -0.05)
          top.scale = SCNVector3(1, 0.8, 0.9)
          h.addChildNode(top)
-         
+
          switch settings.hairStyle {
          case .bun:
              let bun = SCNNode(geometry: SCNSphere(radius: 0.25))
@@ -551,7 +516,7 @@ struct GrandmaSceneView: UIViewRepresentable {
               spike.geometry?.materials = [hm]; spike.position = SCNVector3(0, 0.5, 0); h.addChildNode(spike)
          }
     }
-    
+
     private func buildGlasses(_ h: SCNNode, settings: GrandmaSettings) {
         if settings.glassesStyle == .none { return }
         let gm = mat(.black, rough: 0.3)
@@ -572,12 +537,12 @@ struct GrandmaSceneView: UIViewRepresentable {
         br.geometry?.materials = [gm]; br.position = SCNVector3(0, 0.08, 0.46)
         br.eulerAngles = SCNVector3(0, 0, Float.pi/2); h.addChildNode(br)
     }
-    
+
     private func buildArms(_ body: SCNNode, settings: GrandmaSettings) {
           let outfitColor = UIColor(cgColor: settings.outfitColor.uiColor.cgColor)
           let patternImage = TextureGenerator.shared.generateTexture(pattern: settings.outfitPattern, baseColor: outfitColor)
           let skin = UIColor(cgColor: settings.skinTone.uiColor.cgColor)
-          
+
           for (n, sv) in [("left", -1.0), ("right", 1.0)] {
              let x = Float(sv * 0.70)
              let sh = SCNNode(); sh.name = "\(n)Sh"; sh.position = SCNVector3(x, 0.52, 0); body.addChildNode(sh)
@@ -590,7 +555,7 @@ struct GrandmaSceneView: UIViewRepresentable {
              hand.geometry?.materials = [mat(skin)]; hand.position = SCNVector3(0, -0.21, 0); fa.addChildNode(hand)
           }
     }
-    
+
     private func buildAccessories(_ body: SCNNode, settings: GrandmaSettings) {
         switch settings.accessory {
         case .pearl:
@@ -610,7 +575,7 @@ struct GrandmaSceneView: UIViewRepresentable {
         case .none: break
         }
     }
-    
+
     private func buildHats(_ head: SCNNode, settings: GrandmaSettings) {
         switch settings.hatStyle {
         case .sunHat:
@@ -619,7 +584,7 @@ struct GrandmaSceneView: UIViewRepresentable {
             brim.position = SCNVector3(0, 0.4, -0.05)
             brim.eulerAngles = SCNVector3(-0.1, 0, 0)
             head.addChildNode(brim)
-            
+
             let top = SCNNode(geometry: SCNCylinder(radius: 0.45, height: 0.3))
             top.geometry?.materials = [mat(UIColor(red: 0.9, green: 0.8, blue: 0.6, alpha: 1))]
             top.position = SCNVector3(0, 0.55, -0.05)
@@ -629,12 +594,12 @@ struct GrandmaSceneView: UIViewRepresentable {
             let beanie = SCNNode(geometry: SCNSphere(radius: 0.52))
             beanie.geometry?.materials = [mat(UIColor(red: 0.2, green: 0.4, blue: 0.6, alpha: 1), rough: 0.9)]
             beanie.position = SCNVector3(0, 0.15, -0.05)
-            // Flatten the bottom half
+
             let plane = SCNNode(geometry: SCNBox(width: 2, height: 1, length: 2, chamferRadius: 0))
             plane.position = SCNVector3(0, -0.5, 0)
-            
+
             head.addChildNode(beanie)
-            
+
             let pom = SCNNode(geometry: SCNSphere(radius: 0.15))
             pom.geometry?.materials = [mat(UIColor.white, rough: 0.9)]
             pom.position = SCNVector3(0, 0.55, 0)
@@ -645,7 +610,7 @@ struct GrandmaSceneView: UIViewRepresentable {
             beret.position = SCNVector3(0.1, 0.45, 0)
             beret.eulerAngles = SCNVector3(-0.2, 0, -0.2)
             head.addChildNode(beret)
-            
+
             let tip = SCNNode(geometry: SCNCylinder(radius: 0.02, height: 0.05))
             tip.geometry?.materials = [mat(UIColor(red: 0.8, green: 0.2, blue: 0.2, alpha: 1), rough: 0.9)]
             tip.position = SCNVector3(0, 0.1, 0)
@@ -653,13 +618,13 @@ struct GrandmaSceneView: UIViewRepresentable {
         case .none: break
         }
     }
-    
+
     private func addLights(_ scene: SCNScene) {
-         // Cinematic 3-Point Lighting
+
          let ambient = SCNLight(); ambient.type = .ambient; ambient.intensity = 300
          let ambientNode = SCNNode(); ambientNode.light = ambient
          scene.rootNode.addChildNode(ambientNode)
-         
+
          let keyLight = SCNLight(); keyLight.type = .directional
          keyLight.intensity = 800
          keyLight.castsShadow = true
@@ -670,36 +635,35 @@ struct GrandmaSceneView: UIViewRepresentable {
          let keyNode = SCNNode(); keyNode.light = keyLight
          keyNode.eulerAngles = SCNVector3(-Float.pi/4, -Float.pi/4, 0)
          scene.rootNode.addChildNode(keyNode)
-         
+
          let rimLight = SCNLight(); rimLight.type = .omni
          rimLight.intensity = 550
          let rimNode = SCNNode(); rimNode.light = rimLight
          rimNode.position = SCNVector3(0, 2, -3)
          scene.rootNode.addChildNode(rimNode)
     }
-    
+
     private func addCamera(_ scene: SCNScene) {
         let cn = SCNNode(); cn.camera = SCNCamera(); cn.position = SCNVector3(0, 1.3, 3.5); scene.rootNode.addChildNode(cn)
     }
-    
+
     private func mat(_ c: UIColor, rough: CGFloat = 0.6, metal: CGFloat = 0.0) -> SCNMaterial {
         let m = SCNMaterial()
         m.lightingModel = .physicallyBased
         m.diffuse.contents = c
         m.roughness.contents = rough
         m.metalness.contents = metal
-        // Fake SSS via slight emission
+
         m.emission.contents = c.withAlphaComponent(0.1)
         return m
     }
-    
-    // Overloaded to accept Image Textures for patterns
+
     private func mat(image: UIImage, rough: CGFloat = 0.6) -> SCNMaterial {
         let m = SCNMaterial()
         m.lightingModel = .physicallyBased
         m.diffuse.contents = image
-        // To make the pattern repeat correctly on capsules
-        m.diffuse.contentsTransform = SCNMatrix4MakeScale(2, 4, 1) // Tiling scale
+
+        m.diffuse.contentsTransform = SCNMatrix4MakeScale(2, 4, 1)
         m.diffuse.wrapS = .repeat
         m.diffuse.wrapT = .repeat
         m.roughness.contents = rough

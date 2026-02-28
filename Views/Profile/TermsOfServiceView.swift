@@ -12,7 +12,6 @@ struct TermsOfServiceView: View {
             ScrollView {
                 VStack(spacing: 28) {
 
-                    // ── Header ──────────────────────────────────────────
                     VStack(spacing: 14) {
                         ZStack {
                             Circle()
@@ -48,7 +47,6 @@ struct TermsOfServiceView: View {
                     }
                     .padding(.top, 40)
 
-                    // ── Intro blurb ──────────────────────────────────────
                     Text(L10n.t(.termsIntroBody))
                         .font(.granlyBody)
                         .foregroundStyle(Color.themeText.opacity(0.85))
@@ -56,7 +54,6 @@ struct TermsOfServiceView: View {
                         .lineSpacing(5)
                         .padding(.horizontal, 20)
 
-                    // ── Sections ─────────────────────────────────────────
                     VStack(spacing: 16) {
                         LegalSection(
                             icon: "checkmark.seal.fill",
@@ -97,7 +94,6 @@ struct TermsOfServiceView: View {
                     }
                     .padding(.horizontal)
 
-                    // ── Footer ───────────────────────────────────────────
                     VStack(spacing: 4) {
                         Text(L10n.t(.designedWithCare))
                             .font(.granlyCaption)

@@ -5,7 +5,7 @@ struct DigitalGrandmaWisdomView: View {
     @EnvironmentObject var lang: LanguageManager
 
     var body: some View {
-        // Dependency: re-render body when language changes
+
         let _ = lang.selectedLanguage
         return ZStack {
             MeshGradientBackground(scrollOffset: scrolledOffsets)
@@ -13,7 +13,7 @@ struct DigitalGrandmaWisdomView: View {
 
             ScrollView {
                 VStack(alignment: .leading, spacing: 24) {
-                    // Header
+
                     VStack(alignment: .leading, spacing: 4) {
                         Text(L10n.t(.wisdomHubTitle))
                             .font(.granlyTitle)
@@ -25,7 +25,6 @@ struct DigitalGrandmaWisdomView: View {
                     .padding(.horizontal)
                     .padding(.top, 10)
 
-                    // 1. Stories Section
                     WisdomSectionCard(
                         title: L10n.t(.impactfulStories),
                         subtitle: L10n.t(.impactfulStoriesSubtitle),
@@ -37,7 +36,6 @@ struct DigitalGrandmaWisdomView: View {
                         }
                     }
 
-                    // 2. Universal Quotes
                     WisdomSectionCard(
                         title: L10n.t(.universalWisdom),
                         subtitle: L10n.t(.universalWisdomSubtitle),
@@ -49,7 +47,6 @@ struct DigitalGrandmaWisdomView: View {
                         }
                     }
 
-                    // 3. Memory Box
                     WisdomSectionCard(
                         title: L10n.t(.grandmasMemoryBox),
                         subtitle: L10n.t(.memoryBoxSubtitle),
@@ -61,7 +58,6 @@ struct DigitalGrandmaWisdomView: View {
                         }
                     }
 
-                    // 4. Ask Grandma
                     WisdomSectionCard(
                         title: L10n.t(.askGrandma),
                         subtitle: L10n.t(.askGrandmaSubtitle),
@@ -73,7 +69,6 @@ struct DigitalGrandmaWisdomView: View {
                         }
                     }
 
-                    // 5. Personal Growth Path
                     WisdomSectionCard(
                         title: L10n.t(.growthPath),
                         subtitle: L10n.t(.growthPathSubtitle),

@@ -1,14 +1,10 @@
 import SwiftUI
 import SceneKit
 
-// MARK: - Localized Option Protocol
-/// Protocol adopted by every TextGrid option enum.
-/// The `localizedLabel` property returns the translated display name.
 protocol LocalizedOption: Identifiable, Hashable {
     var localizedLabel: String { get }
 }
 
-// MARK: - Filter Enum
 enum CameraFilter: String, CaseIterable, Identifiable {
     case none = "Original"
     case warm = "Warm"
@@ -38,7 +34,6 @@ enum CameraFilter: String, CaseIterable, Identifiable {
     }
 }
 
-// MARK: - Enums
 enum HairColor: String, CaseIterable, Identifiable {
     case gray = "Silver Gray"
     case white = "Snow White"
@@ -46,9 +41,9 @@ enum HairColor: String, CaseIterable, Identifiable {
     case brown = "Chestnut Brown"
     case black = "Midnight Black"
     case red = "Auburn Red"
-    
+
     var id: String { rawValue }
-    
+
     var uiColor: UIColor {
         switch self {
         case .gray: return UIColor(red: 0.88, green: 0.88, blue: 0.92, alpha: 1)
@@ -105,16 +100,16 @@ enum OutfitColor: String, CaseIterable, Identifiable {
     case rose = "Dusty Rose"
     case navy = "Navy Blue"
     case floral = "Spring Floral"
-    
+
     var id: String { rawValue }
-    
+
     var uiColor: UIColor {
         switch self {
         case .lavender: return UIColor(red: 0.80, green: 0.75, blue: 0.92, alpha: 1)
         case .teal: return UIColor(red: 0.30, green: 0.60, blue: 0.65, alpha: 1)
         case .rose: return UIColor(red: 0.85, green: 0.55, blue: 0.55, alpha: 1)
         case .navy: return UIColor(red: 0.20, green: 0.25, blue: 0.40, alpha: 1)
-        case .floral: return UIColor(red: 0.95, green: 0.90, blue: 0.80, alpha: 1) // Base for pattern
+        case .floral: return UIColor(red: 0.95, green: 0.90, blue: 0.80, alpha: 1)
         }
     }
 }
@@ -146,9 +141,9 @@ enum SkinTone: String, CaseIterable, Identifiable {
     case olive = "Olive"
     case tan = "Tan"
     case deep = "Deep"
-    
+
     var id: String { rawValue }
-    
+
     var uiColor: UIColor {
         switch self {
         case .light: return UIColor(red: 0.96, green: 0.87, blue: 0.78, alpha: 1)
@@ -242,7 +237,7 @@ enum EyeColor: String, CaseIterable, Identifiable {
     case green = "Green"
     case hazel = "Hazel"
     var id: String { rawValue }
-    
+
     var uiColor: UIColor {
         switch self {
         case .brown: return UIColor(red: 0.35, green: 0.20, blue: 0.10, alpha: 1.0)
@@ -271,7 +266,6 @@ enum OutfitStyle: String, CaseIterable, Identifiable {
     }
 }
 
-// MARK: - Preset Looks
 struct PresetLook {
     let name: String
     let hairColor: HairColor
@@ -289,7 +283,7 @@ struct PresetLook {
     let wrinkleIntensity: Double
     let browThickness: Double
     let backgroundTheme: BackgroundTheme
-    
+
     static let all: [PresetLook] = [
         PresetLook(name: "Classic Gran",
             hairColor: .gray, hairStyle: .bun, glassesStyle: .round,
@@ -297,91 +291,91 @@ struct PresetLook {
             hatStyle: .none, earringStyle: .pearl, eyeColor: .brown, skinTone: .light,
             hasLashes: true, greyIntensity: 0.9, wrinkleIntensity: 0.5, browThickness: 0.4,
             backgroundTheme: .cozyRoom),
-        
+
         PresetLook(name: "Bollywood Diva",
             hairColor: .black, hairStyle: .bun, glassesStyle: .none,
             outfitColor: .rose, outfitPattern: .floral, outfitStyle: .saree,
             hatStyle: .none, earringStyle: .goldHoop, eyeColor: .brown, skinTone: .medium,
             hasLashes: true, greyIntensity: 0.1, wrinkleIntensity: 0.2, browThickness: 0.8,
             backgroundTheme: .garden),
-        
+
         PresetLook(name: "Cozy Baker",
             hairColor: .white, hairStyle: .bob, glassesStyle: .square,
             outfitColor: .floral, outfitPattern: .stripes, outfitStyle: .casual,
             hatStyle: .sunHat, earringStyle: .none, eyeColor: .hazel, skinTone: .olive,
             hasLashes: true, greyIntensity: 1.0, wrinkleIntensity: 0.7, browThickness: 0.3,
             backgroundTheme: .cozyRoom),
-        
+
         PresetLook(name: "Garden Party",
             hairColor: .blonde, hairStyle: .long, glassesStyle: .catEye,
             outfitColor: .teal, outfitPattern: .polkaDots, outfitStyle: .casual,
             hatStyle: .sunHat, earringStyle: .diamond, eyeColor: .blue, skinTone: .light,
             hasLashes: true, greyIntensity: 0.3, wrinkleIntensity: 0.3, browThickness: 0.6,
             backgroundTheme: .garden),
-        
+
         PresetLook(name: "Midnight Glam",
             hairColor: .black, hairStyle: .pixie, glassesStyle: .catEye,
             outfitColor: .navy, outfitPattern: .plaid, outfitStyle: .festive,
             hatStyle: .none, earringStyle: .diamond, eyeColor: .green, skinTone: .deep,
             hasLashes: true, greyIntensity: 0.0, wrinkleIntensity: 0.1, browThickness: 0.9,
             backgroundTheme: .library),
-        
+
         PresetLook(name: "Festival Queen",
             hairColor: .red, hairStyle: .bun, glassesStyle: .round,
             outfitColor: .rose, outfitPattern: .floral, outfitStyle: .festive,
             hatStyle: .beret, earringStyle: .goldHoop, eyeColor: .hazel, skinTone: .medium,
             hasLashes: true, greyIntensity: 0.0, wrinkleIntensity: 0.4, browThickness: 0.7,
             backgroundTheme: .gradient),
-        
+
         PresetLook(name: "Wise Elder",
             hairColor: .white, hairStyle: .bun, glassesStyle: .square,
             outfitColor: .navy, outfitPattern: .solid, outfitStyle: .casual,
             hatStyle: .none, earringStyle: .pearl, eyeColor: .brown, skinTone: .tan,
             hasLashes: false, greyIntensity: 1.0, wrinkleIntensity: 0.9, browThickness: 0.3,
             backgroundTheme: .library),
-        
+
         PresetLook(name: "Autumn Stroll",
             hairColor: .red, hairStyle: .long, glassesStyle: .round,
             outfitColor: .floral, outfitPattern: .plaid, outfitStyle: .casual,
             hatStyle: .beret, earringStyle: .pearl, eyeColor: .hazel, skinTone: .tan,
             hasLashes: true, greyIntensity: 0.2, wrinkleIntensity: 0.4, browThickness: 0.5,
             backgroundTheme: .library),
-        
+
         PresetLook(name: "Rose Garden",
             hairColor: .gray, hairStyle: .long, glassesStyle: .catEye,
             outfitColor: .rose, outfitPattern: .floral, outfitStyle: .casual,
             hatStyle: .sunHat, earringStyle: .diamond, eyeColor: .blue, skinTone: .light,
             hasLashes: true, greyIntensity: 0.7, wrinkleIntensity: 0.3, browThickness: 0.5,
             backgroundTheme: .garden),
-        
+
         PresetLook(name: "Ocean Breeze",
             hairColor: .white, hairStyle: .pixie, glassesStyle: .none,
             outfitColor: .teal, outfitPattern: .stripes, outfitStyle: .casual,
             hatStyle: .none, earringStyle: .goldHoop, eyeColor: .blue, skinTone: .medium,
             hasLashes: true, greyIntensity: 0.95, wrinkleIntensity: 0.6, browThickness: 0.35,
             backgroundTheme: .gradient),
-        
+
         PresetLook(name: "Nightwear Comfy",
             hairColor: .gray, hairStyle: .bob, glassesStyle: .square,
             outfitColor: .lavender, outfitPattern: .polkaDots, outfitStyle: .nightwear,
             hatStyle: .none, earringStyle: .none, eyeColor: .brown, skinTone: .light,
             hasLashes: false, greyIntensity: 0.85, wrinkleIntensity: 0.6, browThickness: 0.3,
             backgroundTheme: .cozyRoom),
-        
+
         PresetLook(name: "Golden Years",
             hairColor: .blonde, hairStyle: .bun, glassesStyle: .round,
             outfitColor: .floral, outfitPattern: .solid, outfitStyle: .casual,
             hatStyle: .none, earringStyle: .diamond, eyeColor: .hazel, skinTone: .light,
             hasLashes: true, greyIntensity: 0.5, wrinkleIntensity: 0.5, browThickness: 0.55,
             backgroundTheme: .gradient),
-        
+
         PresetLook(name: "Heritage Chic",
             hairColor: .brown, hairStyle: .bun, glassesStyle: .none,
             outfitColor: .rose, outfitPattern: .solid, outfitStyle: .saree,
             hatStyle: .none, earringStyle: .pearl, eyeColor: .brown, skinTone: .deep,
             hasLashes: true, greyIntensity: 0.15, wrinkleIntensity: 0.3, browThickness: 0.65,
             backgroundTheme: .garden),
-        
+
         PresetLook(name: "Winter Warmth",
             hairColor: .white, hairStyle: .bob, glassesStyle: .square,
             outfitColor: .navy, outfitPattern: .plaid, outfitStyle: .casual,
@@ -404,8 +398,7 @@ struct MakeoverState: Equatable {
     var backgroundTheme: BackgroundTheme
     var facialExpression: FacialExpression
     var outfitPattern: OutfitPattern
-    
-    // Phase 7 Avatar Engine
+
     var eyeColor: EyeColor
     var outfitStyle: OutfitStyle
     var wrinkleIntensity: Double
@@ -414,7 +407,6 @@ struct MakeoverState: Equatable {
     var hasLashes: Bool
 }
 
-// MARK: - Settings Manager
 class GrandmaSettings: ObservableObject {
     @AppStorage("hairColor") var hairColor: HairColor = .gray
     @AppStorage("hairStyle") var hairStyle: HairStyle = .bun
@@ -423,35 +415,31 @@ class GrandmaSettings: ObservableObject {
     @AppStorage("accessory") var accessory: AccessoryType = .pearl
     @AppStorage("skinTone") var skinTone: SkinTone = .light
     @AppStorage("cameraFilter") var filter: CameraFilter = .none
-    
-    // New Makeover Properties
+
     @AppStorage("hatStyle") var hatStyle: HatStyle = .none
     @AppStorage("earringStyle") var earringStyle: EarringStyle = .none
     @AppStorage("backgroundTheme") var backgroundTheme: BackgroundTheme = .gradient
     @AppStorage("facialExpression") var facialExpression: FacialExpression = .smile
     @AppStorage("outfitPattern") var outfitPattern: OutfitPattern = .solid
-    
-    // Phase 7 Avatar Engine Properties
+
     @AppStorage("eyeColor") var eyeColor: EyeColor = .brown
     @AppStorage("outfitStyle") var outfitStyle: OutfitStyle = .casual
     @AppStorage("wrinkleIntensity") var wrinkleIntensity: Double = 0.5
     @AppStorage("greyIntensity") var greyIntensity: Double = 0.8
     @AppStorage("browThickness") var browThickness: Double = 0.5
     @AppStorage("hasLashes") var hasLashes: Bool = true
-    
-    // Undo/Redo Stacks
+
     @Published var undoStack: [MakeoverState] = []
     @Published var redoStack: [MakeoverState] = []
     @Published var currentPresetIndex: Int = 0
-    
+
     var canUndo: Bool { !undoStack.isEmpty }
     var canRedo: Bool { !redoStack.isEmpty }
-    
-    // The name of the currently active preset (for display in the wand badge)
+
     var currentPresetName: String { PresetLook.all[currentPresetIndex % PresetLook.all.count].name }
-    
+
     func applyPreset() {
-        saveState() // allow undo
+        saveState()
         let look = PresetLook.all[currentPresetIndex % PresetLook.all.count]
         withAnimation(.easeInOut(duration: 0.3)) {
             hairColor      = look.hairColor
@@ -472,7 +460,7 @@ class GrandmaSettings: ObservableObject {
         }
         currentPresetIndex = (currentPresetIndex + 1) % PresetLook.all.count
     }
-    
+
     func saveState() {
         let currentState = MakeoverState(
             hairColor: hairColor, hairStyle: hairStyle, glassesStyle: glassesStyle,
@@ -483,14 +471,14 @@ class GrandmaSettings: ObservableObject {
             wrinkleIntensity: wrinkleIntensity, greyIntensity: greyIntensity,
             browThickness: browThickness, hasLashes: hasLashes
         )
-        // If the top of the stack is already this state, don't duplicate it.
+
         if undoStack.last != currentState {
             undoStack.append(currentState)
-            // Once we make a new change, we invalidate the redo future
+
             redoStack.removeAll()
         }
     }
-    
+
     func undo() {
         guard canUndo else { return }
         let currentState = MakeoverState(
@@ -502,13 +490,13 @@ class GrandmaSettings: ObservableObject {
             wrinkleIntensity: wrinkleIntensity, greyIntensity: greyIntensity,
             browThickness: browThickness, hasLashes: hasLashes
         )
-        
+
         if let previousState = undoStack.popLast() {
             redoStack.append(currentState)
             restore(state: previousState)
         }
     }
-    
+
     func redo() {
         guard canRedo else { return }
         let currentState = MakeoverState(
@@ -520,13 +508,13 @@ class GrandmaSettings: ObservableObject {
             wrinkleIntensity: wrinkleIntensity, greyIntensity: greyIntensity,
             browThickness: browThickness, hasLashes: hasLashes
         )
-        
+
         if let nextState = redoStack.popLast() {
             undoStack.append(currentState)
             restore(state: nextState)
         }
     }
-    
+
     private func restore(state: MakeoverState) {
         withAnimation {
             hairColor = state.hairColor
@@ -549,7 +537,7 @@ class GrandmaSettings: ObservableObject {
             hasLashes = state.hasLashes
         }
     }
-    
+
     func randomize() {
         saveState()
         withAnimation {
@@ -571,7 +559,7 @@ class GrandmaSettings: ObservableObject {
             hasLashes = Bool.random()
         }
     }
-    
+
     func reset() {
         saveState()
         withAnimation {
@@ -597,7 +585,6 @@ class GrandmaSettings: ObservableObject {
     }
 }
 
-// Extensions for AppStorage support
 extension HairColor: RawRepresentable { }
 extension HairStyle: RawRepresentable { }
 extension GlassesStyle: RawRepresentable { }
@@ -613,7 +600,6 @@ extension OutfitPattern: RawRepresentable { }
 extension EyeColor: RawRepresentable { }
 extension OutfitStyle: RawRepresentable { }
 
-// MARK: - LocalizedOption conformances (for TextGrid)
 extension HairStyle: LocalizedOption { }
 extension GlassesStyle: LocalizedOption { }
 extension AccessoryType: LocalizedOption { }
@@ -623,4 +609,3 @@ extension BackgroundTheme: LocalizedOption { }
 extension FacialExpression: LocalizedOption { }
 extension OutfitStyle: LocalizedOption { }
 extension CameraFilter: LocalizedOption { }
-// OutfitPattern is defined in TextureGenerator.swift — conformance declared there

@@ -20,7 +20,7 @@ struct AskGrandmaView: View {
                 .ignoresSafeArea()
 
             VStack {
-                // Header
+
                 HStack {
                     ProfileAvatarView(size: 44)
                         .shadow(color: .black.opacity(0.1), radius: 4)
@@ -38,7 +38,6 @@ struct AskGrandmaView: View {
                 .padding()
                 .background(.ultraThinMaterial)
 
-                // Chat Area
                 ScrollViewReader { proxy in
                     ScrollView {
                         LazyVStack(spacing: 16) {
@@ -69,7 +68,6 @@ struct AskGrandmaView: View {
                     }
                 }
 
-                // Input Area
                 HStack(spacing: 12) {
                     TextField(L10n.t(.tellGrandmaMind), text: $messageText)
                         .padding(16)
@@ -96,13 +94,13 @@ struct AskGrandmaView: View {
         }
         .navigationBarTitleDisplayMode(.inline)
         .onAppear {
-            // Inject greeting in current language on first appear only
+
             if messages.isEmpty {
                 messages = [ChatMessage(text: L10n.t(.askGrandmaGreeting), isUser: false)]
             }
         }
         .onChange(of: lang.selectedLanguage) { _ in
-            // Update greeting when language changes (only when still just the greeting)
+
             if messages.count == 1 && !messages[0].isUser {
                 messages = [ChatMessage(text: L10n.t(.askGrandmaGreeting), isUser: false)]
             }
@@ -126,12 +124,9 @@ struct AskGrandmaView: View {
         }
     }
 
-    // MARK: - Language-aware Response Engine
-
     private func generateGrandmaResponse(to input: String, language: AppLanguage) -> String {
         let lower = input.lowercased()
 
-        // ── 1. Keyword sets per topic (English + transliterated equivalents) ──
         let sadKeywords      = ["sad", "cry", "depressed", "upset", "grief",
                                 "उदास", "ro", "रोना", "triste", "llorar", "triste", "pleurer", "难过", "哭"]
         let anxiousKeywords  = ["anxious", "worried", "stress", "nervous", "fear",
@@ -149,12 +144,10 @@ struct AskGrandmaView: View {
         let workKeywords     = ["school", "job", "work", "study", "exam", "office",
                                 "स्कूल", "काम", "पढ़ाई", "escuela", "trabajo", "estudio", "école", "travail", "étude", "学校", "工作", "学习"]
 
-        // ── 2. Keyword check ──
         func containsAny(_ keywords: [String]) -> Bool {
             keywords.contains { lower.contains($0) }
         }
 
-        // ── 3. Response pools per language ──
         struct Responses {
             let sad: String
             let anxious: String
@@ -287,7 +280,7 @@ struct AskGrandmaView: View {
                     "人生的确是一段充满惊喜的旅程。你想下一步怎么做呢？",
                 ]
             )
-        default: // .english
+        default:
             pool = Responses(
                 sad: "Oh honey, come sit here with me. It's okay to feel sad. Even the sky has to cry sometimes to make the flowers grow. Take a deep breath. You are loved, so very loved.",
                 anxious: "Take a deep breath with me, right now. In... and out... Good. Remember we can only control what's in front of us today. Leave tomorrow's worries for tomorrow.",
@@ -318,7 +311,6 @@ struct AskGrandmaView: View {
             )
         }
 
-        // ── 4. Match keywords → response ──
         if containsAny(sadKeywords)     { return pool.sad }
         if containsAny(anxiousKeywords) { return pool.anxious }
         if containsAny(angryKeywords)   { return pool.angry }
@@ -328,7 +320,6 @@ struct AskGrandmaView: View {
         if containsAny(sickKeywords)    { return pool.sick }
         if containsAny(workKeywords)    { return pool.work }
 
-        // ── 5. Sentiment fallback (NLTagger works on any language text) ──
         let tagger = NLTagger(tagSchemes: [.sentimentScore])
         tagger.string = input
         let (sentiment, _) = tagger.tag(at: input.startIndex, unit: .paragraph, scheme: .sentimentScore)

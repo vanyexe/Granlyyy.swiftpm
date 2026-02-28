@@ -1,13 +1,11 @@
 import SwiftUI
 import UserNotifications
 
-// MARK: - NotificationsView
 struct NotificationsView: View {
 
     @StateObject private var nm = NotificationManager.shared
     @EnvironmentObject var lang: LanguageManager
 
-    // Local time-picker state
     @State private var storyTime:    Date = NotificationsView.savedTime("story",    defaultHour: 20)
     @State private var activityTime: Date = NotificationsView.savedTime("activity", defaultHour: 8)
 
@@ -20,14 +18,12 @@ struct NotificationsView: View {
             ScrollView(showsIndicators: false) {
                 VStack(spacing: 20) {
 
-                    // ── Permission banner ────────────────────────────────────
                     if nm.authStatus == .denied {
                         permissionBanner
                     } else if nm.authStatus == .notDetermined {
                         requestPermissionBanner
                     }
 
-                    // ── Story Reminder ────────────────────────────────────────
                     reminderCard(
                         icon: "book.fill",
                         iconColor: Color.themeRose,
@@ -46,7 +42,6 @@ struct NotificationsView: View {
                         if nm.storyEnabled { nm.scheduleStoryReminder() }
                     }
 
-                    // ── Activity Reminder ─────────────────────────────────────
                     reminderCard(
                         icon: "heart.fill",
                         iconColor: .orange,
@@ -65,10 +60,8 @@ struct NotificationsView: View {
                         if nm.activityEnabled { nm.scheduleActivityReminder() }
                     }
 
-                    // ── Progress Updates ──────────────────────────────────────
                     progressCard
 
-                    // ── Empty state ───────────────────────────────────────────
                     if !nm.storyEnabled && !nm.activityEnabled && !nm.streakEnabled {
                         emptyState
                     }
@@ -84,7 +77,6 @@ struct NotificationsView: View {
         .task { await nm.refreshStatus() }
     }
 
-    // MARK: Permission banners
     private var requestPermissionBanner: some View {
         VStack(alignment: .leading, spacing: 10) {
             HStack(spacing: 12) {
@@ -147,7 +139,6 @@ struct NotificationsView: View {
         .glassCard(cornerRadius: 16)
     }
 
-    // MARK: Reminder card builder
     @ViewBuilder
     private func reminderCard(
         icon: String,
@@ -160,7 +151,7 @@ struct NotificationsView: View {
         previewBody: String
     ) -> some View {
         VStack(spacing: 0) {
-            // Header row
+
             HStack(spacing: 12) {
                 ZStack {
                     RoundedRectangle(cornerRadius: 10, style: .continuous)
@@ -182,7 +173,6 @@ struct NotificationsView: View {
             if isOn.wrappedValue {
                 Divider().padding(.horizontal, 16)
 
-                // Time picker
                 HStack {
                     Text(L10n.t(.reminderTime))
                         .font(.granlyBody)
@@ -197,7 +187,6 @@ struct NotificationsView: View {
 
                 Divider().padding(.horizontal, 16)
 
-                // Preview notification bubble  
                 HStack(alignment: .top, spacing: 10) {
                     Image(systemName: "bell.fill")
                         .font(.system(size: 12))
@@ -223,7 +212,6 @@ struct NotificationsView: View {
         .glassCard(cornerRadius: 16)
     }
 
-    // MARK: Progress / streak card
     private var progressCard: some View {
         HStack(spacing: 12) {
             ZStack {
@@ -256,7 +244,6 @@ struct NotificationsView: View {
         .glassCard(cornerRadius: 16)
     }
 
-    // MARK: Empty state
     private var emptyState: some View {
         VStack(spacing: 14) {
             Image(systemName: "bell.slash")
@@ -276,7 +263,6 @@ struct NotificationsView: View {
         .frame(maxWidth: .infinity)
     }
 
-    // MARK: Helpers
     private func handleToggle() {
         Task { await ensurePermissionThenSchedule() }
     }
@@ -290,7 +276,6 @@ struct NotificationsView: View {
         }
     }
 
-    // Restore persisted time to a Date
     static func savedTime(_ key: String, defaultHour: Int) -> Date {
         let h = UserDefaults.standard.integer(forKey: "notif_\(key)_hour")
         let m = UserDefaults.standard.integer(forKey: "notif_\(key)_minute")

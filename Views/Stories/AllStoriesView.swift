@@ -1,7 +1,5 @@
 import SwiftUI
 
-/// Full story browser — destination for the "See All" button on the Home screen.
-/// Shows stories across all moods with a horizontal mood-chip filter and category pills.
 @MainActor
 struct AllStoriesView: View {
     @EnvironmentObject var lang: LanguageManager
@@ -24,7 +22,6 @@ struct AllStoriesView: View {
         "Comfort": .comfortCategory,
     ]
 
-    // ── Computed story list ──────────────────────────────────────────────────
     private var filteredStories: [(story: Story, mood: Mood)] {
         let source: [(story: Story, mood: Mood)]
         if let mood = selectedMood {
@@ -44,7 +41,7 @@ struct AllStoriesView: View {
                 .ignoresSafeArea()
 
             VStack(spacing: 0) {
-                // ── Header ───────────────────────────────────────────────────
+
                 HStack {
                     Button(action: { dismiss() }) {
                         Image(systemName: "chevron.left")
@@ -58,16 +55,15 @@ struct AllStoriesView: View {
                         .font(.granlyTitle2)
                         .foregroundStyle(Color.themeText)
                     Spacer()
-                    // Balance spacer
+
                     Color.clear.frame(width: 36, height: 36)
                 }
                 .padding()
                 .background(.ultraThinMaterial)
 
-                // ── Mood Filter Chips ────────────────────────────────────────
                 ScrollView(.horizontal, showsIndicators: false) {
                     HStack(spacing: 10) {
-                        // "All" chip
+
                         MoodFilterChip(
                             label: L10n.t(.allCategory),
                             color: Color.themeRose,
@@ -87,7 +83,6 @@ struct AllStoriesView: View {
                 }
                 .background(.ultraThinMaterial)
 
-                // ── Category Pill Row ────────────────────────────────────────
                 ScrollView(.horizontal, showsIndicators: false) {
                     HStack(spacing: 8) {
                         ForEach(categories, id: \.self) { cat in
@@ -111,7 +106,6 @@ struct AllStoriesView: View {
 
                 Divider().opacity(0.3)
 
-                // ── Story List ───────────────────────────────────────────────
                 if filteredStories.isEmpty {
                     Spacer()
                     VStack(spacing: 12) {
@@ -143,8 +137,6 @@ struct AllStoriesView: View {
     }
 }
 
-// MARK: - Mood Filter Chip
-
 @MainActor
 private struct MoodFilterChip: View {
     let label: String
@@ -166,8 +158,6 @@ private struct MoodFilterChip: View {
     }
 }
 
-// MARK: - Story Row
-
 @MainActor
 private struct AllStoryRow: View {
     let story: Story
@@ -177,7 +167,7 @@ private struct AllStoryRow: View {
 
     var body: some View {
         HStack(spacing: 14) {
-            // Mood color dot + icon
+
             ZStack {
                 Circle()
                     .fill(mood.baseColor.opacity(0.15))
@@ -220,7 +210,6 @@ private struct AllStoryRow: View {
 
             Spacer()
 
-            // Like button
             Button(action: {
                 withAnimation { storyManager.toggleLike(for: story) }
             }) {

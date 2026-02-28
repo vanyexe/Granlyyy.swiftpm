@@ -12,7 +12,6 @@ struct PrivacyPolicyView: View {
             ScrollView {
                 VStack(spacing: 28) {
 
-                    // ── Header ──────────────────────────────────────────
                     VStack(spacing: 14) {
                         ZStack {
                             Circle()
@@ -48,7 +47,6 @@ struct PrivacyPolicyView: View {
                     }
                     .padding(.top, 40)
 
-                    // ── Intro blurb ──────────────────────────────────────
                     Text(L10n.t(.privacyIntroBody))
                         .font(.granlyBody)
                         .foregroundStyle(Color.themeText.opacity(0.85))
@@ -56,7 +54,6 @@ struct PrivacyPolicyView: View {
                         .lineSpacing(5)
                         .padding(.horizontal, 20)
 
-                    // ── Sections ─────────────────────────────────────────
                     VStack(spacing: 16) {
                         LegalSection(
                             icon: "hand.raised.slash.fill",
@@ -91,7 +88,6 @@ struct PrivacyPolicyView: View {
                     }
                     .padding(.horizontal)
 
-                    // ── Footer ───────────────────────────────────────────
                     VStack(spacing: 4) {
                         Text(L10n.t(.designedWithCare))
                             .font(.granlyCaption)
@@ -110,7 +106,6 @@ struct PrivacyPolicyView: View {
     }
 }
 
-// MARK: - Shared component used by both legal pages
 struct LegalSection: View {
     let icon: String
     let iconColor: Color

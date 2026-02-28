@@ -6,13 +6,12 @@ struct StoryListView: View {
     @Environment(\.dismiss) private var dismiss
     @EnvironmentObject var lang: LanguageManager
 
-    // Use index-based selection so it survives language switches
     @State private var selectedCategoryIndex: Int = 0
 
     private var categoryKeys: [L10nKey] {
         [.allCategory, .shortCategory, .moralCategory, .bedtimeCategory, .funnyCategory]
     }
-    // Raw English values for filtering story data (invariant)
+
     private let categoryValues = ["All", "Short", "Moral", "Bedtime", "Funny"]
 
     var filteredStories: [Story] {
@@ -20,19 +19,19 @@ struct StoryListView: View {
         if selectedCategoryIndex == 0 { return stories }
         return stories.filter { $0.category == categoryValues[selectedCategoryIndex] }
     }
-    
+
     var body: some View {
         ZStack {
             Color.themeBackground.ignoresSafeArea()
-            
+
             VStack(spacing: 0) {
-                // Header
+
                 HStack {
                     Button(action: { dismiss() }) {
                         Image(systemName: "chevron.left")
-                            .font(.granlyHeadline) // Title2 -> Headline for a smaller back button
+                            .font(.granlyHeadline)
                             .foregroundStyle(Color.themeText)
-                            .frame(width: 44, height: 44) // 44 -> 36
+                            .frame(width: 44, height: 44)
                             .glassCard(cornerRadius: 14)
                     }
                     Spacer()
@@ -40,12 +39,11 @@ struct StoryListView: View {
                         .font(.granlyTitle2)
                         .foregroundStyle(Color.themeText)
                     Spacer()
-                    // Hidden balance
+
                     Color.clear.frame(width: 44, height: 44)
                 }
                 .padding()
-                
-                // Category Filter
+
                 ScrollView(.horizontal, showsIndicators: false) {
                     HStack(spacing: 10) {
                         ForEach(0..<categoryKeys.count, id: \.self) { idx in
@@ -64,17 +62,16 @@ struct StoryListView: View {
                     .padding(.horizontal)
                     .padding(.bottom, 12)
                 }
-                
-                // Story List
+
                 ScrollView {
-                    LazyVStack(spacing: 12) { // 16 -> 12
+                    LazyVStack(spacing: 12) {
                         ForEach(filteredStories) { story in
                             NavigationLink(destination: StoryView(mood: mood, storyToLoad: story)) {
                                 StoryListRow(story: story, moodColor: mood.baseColor)
                             }
                         }
                     }
-                    .padding(.horizontal) // Just horizontal padding to tighten list
+                    .padding(.horizontal)
                 }
             }
         }
@@ -86,25 +83,25 @@ struct StoryListRow: View {
     let story: Story
     let moodColor: Color
     @ObservedObject var storyManager = StoryManager.shared
-    @EnvironmentObject var lang: LanguageManager   // needed so SwiftUI re-renders on language change
+    @EnvironmentObject var lang: LanguageManager
     var body: some View {
-        HStack(spacing: 12) { // 16 -> 12
-            // Icon / Category Badge
+        HStack(spacing: 12) {
+
             ZStack {
                 Circle()
                     .fill(moodColor.opacity(0.15))
-                    .frame(width: 48, height: 48) // 50 -> 40
+                    .frame(width: 48, height: 48)
                 Image(systemName: getIcon(for: story.category))
                     .foregroundStyle(moodColor)
-                    .font(.system(size: 18)) // Headline -> Subheadline
+                    .font(.system(size: 18))
             }
-            
+
             VStack(alignment: .leading, spacing: 4) {
                 Text(story.title)
-                    .font(.granlyBodyBold) // Headline -> BodyBold
+                    .font(.granlyBodyBold)
                     .foregroundStyle(Color.themeText)
                     .lineLimit(1)
-                
+
                 HStack {
                     Text(L10n.t(categoryKey(for: story.category)).uppercased())
                         .font(.system(size: 11, weight: .bold, design: .rounded))
@@ -112,17 +109,16 @@ struct StoryListRow: View {
                         .foregroundStyle(moodColor)
                         .padding(.horizontal, 8)
                         .padding(.vertical, 4)
-                        .clipShape(Capsule()) // 4px Radius -> Pill capsule
-                    
+                        .clipShape(Capsule())
+
                     Text("• \(story.readTime) \(L10n.t(.minRead))")
                         .font(.granlyCaption)
                         .foregroundStyle(.secondary)
                 }
             }
-            
+
             Spacer()
-            
-            // Like Button
+
             Button(action: {
                 withAnimation {
                     storyManager.toggleLike(for: story)
@@ -133,10 +129,10 @@ struct StoryListRow: View {
                     .font(.granlyHeadline)
             }
         }
-        .padding(14) // 16 -> 14
-        .glassCard(cornerRadius: 14) // 16 -> 14
+        .padding(14)
+        .glassCard(cornerRadius: 14)
     }
-    
+
     func categoryKey(for category: String) -> L10nKey {
         switch category {
         case "Short":   return .shortCategory

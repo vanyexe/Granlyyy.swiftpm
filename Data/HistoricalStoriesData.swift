@@ -29,7 +29,7 @@ struct HistoricalStoriesData {
             personalGrowthTakeaway: "Courage doesn't always roar. Sometimes courage is the quiet, steady choice to do what is right, no matter how long the walk is.",
             iconName: "figure.walk"
         ),
-        
+
         HistoricalStory(
             title: "Nelson Mandela's Forgiveness",
             era: "1990 - South Africa",
@@ -47,7 +47,7 @@ struct HistoricalStoriesData {
             personalGrowthTakeaway: "Your ability to forgive is your greatest strength. It frees you from the past and allows you to build a beautiful future.",
             iconName: "hands.sparkles"
         ),
-        
+
         HistoricalStory(
             title: "Martin Luther King Jr. & The Dream",
             era: "1963 - United States",
@@ -65,7 +65,7 @@ struct HistoricalStoriesData {
             personalGrowthTakeaway: "Never underestimate the power of your words and your vision. Speak your truth with love, and you will spark light in others.",
             iconName: "mic.fill"
         ),
-        
+
         HistoricalStory(
             title: "The Christmas Truce of WWI",
             era: "1914 - Europe",
@@ -83,7 +83,7 @@ struct HistoricalStoriesData {
             personalGrowthTakeaway: "Look for the humanity in everyone you meet. We are all just people, hoping for warmth, peace, and connection.",
             iconName: "snowflake"
         ),
-        
+
         HistoricalStory(
             title: "The Fall of the Berlin Wall",
             era: "1989 - Germany",
@@ -101,7 +101,7 @@ struct HistoricalStoriesData {
             personalGrowthTakeaway: "Tear down the walls that keep you isolated. Connection, freedom, and love are always worth the effort of breaking through.",
             iconName: "squareshape.split.2x2"
         ),
-        
+
         HistoricalStory(
             title: "The Formation of the United Nations",
             era: "1945 - Global",
@@ -119,7 +119,7 @@ struct HistoricalStoriesData {
             personalGrowthTakeaway: "Seek understanding before victory. The most lasting peace comes when everyone has a seat at the table.",
             iconName: "globe.americas.fill"
         ),
-        
+
         HistoricalStory(
             title: "Helen Keller's Breakthrough",
             era: "1887 - United States",
@@ -137,7 +137,7 @@ struct HistoricalStoriesData {
             personalGrowthTakeaway: "No limitation is absolute. With determination, patience, and the right help, you can find a way to express your unique light.",
             iconName: "hand.point.up.braille.fill"
         ),
-        
+
         HistoricalStory(
             title: "The Eradication of Smallpox",
             era: "1980 - Global",
@@ -155,7 +155,7 @@ struct HistoricalStoriesData {
             personalGrowthTakeaway: "When we focus on what binds us rather than what divides us, we can cure the world's deepest ailments.",
             iconName: "cross.case.fill"
         ),
-        
+
         HistoricalStory(
             title: "The Apollo 11 Moon Landing",
             era: "1969 - Space",
@@ -173,7 +173,7 @@ struct HistoricalStoriesData {
             personalGrowthTakeaway: "Aim for the stars. Even if you miss, you will expand your universe. Don't be afraid of the unknown.",
             iconName: "moon.stars.fill"
         ),
-        
+
         HistoricalStory(
             title: "The Global Response to COVID-19",
             era: "2020 - Global",
@@ -211,7 +211,7 @@ struct HistoricalStoriesData {
             personalGrowthTakeaway: "勇气并不总是轰轰烈烈的。有时，勇气是平静而坚定地选择做正确的事，无论这段路程有多长。",
             iconName: "figure.walk"
         ),
-        
+
         HistoricalStory(
             title: "纳尔逊·曼德拉的宽恕",
             era: "1990 - 南非",
@@ -229,7 +229,7 @@ struct HistoricalStoriesData {
             personalGrowthTakeaway: "你宽恕的能力是你最大的力量。它将你从过去中解放出来，让你建立一个美好的未来。",
             iconName: "hands.sparkles"
         ),
-        
+
         HistoricalStory(
             title: "马丁·路德·金与梦想",
             era: "1963 - 美国",
@@ -247,7 +247,7 @@ struct HistoricalStoriesData {
             personalGrowthTakeaway: "永远不要低估你语言和愿景的力量。带着爱说出你的真理，你就会在他人身上点亮光芒。",
             iconName: "mic.fill"
         ),
-        
+
         HistoricalStory(
             title: "第一次世界大战的圣诞休战",
             era: "1914 - 欧洲",
@@ -265,7 +265,7 @@ struct HistoricalStoriesData {
             personalGrowthTakeaway: "在你遇到的每个人身上寻找人性。我们都是一样的人，渴望温暖、和平与联系。",
             iconName: "snowflake"
         ),
-        
+
         HistoricalStory(
             title: "柏林墙的倒塌",
             era: "1989 - 德国",
@@ -283,7 +283,7 @@ struct HistoricalStoriesData {
             personalGrowthTakeaway: "推倒那些让你孤立的墙。联系、自由与爱永远值得你去努力突破阻碍。",
             iconName: "squareshape.split.2x2"
         ),
-        
+
         HistoricalStory(
             title: "联合国的成立",
             era: "1945 - 全球",
@@ -301,7 +301,7 @@ struct HistoricalStoriesData {
             personalGrowthTakeaway: "在寻求胜利之前先寻求理解。只有当所有人都能坐在谈判桌前时，最持久的和平才会到来。",
             iconName: "globe.americas.fill"
         ),
-        
+
         HistoricalStory(
             title: "海伦·凯勒的突破",
             era: "1887 - 美国",
@@ -319,7 +319,7 @@ struct HistoricalStoriesData {
             personalGrowthTakeaway: "没有任何限制是绝对的。只要有决心、耐心和正确的帮助，你就能找到表达自己独特光芒的方法。",
             iconName: "hand.point.up.braille.fill"
         ),
-        
+
         HistoricalStory(
             title: "天花的根除",
             era: "1980 - 全球",
@@ -337,7 +337,7 @@ struct HistoricalStoriesData {
             personalGrowthTakeaway: "当我们关注将我们联系在一起的东西，而不是将我们分开的东西时，我们就能治愈世界上最深的疮痍。",
             iconName: "cross.case.fill"
         ),
-        
+
         HistoricalStory(
             title: "阿波罗11号登月",
             era: "1969 - 太空",
@@ -355,7 +355,7 @@ struct HistoricalStoriesData {
             personalGrowthTakeaway: "把目标定在群星。即使你射偏了，你也会广阔你的宇宙。不要害怕未知。",
             iconName: "moon.stars.fill"
         ),
-        
+
         HistoricalStory(
             title: "全球应对新冠疫情",
             era: "2020 - 全球",
@@ -393,7 +393,7 @@ struct HistoricalStoriesData {
             personalGrowthTakeaway: "साहस हमेशा दहाड़ता नहीं है। कभी-कभी साहस वह शांत, स्थिर विकल्प होता है जो सही काम करने का होता है, भले ही इसके लिए कितनी भी लंबी दूरी क्यों न तय करनी पड़े।",
             iconName: "figure.walk"
         ),
-        
+
         HistoricalStory(
             title: "नेल्सन मंडेला की क्षमा",
             era: "1990 - दक्षिण अफ्रीका",
@@ -411,7 +411,7 @@ struct HistoricalStoriesData {
             personalGrowthTakeaway: "क्षमा करने की आपकी क्षमता आपकी सबसे बड़ी ताकत है। यह आपको अतीत से मुक्त करती है और एक खूबसूरत भविष्य बनाने की अनुमति देती है।",
             iconName: "hands.sparkles"
         ),
-        
+
         HistoricalStory(
             title: "मार्टिन लूथर किंग जूनियर और वो सपना",
             era: "1963 - संयुक्त राज्य अमेरिका",
@@ -429,7 +429,7 @@ struct HistoricalStoriesData {
             personalGrowthTakeaway: "कभी भी अपने शब्दों और अपनी दृष्टि की शक्ति को कम मत समझो। प्रेम के साथ अपना सच बोलो, और तुम दूसरों में भी उम्मीद जगा दोगे।",
             iconName: "mic.fill"
         ),
-        
+
         HistoricalStory(
             title: "प्रथम विश्व युद्ध का क्रिसमस युद्धविराम",
             era: "1914 - यूरोप",
@@ -447,7 +447,7 @@ struct HistoricalStoriesData {
             personalGrowthTakeaway: "आप जिस किसी से भी मिलें, उसमें मानवता की तलाश करें। हम सभी बस इंसान हैं, जो गर्मी, शांति और आपसी जुड़ाव की उम्मीद कर रहे हैं।",
             iconName: "snowflake"
         ),
-        
+
         HistoricalStory(
             title: "बर्लिन की दीवार का गिरना",
             era: "1989 - जर्मनी",
@@ -465,7 +465,7 @@ struct HistoricalStoriesData {
             personalGrowthTakeaway: "उन दीवारों को गिरा दें जो आपको अलग-थलग रखती हैं। जुड़ाव, स्वतंत्रता और प्यार हमेशा प्रयास करने लायक है।",
             iconName: "squareshape.split.2x2"
         ),
-        
+
         HistoricalStory(
             title: "अंतर्राष्ट्रीय संयुक्त राष्ट्र का गठन",
             era: "1945 - वैश्विक",
@@ -483,7 +483,7 @@ struct HistoricalStoriesData {
             personalGrowthTakeaway: "जीतने से पहले समझौता और समझ खोजें। सबसे स्थायी शांति तभी आती है जब सभी को समान अधिकार मिलते हैं।",
             iconName: "globe.americas.fill"
         ),
-        
+
         HistoricalStory(
             title: "हेलेन केलर की सफलता",
             era: "1887 - संयुक्त राज्य अमेरिका",
@@ -501,7 +501,7 @@ struct HistoricalStoriesData {
             personalGrowthTakeaway: "कोई भी सीमा हमेशा नहीं रहती। निश्चय, धैर्य और सही सहायता से, आप अपनी रोशनी बिखेरने का मार्ग ढूंढ सकते हैं।",
             iconName: "hand.point.up.braille.fill"
         ),
-        
+
         HistoricalStory(
             title: "चेचक का पूर्ण उन्मूलन",
             era: "1980 - वैश्विक",
@@ -519,7 +519,7 @@ struct HistoricalStoriesData {
             personalGrowthTakeaway: "जब हम इस बात पर ध्यान केंद्रित करते हैं कि क्या हमें एक साथ बांधता है, न कि क्या हमें अलग करता है, तो हम दुनिया के सबसे गहरे रोगों को ठीक कर सकते हैं।",
             iconName: "cross.case.fill"
         ),
-        
+
         HistoricalStory(
             title: "अपोलो 11 का चंद्र अभियान",
             era: "1969 - अंतरिक्ष",
@@ -537,7 +537,7 @@ struct HistoricalStoriesData {
             personalGrowthTakeaway: "तारों का लक्ष्य रखो। भले ही आप चूक जाएं, लेकिन आप अपने क्षितिज का विस्तार करेंगे। अज्ञात से मत डरो।",
             iconName: "moon.stars.fill"
         ),
-        
+
         HistoricalStory(
             title: "COVID-19 पर वैश्विक प्रतिक्रिया",
             era: "2020 - वैश्विक",
@@ -574,7 +574,7 @@ struct HistoricalStoriesData {
             personalGrowthTakeaway: "El valor no siempre ruge. A veces el coraje es la elección silenciosa y constante de hacer lo que es correcto, sin importar cuán largo sea el camino.",
             iconName: "figure.walk"
         ),
-        
+
         HistoricalStory(
             title: "El Perdón de Nelson Mandela",
             era: "1990 - Sudáfrica",
@@ -592,7 +592,7 @@ struct HistoricalStoriesData {
             personalGrowthTakeaway: "Tu capacidad de perdonar es tu mayor fortaleza. Te libera del pasado y te permite construir un hermoso futuro.",
             iconName: "hands.sparkles"
         ),
-        
+
         HistoricalStory(
             title: "Martin Luther King Jr. y El Sueño",
             era: "1963 - Estados Unidos",
@@ -610,7 +610,7 @@ struct HistoricalStoriesData {
             personalGrowthTakeaway: "Nunca subestimes el poder de tus palabras y tu visión. Habla tu verdad con amor, y encenderás la luz en otros.",
             iconName: "mic.fill"
         ),
-        
+
         HistoricalStory(
             title: "La Tregua de Navidad de la Primera Guerra Mundial",
             era: "1914 - Europa",
@@ -628,7 +628,7 @@ struct HistoricalStoriesData {
             personalGrowthTakeaway: "Busca la humanidad en cada persona que conozcas. Todos somos simplemente personas, esperando calor, paz y conexión.",
             iconName: "snowflake"
         ),
-        
+
         HistoricalStory(
             title: "La Caída del Muro de Berlín",
             era: "1989 - Alemania",
@@ -646,7 +646,7 @@ struct HistoricalStoriesData {
             personalGrowthTakeaway: "Derriba los muros que te mantienen aislado. La conexión, la libertad y el amor siempre valen el esfuerzo de romper lo que nos separa.",
             iconName: "squareshape.split.2x2"
         ),
-        
+
         HistoricalStory(
             title: "La Formación de las Naciones Unidas",
             era: "1945 - Global",
@@ -664,7 +664,7 @@ struct HistoricalStoriesData {
             personalGrowthTakeaway: "Busca entender antes que vencer. La paz más duradera se logra cuando todos tienen un asiento en la mesa.",
             iconName: "globe.americas.fill"
         ),
-        
+
         HistoricalStory(
             title: "El Gran Avance de Helen Keller",
             era: "1887 - Estados Unidos",
@@ -682,7 +682,7 @@ struct HistoricalStoriesData {
             personalGrowthTakeaway: "Ninguna limitación es absoluta. Con determinación, paciencia y la ayuda adecuada, puedes encontrar una manera de expresar tu propia e irrepetible luz.",
             iconName: "hand.point.up.braille.fill"
         ),
-        
+
         HistoricalStory(
             title: "La Erradicación de la Viruela",
             era: "1980 - Global",
@@ -700,7 +700,7 @@ struct HistoricalStoriesData {
             personalGrowthTakeaway: "Cuando nos enfocamos en lo que nos une en lugar de lo que nos divide, podemos curar las enfermedades más profundas del mundo.",
             iconName: "cross.case.fill"
         ),
-        
+
         HistoricalStory(
             title: "El Aterrizaje en la Luna del Apolo 11",
             era: "1969 - Espacio",
@@ -718,7 +718,7 @@ struct HistoricalStoriesData {
             personalGrowthTakeaway: "Apunta a las estrellas. Incluso si fallas, ampliarás tu horizonte. No le tengas miedo a lo desconocido.",
             iconName: "moon.stars.fill"
         ),
-        
+
         HistoricalStory(
             title: "La Respuesta Global al COVID-19",
             era: "2020 - Global",

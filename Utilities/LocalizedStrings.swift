@@ -1,24 +1,19 @@
 import Foundation
 import SwiftUI
 
-// MARK: - L10n Key Enum
-/// Every localizable string key in the app.
 enum L10nKey: String {
-    // MARK: Common
+
     case appName
     case cancel, save, ok, done, skip, reset, close, continueAction, getStarted, seeAll, of
     case comingSoon, version
 
-    // MARK: Onboarding
     case onboarding1Title, onboarding1Description
     case onboarding2Title, onboarding2Description
     case onboarding3Title, onboarding3Description
     case onboarding4Title, onboarding4Description
 
-    // MARK: Language Selection
     case chooseLanguage, chooseLanguageSubtitle
 
-    // MARK: Home
     case greetingMorning, greetingAfternoon, greetingEvening
     case myDear
     case featuredForYou, howAreYouFeeling
@@ -27,17 +22,13 @@ enum L10nKey: String {
     case featuredSeeAll
     case noStoriesFound
 
-    // MARK: Story
     case tellingFrom, readMin, shuffle, story, loading
     case playingFromLibrary, grandmasStories, narratedByGrandma, preparingStory, storyPreview, showFullStory
 
-    // MARK: Quick Toast messages (Grandma tap)
     case toastHehe, toastILoveYou, toastYoureDoing, toastAlwaysHere, toastOhMy
 
-    // MARK: Moods
     case moodHappy, moodSad, moodAnxious, moodLonely, moodTired, moodAngry, moodGrateful, moodExcited
 
-    // MARK: Profile & Settings
     case profile, personal, preferences, support
     case grandmasName, grandmaMakeover
     case language, darkMode, dailyReminders
@@ -45,23 +36,18 @@ enum L10nKey: String {
     case resetAllData, storiesRead
     case renameGrandma
 
-    // MARK: Alerts
     case resetDataQuestion, resetDataMessage, resetDataConfirm
     case rateMessage
     case thankYouForLove
 
-    // MARK: Makeover
     case makeover, hair, glasses, outfit, pattern, accessories, hats, earrings, face, backgrounds, filters
     case wrinkleIntensity, greyIntensity, browThickness, eyelashes
 
-    // MARK: Wisdom
     case wisdom, takeAction, modernExplanation, grandmaAdvice, dailyPractice
 
-    // MARK: Daily Wisdom Page
     case wisdomPageTitle, wisdomPageSubtitle, shareWisdom
     case wisdomCatLife, wisdomCatLove, wisdomCatResilience, wisdomCatSimpleJoys, wisdomCatHappiness, wisdomCatPatience
 
-    // MARK: Wisdom Hub (DigitalGrandmaWisdomView)
     case wisdomHubTitle, wisdomHubSubtitle
     case impactfulStories, impactfulStoriesSubtitle, readOurHistory
     case universalWisdomSubtitle, exploreDailyQuotes
@@ -69,31 +55,24 @@ enum L10nKey: String {
     case askGrandmaSubtitle, talkToGrandma
     case growthPath, growthPathSubtitle, chooseYourPath
 
-    // MARK: Story List
     case allCategory, shortCategory, moralCategory, bedtimeCategory, funnyCategory, natureCategory, comfortCategory
     case storiesLabel, minRead
 
-    // MARK: Universal Quotes Actions
     case discussThisQuote, updateGrowthPath
 
-    // MARK: Emotional Garden (GrowthPathView)
     case emotionalGarden, statEnergy, statPaths
     case completeReflection, reflectionAckButton, reflectionMessage
 
-    // MARK: Ask Grandma Chat
     case chatWithGrandma, grandmaOnline, grandmaTyping, tellGrandmaMind
 
-    // MARK: Impactful Stories (HistoricalStoryListView)
     case storiesThatShapedUs, storiesThatShapedUsSubtitle
 
-    // MARK: Historical Story Detail
     case whatHappened, lifeLessons, grandmaAsks, growthTakeaway, yourReflection, continueYourJourney, talkGrandmaAboutThis
 
-    // MARK: About Granly
     case aboutGranly, ourMission, missionBody, missionBody2, missionBody3
     case rateAppStore, privacyPolicy, termsOfService, designedWithCare, copyright
     case websiteLabel
-    // Legal pages
+
     case privacyDataWeCollect, privacyDataWeCollectBody
     case privacyHowWeUse, privacyHowWeUseBody
     case privacyChildren, privacyChildrenBody
@@ -107,87 +86,69 @@ enum L10nKey: String {
     case termsContact, termsContactBody
     case legalLastUpdated
 
-    // MARK: Grandma Makeover
     case saveLabel
     case optionStyle, optionColor, optionFrames, optionNecklace, optionHatStyle
     case optionSkinTone, optionEyeColor, optionExpression, optionLashes, optionTheme, optionCameraFilter
 
-    // MARK: Memory Box
     case memories, addMemory, noMemoriesYet
 
-    // MARK: Ask Grandma
     case askGrandma, typeYourFeeling, sendMessage
     case askGrandmaGreeting
 
-    // MARK: Growth Path Nodes
     case growthNode1Title, growthNode1Desc
     case growthNode2Title, growthNode2Desc
     case growthNode3Title, growthNode3Desc
     case growthNode4Title, growthNode4Desc
     case growthNode5Title, growthNode5Desc
 
-    // MARK: Historical Stories
     case historicalStories, inspiredBy, readStory
 
-    // MARK: Recipes
-    // MARK: Recipes
     case recipes, prepTime, ingredients, steps, difficulty, grandmasKitchen, comfortFoodSubtitle, instructions
-    
-    // MARK: Cozy Activities
+
     case cozyActivities, cozyActivitiesSubtitle, grandmasHeart, guidedMoment
 
-    // MARK: Universal Quotes
     case universalWisdom, timelessTruthsSubtitle, simpleMeaning, grandmaSaysTitle
 
-    // MARK: Memory Box
     case grandmasMemoryBox, emptyMemoryBox, emptyMemoryBoxHint, savedStories, savedRecipes, savedQuotes
 
-    // MARK: Home View
     case dailyQuoteText, home
 
-    // MARK: Avatar & Player UI
     case currentPreview, themedIcons, resetToDefault, changeProfilePicture, chooseFromGallery
     case sleepTimer, playing, paused
 
-    // MARK: Missing translations (Timers, Buttons, MemBox, Activities)
     case savedMemoriesTitle, storiesSavedCount, noMemoriesBody
     case termsIntroBody, privacyIntroBody
     case stopPlaybackAfter, timer5Min, timer15Min, timer30Min, turnOffTimer, shareStory, stopPlayback
     case stepNoOfTotal, step, currentStep, back, nextStep, completeLabel, activityCompleteTitle, activityCompleteBody, tryAgain, activityComplete, activityFinishedBody, wonderful
 
-    // MARK: Notifications
     case notificationsSection, notifications, reminderTime
     case storyReminder, notifStorySubtitle
     case activityReminder, notifActivitySubtitle
     case progressUpdates, notifProgressSubtitle
     case notifEmptyTitle, notifEmptyBody
     case notifPermissionTitle, notifPermissionBody, notifPermissionButton
-    // Notification body copy (shown in the actual OS notification)
+
     case notifStoryTitle, notifStoryBody, notifStoryBody2
     case notifActivityTitle, notifActivityBody, notifActivityBody2
     case notifStreakTitle, notifStreakBody
     case notifDisabledTitle, notifDisabledBody, notifSettingsButton
 }
 
-// MARK: - L10n Lookup Engine
 struct L10n {
-    /// Reads current language directly from UserDefaults (nonisolated — safe to call from anywhere)
+
     static func t(_ key: L10nKey) -> String {
         let code = UserDefaults.standard.string(forKey: "selectedLanguage") ?? AppLanguage.english.rawValue
         let lang = AppLanguage(rawValue: code) ?? .english
         return strings[lang]?[key] ?? strings[.english]?[key] ?? key.rawValue
     }
 
-    /// Interpolates formatted text (e.g. "Step %d of %d") using the current language
     static func tf(_ key: L10nKey, _ args: CVarArg...) -> String {
         let template = t(key)
         return String(format: template, arguments: args)
     }
 
-    // MARK: - Translation Dictionaries
     static let strings: [AppLanguage: [L10nKey: String]] = [
 
-        // ─────────────────────────── ENGLISH ────────────────────────────
         .english: [
             .appName: "Granly",
             .cancel: "Cancel", .save: "Save", .ok: "OK", .done: "Done",
@@ -278,7 +239,7 @@ struct L10n {
             .allCategory: "All", .shortCategory: "Short", .moralCategory: "Moral",
             .bedtimeCategory: "Bedtime", .funnyCategory: "Funny", .natureCategory: "Nature", .comfortCategory: "Comfort",
             .storiesLabel: "Stories", .minRead: "min read",
-            
+
             .cozyActivities: "Cozy Activities",
             .cozyActivitiesSubtitle: "Comforting moments for your soul.",
             .grandmasHeart: "Grandma's Heart", .guidedMoment: "Guided Moment",
@@ -313,7 +274,6 @@ struct L10n {
             .termsOfService: "Terms of Service", .designedWithCare: "Designed & Developed with Care",
             .copyright: "© 2026 Granly App", .websiteLabel: "Website",
 
-            // Legal pages – English
             .privacyDataWeCollect: "Data We Don't Collect",
             .privacyDataWeCollectBody: "Granly is built entirely offline. We do not collect, transmit, or store any personal information on external servers. All data you create — memories, customisations, preferences — lives only on your device and is never shared.",
             .privacyHowWeUse: "How Your Data Is Used",
@@ -360,27 +320,25 @@ struct L10n {
             .historicalStories: "Historical Stories", .inspiredBy: "Inspired by",
             .readStory: "Read Story",
             .recipes: "Recipes", .prepTime: "Prep Time", .ingredients: "Ingredients",
-            .steps: "Steps", .difficulty: "Difficulty", .grandmasKitchen: "Grandma's Kitchen", 
+            .steps: "Steps", .difficulty: "Difficulty", .grandmasKitchen: "Grandma's Kitchen",
             .comfortFoodSubtitle: "Comfort food for the soul.", .instructions: "Instructions",
 
-            .universalWisdom: "Universal Wisdom", .timelessTruthsSubtitle: "Timeless truths connecting us all.", 
+            .universalWisdom: "Universal Wisdom", .timelessTruthsSubtitle: "Timeless truths connecting us all.",
             .simpleMeaning: "Simple Meaning", .grandmaSaysTitle: "Grandma Says...",
 
-            .grandmasMemoryBox: "Grandma's Memory Box", .emptyMemoryBox: "Your Memory Box is empty.", 
-            .emptyMemoryBoxHint: "Tap the heart icon on your favorite stories and quotes to keep them safe in here.", 
+            .grandmasMemoryBox: "Grandma's Memory Box", .emptyMemoryBox: "Your Memory Box is empty.",
+            .emptyMemoryBoxHint: "Tap the heart icon on your favorite stories and quotes to keep them safe in here.",
             .savedStories: "Saved Stories", .savedRecipes: "Saved Recipes", .savedQuotes: "Saved Quotes",
 
             .dailyQuoteText: "\"Keep your face always toward the sunshine and shadows will fall behind you.\"",
             .home: "Home",
 
-            // NEW STRUCTURAL TEXT KEYS
             .savedMemoriesTitle: "Saved Memories", .storiesSavedCount: "%d stories saved", .noMemoriesBody: "When grandma tells you a story you love,\ntap the heart to save it here forever.",
             .termsIntroBody: "These terms govern your use of Granly. Please take a moment to read them — they're written with the same warmth and care as everything else in this app.",
             .privacyIntroBody: "At Granly, your privacy is as sacred as grandma's secret recipe. Here's exactly what we do — and don't do — with your information.",
             .stopPlaybackAfter: "Stop audio playback after...", .timer5Min: "5 Minutes", .timer15Min: "15 Minutes", .timer30Min: "30 Minutes", .turnOffTimer: "Turn Off Timer", .shareStory: "Share Story", .stopPlayback: "Stop Playback",
             .stepNoOfTotal: "Step %d of %d", .step: "%d steps", .currentStep: "Current Step", .back: "Back", .nextStep: "Next Step", .completeLabel: "Complete", .activityCompleteTitle: "Activity Complete!", .activityCompleteBody: "You've completed all %d steps of %@. Well done.", .tryAgain: "Try Again", .activityComplete: "Activity Complete", .activityFinishedBody: "%@ finished.\nWell done — Grandma is proud of you.", .wonderful: "Wonderful",
 
-            // NOTIFICATIONS
             .notificationsSection: "Notifications", .notifications: "Notifications", .reminderTime: "Reminder Time",
             .storyReminder: "Story Reminder", .notifStorySubtitle: "Evening nudge for bedtime stories",
             .activityReminder: "Activity Reminder", .notifActivitySubtitle: "Morning prompt for cozy activities",
@@ -402,7 +360,6 @@ struct L10n {
             .notifDisabledBody: "Enable them in iOS Settings → Granly.",
             .notifSettingsButton: "Settings",
 
-            // Avatar & Player
             .currentPreview: "Current Preview",
             .themedIcons: "Themed Icons",
             .resetToDefault: "Reset to Default Grandma",
@@ -413,7 +370,6 @@ struct L10n {
             .paused: "Paused"
         ],
 
-        // ─────────────────────────── HINDI ──────────────────────────────
         .hindi: [
             .appName: "ग्रैनली",
             .cancel: "रद्द करें", .save: "सहेजें", .ok: "ठीक है", .done: "हो गया",
@@ -535,7 +491,6 @@ struct L10n {
             .termsOfService: "सेवा शर्तें", .designedWithCare: "प्यार से डिज़ाइन और विकसित",
             .copyright: "© 2026 ग्रॉन्ली एप्प", .websiteLabel: "वेबसाइट",
 
-            // Legal pages – Hindi
             .privacyDataWeCollect: "हम कोई डेटा एकत्र नहीं करते",
             .privacyDataWeCollectBody: "ग्रॉन्ली पूरी तरह ऑफलाइन बना है। हम किसी बाहरी सर्वर पर कोई व्यक्तिगत जानकारी एकत्र, प्रसारित या संग्रहीत नहीं करते। आपका सारा डेटा — यादें, कस्टमाइज़ेशन, प्राथमिकताएँ — केवल आपके डिवाइस पर रहती हैं और कभी साझा नहीं की जाती।",
             .privacyHowWeUse: "आपका डेटा कैसे उपयोग होता है",
@@ -605,7 +560,6 @@ struct L10n {
             .stopPlaybackAfter: "इसके बाद ऑडियो प्लेबैक बंद करें...", .timer5Min: "5 मिनट", .timer15Min: "15 मिनट", .timer30Min: "30 मिनट", .turnOffTimer: "टाइमर बंद करें", .shareStory: "कहानी साझा करें", .stopPlayback: "प्लेबैक रोकें",
             .stepNoOfTotal: "चरण %d / %d", .step: "%d चरण", .currentStep: "वर्तमान चरण", .back: "पीछे", .nextStep: "अगला चरण", .completeLabel: "पूरा", .activityCompleteTitle: "गतिविधि पूरी हुई!", .activityCompleteBody: "आपने %@ के सभी %d चरण पूरे कर लिए हैं। बहुत बढ़िया।", .tryAgain: "फिर से प्रयास करें", .activityComplete: "गतिविधि पूरी", .activityFinishedBody: "%@ समाप्त हुई।\nबहुत बढ़िया — दादी को आप पर गर्व है।", .wonderful: "अद्भुत",
 
-            // NOTIFICATIONS (Hindi)
             .notificationsSection: "सूचनाएँ", .notifications: "सूचनाएँ", .reminderTime: "अनुस्मारक समय",
             .storyReminder: "कहानी अनुस्मारक", .notifStorySubtitle: "सोने की कहानियों के लिए शाम की याद",
             .activityReminder: "गतिविधि अनुस्मारक", .notifActivitySubtitle: "आरामदायक गतिविधियों के लिए सुबह की याद",
@@ -627,7 +581,6 @@ struct L10n {
             .notifDisabledBody: "इन्हें iOS सेटिंग्स → ग्रैनली में सक्षम करें।",
             .notifSettingsButton: "सेटिंग्स",
 
-            // Avatar & Player
             .currentPreview: "वर्तमान पूर्वावलोकन",
             .themedIcons: "थीम वाले आइकन",
             .resetToDefault: "डिफ़ॉल्ट दादी पर रीसेट करें",
@@ -638,7 +591,6 @@ struct L10n {
             .paused: "रुका हुआ"
         ],
 
-        // ─────────────────────────── SPANISH ─────────────────────────────
         .spanish: [
             .appName: "Granly",
             .cancel: "Cancelar", .save: "Guardar", .ok: "Aceptar", .done: "Hecho",
@@ -760,7 +712,6 @@ struct L10n {
             .termsOfService: "Términos de Servicio", .designedWithCare: "Diseñado y Desarrollado con Cuidado",
             .copyright: "© 2026 Granly App", .websiteLabel: "Sitio Web",
 
-            // Legal pages – Spanish
             .privacyDataWeCollect: "Datos que No Recopilamos",
             .privacyDataWeCollectBody: "Granly está creado completamente sin conexión. No recopilamos, transmitimos ni almacenamos ninguna información personal en servidores externos. Todos los datos que creas — recuerdos, personalizaciones, preferencias — viven solo en tu dispositivo y nunca se comparten.",
             .privacyHowWeUse: "Cómo se Usan tus Datos",
@@ -809,7 +760,7 @@ struct L10n {
             .recipes: "Recetas", .prepTime: "Tiempo de prep.", .ingredients: "Ingredientes",
             .steps: "Pasos", .difficulty: "Dificultad", .grandmasKitchen: "La Cocina de la Abuela",
             .comfortFoodSubtitle: "Comida reconfortante para el alma.", .instructions: "Instrucciones",
-            
+
             .cozyActivities: "Actividades Acogedoras",
             .cozyActivitiesSubtitle: "Momentos reconfortantes para tu alma.",
             .grandmasHeart: "Corazón de la Abuela", .guidedMoment: "Momento Guiado",
@@ -830,7 +781,6 @@ struct L10n {
             .stopPlaybackAfter: "Detener reproducción de audio después...", .timer5Min: "5 minutos", .timer15Min: "15 minutos", .timer30Min: "30 minutos", .turnOffTimer: "Apagar el temporizador", .shareStory: "Compartir historia", .stopPlayback: "Detener reproducción",
             .stepNoOfTotal: "Paso %d de %d", .step: "%d pasos", .currentStep: "Paso actual", .back: "Atrás", .nextStep: "Siguiente paso", .completeLabel: "Completar", .activityCompleteTitle: "¡Actividad completada!", .activityCompleteBody: "Ha completado todos los %d pasos de %@. Bien hecho.", .tryAgain: "Intentar otra vez", .activityComplete: "Actividad Completada", .activityFinishedBody: "%@ terminada.\nBien hecho — La abuela está orgullosa.", .wonderful: "Maravilloso",
 
-            // NOTIFICATIONS (Spanish)
             .notificationsSection: "Notificaciones", .notifications: "Notificaciones", .reminderTime: "Hora del recordatorio",
             .storyReminder: "Recordatorio de historia", .notifStorySubtitle: "Recordatorio vespertino para cuentos",
             .activityReminder: "Recordatorio de actividad", .notifActivitySubtitle: "Recordatorio matutino para actividades",
@@ -852,7 +802,6 @@ struct L10n {
             .notifDisabledBody: "Habilítalas en Ajustes de iOS → Granly.",
             .notifSettingsButton: "Ajustes",
 
-            // Avatar & Player
             .currentPreview: "Vista previa actual",
             .themedIcons: "Iconos temáticos",
             .resetToDefault: "Restablecer a la abuela por defecto",
@@ -863,7 +812,6 @@ struct L10n {
             .paused: "En pausa"
         ],
 
-        // ─────────────────────────── FRENCH ─────────────────────────────
         .french: [
             .appName: "Granly",
             .cancel: "Annuler", .save: "Enregistrer", .ok: "OK", .done: "Terminé",
@@ -985,7 +933,6 @@ struct L10n {
             .termsOfService: "Conditions d'Utilisation", .designedWithCare: "Conçu et Développé avec Soin",
             .copyright: "© 2026 Granly App", .websiteLabel: "Site Web",
 
-            // Legal pages – French
             .privacyDataWeCollect: "Données que Nous Ne Collectons Pas",
             .privacyDataWeCollectBody: "Granly est entièrement hors ligne. Nous ne collectons, ne transmettons ni ne stockons aucune information personnelle sur des serveurs externes. Toutes les données que vous créez — souvenirs, personnalisations, préférences — ne vivent que sur votre appareil et ne sont jamais partagées.",
             .privacyHowWeUse: "Comment Vos Données Sont Utilisées",
@@ -1034,7 +981,7 @@ struct L10n {
             .recipes: "Recettes", .prepTime: "Temps de Préparation", .ingredients: "Ingrédients",
             .steps: "Étapes", .difficulty: "Difficulté", .grandmasKitchen: "La Cuisine de Grand-mère",
             .comfortFoodSubtitle: "Une cuisine réconfortante pour l'âme.", .instructions: "Instructions",
-            
+
             .cozyActivities: "Activités Cocooning",
             .cozyActivitiesSubtitle: "Des moments de réconfort pour votre âme.",
             .grandmasHeart: "Cœur de Grand-mère", .guidedMoment: "Moment Guidé",
@@ -1055,7 +1002,6 @@ struct L10n {
             .stopPlaybackAfter: "Arrêter la lecture audio après...", .timer5Min: "5 Minutes", .timer15Min: "15 Minutes", .timer30Min: "30 Minutes", .turnOffTimer: "Éteindre le minuteur", .shareStory: "Partager l'histoire", .stopPlayback: "Arrêter la lecture",
             .stepNoOfTotal: "Étape %d sur %d", .step: "%d étapes", .currentStep: "Étape actuelle", .back: "Retour", .nextStep: "Étape suivante", .completeLabel: "Terminer", .activityCompleteTitle: "Activité terminée !", .activityCompleteBody: "Vous avez terminé toutes les %d étapes de %@. Bien joué.", .tryAgain: "Réessayer", .activityComplete: "Activité Terminée", .activityFinishedBody: "%@ terminée.\nBien joué — Grand-mère est fière de toi.", .wonderful: "Formidable",
 
-            // NOTIFICATIONS (French)
             .notificationsSection: "Notifications", .notifications: "Notifications", .reminderTime: "Heure du rappel",
             .storyReminder: "Rappel d'histoire", .notifStorySubtitle: "Rappel du soir pour les histoires du coucher",
             .activityReminder: "Rappel d'activité", .notifActivitySubtitle: "Rappel du matin pour les activités réconfortantes",
@@ -1077,7 +1023,6 @@ struct L10n {
             .notifDisabledBody: "Activez-les dans les Réglages iOS → Granly.",
             .notifSettingsButton: "Réglages",
 
-            // Avatar & Player
             .currentPreview: "Aperçu actuel",
             .themedIcons: "Icônes thématiques",
             .resetToDefault: "Réinitialiser à la grand-mère par défaut",
@@ -1088,8 +1033,6 @@ struct L10n {
             .paused: "En pause"
         ],
 
-
-        // ─────────────────────────── MANDARIN (zh-CN) ───────────────────────────
         .mandarin: [
             .appName: "格兰利",
             .cancel: "取消", .save: "保存", .ok: "确定", .done: "完成",
@@ -1180,7 +1123,7 @@ struct L10n {
             .allCategory: "全部", .shortCategory: "短篇", .moralCategory: "寓言",
             .bedtimeCategory: "睡前", .funnyCategory: "趣味", .natureCategory: "自然", .comfortCategory: "慰藉",
             .storiesLabel: "故事", .minRead: "分钟阅读",
-            
+
             .cozyActivities: "温馨活动",
             .cozyActivitiesSubtitle: "抚慰心灵的写意时刻。",
             .grandmasHeart: "奶奶的心声", .guidedMoment: "导引时刻",
@@ -1215,7 +1158,6 @@ struct L10n {
             .termsOfService: "服务条款", .designedWithCare: "用心设计与开发",
             .copyright: "© 2026 格兰利应用", .websiteLabel: "网站",
 
-            // Legal pages – Mandarin
             .privacyDataWeCollect: "我们不收集的数据",
             .privacyDataWeCollectBody: "格兰利完全在离线状态下运行。我们不会在外部服务器上收集、传输或存储任何个人信息。您创建的所有数据——回忆、个性化设置、偏好——只保存在您的设备上，从不共享。",
             .privacyHowWeUse: "您的数据如何使用",
@@ -1281,7 +1223,6 @@ struct L10n {
             .stopPlaybackAfter: "此后停止音频播放...", .timer5Min: "5 分钟", .timer15Min: "15 分钟", .timer30Min: "30 分钟", .turnOffTimer: "关闭定时器", .shareStory: "分享故事", .stopPlayback: "停止播放",
             .stepNoOfTotal: "步骤 %d / %d", .step: "%d 步", .currentStep: "当前步骤", .back: "返回", .nextStep: "下一步", .completeLabel: "完成", .activityCompleteTitle: "活动完成！", .activityCompleteBody: "您已完成 %@ 的所有 %d 个步骤。做得好。", .tryAgain: "再试一次", .activityComplete: "活动完成", .activityFinishedBody: "活动 %@ 结束。\n做得好——奶奶为你感到骄傲。", .wonderful: "太棒了",
 
-            // NOTIFICATIONS (Mandarin)
             .notificationsSection: "通知", .notifications: "通知", .reminderTime: "提醒时间",
             .storyReminder: "故事提醒", .notifStorySubtitle: "睡前故事的晚间提示",
             .activityReminder: "活动提醒", .notifActivitySubtitle: "温馨活动的早晨提示",
@@ -1303,7 +1244,6 @@ struct L10n {
             .notifDisabledBody: "在 iOS 设置 → Granly 中启用它们。",
             .notifSettingsButton: "设置",
 
-            // Avatar & Player
             .currentPreview: "当前预览",
             .themedIcons: "主题图标",
             .resetToDefault: "重置为默认奶奶",

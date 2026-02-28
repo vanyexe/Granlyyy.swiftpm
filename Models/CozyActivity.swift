@@ -22,7 +22,7 @@ struct CozyActivityData {
         case .english:  return englishActivities
         }
     }
-    
+
     private static let englishActivities: [CozyActivity] = [
         CozyActivity(
             title: "Knitting Time",
@@ -185,9 +185,7 @@ struct CozyActivityData {
             ]
         )
     ]
-    
-    // MARK: - Localized Versions
-    
+
     private static let mandarinActivities: [CozyActivity] = [
         CozyActivity(
             title: "编织时光",

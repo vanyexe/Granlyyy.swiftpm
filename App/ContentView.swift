@@ -5,10 +5,9 @@ struct ContentView: View {
     @State private var isActive = false
     @AppStorage("hasCompletedOnboarding") private var hasCompletedOnboarding = false
     @AppStorage("hasSelectedLanguage") private var hasSelectedLanguage = false
-    
-    // Inject the global language manager so changing the language forces an app-wide redraw
+
     @EnvironmentObject var lang: LanguageManager
-    
+
     var body: some View {
         ZStack {
             if isActive {
@@ -25,14 +24,10 @@ struct ContentView: View {
                 SplashView(isActive: $isActive)
             }
         }
-        .id(lang.selectedLanguage.rawValue) // CRITICAL: Forces entire app to redraw when language changes
+        .id(lang.selectedLanguage.rawValue)
         .animation(.easeInOut, value: isActive)
         .animation(.easeInOut, value: hasCompletedOnboarding)
         .animation(.easeInOut, value: hasSelectedLanguage)
     }
 }
-
-
-
-
 

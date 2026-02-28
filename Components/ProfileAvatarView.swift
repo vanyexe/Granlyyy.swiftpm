@@ -1,13 +1,12 @@
 import SwiftUI
 
-/// Helper View to display the correct avatar based on settings
 @MainActor
 struct ProfileAvatarView: View {
     let size: CGFloat
     @AppStorage("profileAvatarType") private var avatarType = "default"
     @AppStorage("profileAvatarValue") private var avatarValue = ""
     @AppStorage("customProfileImageData") private var customImageData: Data = Data()
-    
+
     var body: some View {
         Group {
             if avatarType == "gallery", let uiImage = UIImage(data: customImageData) {

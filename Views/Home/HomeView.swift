@@ -14,38 +14,37 @@ struct HomeView: View {
     @State private var scrollOffset: CGFloat = 0
     @Namespace private var animation
     @EnvironmentObject var lang: LanguageManager
-    
-    // For Navigation
+
     @State private var showSurpriseStory = false
     @State private var surpriseStory: Story?
-    
+
     let moods = Mood.allMoods
-    
+
     var body: some View {
         NavigationStack {
             TabView(selection: $selectedTab) {
-                // Shared background applied to the Home Tab content
+
                 homeContent
                     .tag(Tab.stories)
                     .tabItem { Label(L10n.t(.home), systemImage: "house.fill") }
-                
+
                 MemoryBoxView()
                     .tag(Tab.memories)
                     .tabItem { Label(L10n.t(.memories), systemImage: "heart.fill") }
-                    
+
                 CozyActivitiesView()
                     .tag(Tab.activities)
                     .tabItem { Label(L10n.t(.cozyActivities), systemImage: "sun.max.fill") }
-                
+
                 DigitalGrandmaWisdomView()
                     .tag(Tab.wisdom)
                     .tabItem { Label(L10n.t(.wisdom), systemImage: "leaf.fill") }
-                
+
                 ProfileView()
                     .tag(Tab.profile)
                     .tabItem { Label(L10n.t(.profile), systemImage: "person.circle.fill") }
             }
-            .id(lang.selectedLanguage.rawValue) // Force tab item label refresh on language change
+            .id(lang.selectedLanguage.rawValue)
             .tint(Color.themeRose)
             .navigationDestination(isPresented: $showSurpriseStory) {
                 if let story = surpriseStory {
@@ -54,14 +53,14 @@ struct HomeView: View {
             }
         }
     }
-    
+
     private var homeContent: some View {
         ZStack {
             MeshGradientBackground(scrollOffset: scrollOffset)
                 .ignoresSafeArea()
-            
+
             VStack(spacing: 0) {
-                // Header moved inside home tab
+
                 HStack {
                     VStack(alignment: .leading, spacing: 4) {
                         Text(greeting)
@@ -85,33 +84,31 @@ struct HomeView: View {
                 .padding(.horizontal)
                 .padding(.top, 10)
                 .background(.ultraThinMaterial)
-                
+
                 ScrollView {
                     VStack(spacing: 24) {
-                        // Daily Quote Card
+
                         DailyQuoteCard()
                             .padding(.horizontal)
                             .onTapGesture { selectedTab = .wisdom }
-                        
-                        // Featured Stories — Premium Hero Cards
+
                         VStack(alignment: .leading, spacing: 14) {
-                            // Section Header
+
                             HStack(alignment: .center, spacing: 8) {
-                                // Decorative accent
+
                                 RoundedRectangle(cornerRadius: 2)
                                     .fill(
                                         LinearGradient(colors: [Color.themeRose, Color.themeGold],
                                                        startPoint: .top, endPoint: .bottom)
                                     )
                                     .frame(width: 4, height: 22)
-                                
+
                                 Text(L10n.t(.featuredForYou))
                                     .font(.granlyHeadline)
                                     .foregroundStyle(Color.themeText)
-                                
+
                                 Spacer()
-                                
-                                // "See All" pill — navigates to AllStoriesView
+
                                 NavigationLink(destination: AllStoriesView()) {
                                     Text(L10n.t(.seeAll))
                                         .font(.system(size: 12, weight: .bold, design: .rounded))
@@ -123,7 +120,7 @@ struct HomeView: View {
                                 }
                             }
                             .padding(.horizontal)
-                            
+
                             ScrollView(.horizontal, showsIndicators: false) {
                                 HStack(spacing: 14) {
                                     ForEach(0..<4, id: \.self) { i in
@@ -138,8 +135,7 @@ struct HomeView: View {
                                 .padding(.bottom, 6)
                             }
                         }
-                        
-                        // Quick Actions
+
                         HStack(spacing: 12) {
                             QuickActionButton(icon: "sparkles", title: L10n.t(.surpriseMe), color: .purple) {
                                 if let randomMood = Mood.allMoods.randomElement() {
@@ -155,14 +151,13 @@ struct HomeView: View {
                             }
                         }
                         .padding(.horizontal)
-                        
-                        // Mood Grid
+
                         VStack(alignment: .leading, spacing: 16) {
                             Text(L10n.t(.howAreYouFeeling))
                                 .font(.granlyHeadline)
                                 .foregroundStyle(Color.themeText)
                                 .padding(.horizontal)
-                            
+
                             LazyVGrid(columns: [GridItem(.flexible()), GridItem(.flexible())], spacing: 16) {
                                 ForEach(moods) { mood in
                                     NavigationLink(destination: StoryListView(mood: mood)) {
@@ -179,8 +174,7 @@ struct HomeView: View {
             }
         }
     }
-    
-    // Time-aware greeting
+
     private var greeting: String {
         let hour = Calendar.current.component(.hour, from: Date())
         if hour < 12 { return L10n.t(.greetingMorning) }
@@ -189,7 +183,6 @@ struct HomeView: View {
     }
 }
 
-// MARK: - Components
 @MainActor
 struct DailyQuoteCard: View {
     @EnvironmentObject var lang: LanguageManager
@@ -225,7 +218,7 @@ struct QuickActionButton: View {
     let color: Color
     let action: () -> Void
     @EnvironmentObject var lang: LanguageManager
-    
+
     var body: some View {
         Button(action: action) {
             VStack(spacing: 6) {
@@ -253,7 +246,7 @@ struct QuickActionButton: View {
 struct MoodCard: View {
     let mood: Mood
     @EnvironmentObject var lang: LanguageManager
-    
+
     var body: some View {
         VStack(spacing: 12) {
             Image(systemName: mood.icon)
@@ -276,8 +269,7 @@ struct FeaturedStoryCard: View {
     let storyTitle: String
     let index: Int
     @EnvironmentObject var lang: LanguageManager
-    
-    // Each card gets a unique gradient personality
+
     private var cardGradient: [Color] {
         switch index % 4 {
         case 0: return [Color(red: 0.85, green: 0.35, blue: 0.45), Color(red: 0.55, green: 0.15, blue: 0.35)]
@@ -286,19 +278,18 @@ struct FeaturedStoryCard: View {
         default: return [Color(red: 0.70, green: 0.50, blue: 0.25), Color(red: 0.45, green: 0.25, blue: 0.10)]
         }
     }
-    
+
     @State private var appear = false
-    
+
     var body: some View {
         ZStack(alignment: .bottomLeading) {
-            // Rich gradient background
+
             LinearGradient(
                 colors: cardGradient,
                 startPoint: .topLeading,
                 endPoint: .bottomTrailing
             )
-            
-            // Decorative circle (top-right corner accent)
+
             Circle()
                 .fill(.white.opacity(0.08))
                 .frame(width: 150, height: 150)
@@ -307,10 +298,9 @@ struct FeaturedStoryCard: View {
                 .fill(.white.opacity(0.05))
                 .frame(width: 90, height: 90)
                 .offset(x: 30, y: -95)
-            
-            // Content overlay
+
             VStack(alignment: .leading, spacing: 0) {
-                // Top Row: icon + reading time badge
+
                 HStack(alignment: .top) {
                     ZStack {
                         Circle()

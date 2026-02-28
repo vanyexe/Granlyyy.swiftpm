@@ -3,32 +3,31 @@ import SwiftUI
 struct RecipeListView: View {
     @AppStorage("selectedLanguage") private var selectedLanguage: String = AppLanguage.english.rawValue
     @EnvironmentObject var lang: LanguageManager
-    
+
     private var recipes: [Recipe] {
         RecipeData.comfortRecipes(for: AppLanguage(rawValue: selectedLanguage) ?? .english)
     }
-    
+
     var body: some View {
         NavigationStack {
             ZStack {
                 Color.themeBackground.ignoresSafeArea()
-                
+
                 ScrollView {
                     VStack(alignment: .leading, spacing: 24) {
-                        // Header
+
                         VStack(alignment: .leading, spacing: 8) {
                             Text(L10n.t(.grandmasKitchen))
                                 .font(.granlyTitle)
                                 .foregroundStyle(Color.themeText)
-                            
+
                             Text(L10n.t(.comfortFoodSubtitle))
                                 .font(.granlyHeadline)
                                 .foregroundStyle(Color.themeRose)
                         }
                         .padding(.horizontal)
                         .padding(.top, 10)
-                        
-                        // Recipe Grid
+
                         LazyVGrid(columns: [GridItem(.flexible()), GridItem(.flexible())], spacing: 16) {
                             ForEach(recipes) { recipe in
                                 NavigationLink(destination: RecipeDetailView(recipe: recipe)) {
@@ -47,28 +46,28 @@ struct RecipeListView: View {
 
 struct RecipeCard: View {
     let recipe: Recipe
-    
+
     var body: some View {
-        VStack(spacing: 8) { // 12 -> 8
+        VStack(spacing: 8) {
             ZStack {
                 Circle()
                     .fill(recipe.color.opacity(0.15))
-                    .frame(width: 48, height: 48) // 60 -> 48
-                
+                    .frame(width: 48, height: 48)
+
                 Image(systemName: recipe.iconName)
-                    .font(.granlyTitle2) // Title -> Title2
+                    .font(.granlyTitle2)
                     .foregroundStyle(recipe.color)
             }
-            .padding(.top, 14) // 16 -> 14
-            
+            .padding(.top, 14)
+
             VStack(spacing: 4) {
                 Text(recipe.title)
-                    .font(.granlyBodyBold) // Headline -> BodyBold
+                    .font(.granlyBodyBold)
                     .multilineTextAlignment(.center)
                     .foregroundStyle(Color.themeText)
                     .lineLimit(2)
                     .fixedSize(horizontal: false, vertical: true)
-                
+
                 HStack(spacing: 4) {
                     Image(systemName: "clock")
                         .font(.granlyCaption)
@@ -78,12 +77,12 @@ struct RecipeCard: View {
                 .foregroundStyle(.secondary)
             }
             .padding(.horizontal, 8)
-            .padding(.bottom, 14) // 16 -> 14
+            .padding(.bottom, 14)
         }
         .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .top)
         .background(Color.themeCard)
-        .clipShape(RoundedRectangle(cornerRadius: 16)) // 20 -> 16
-        .shadow(color: .black.opacity(0.05), radius: 6, y: 3) // 8 -> 6
+        .clipShape(RoundedRectangle(cornerRadius: 16))
+        .shadow(color: .black.opacity(0.05), radius: 6, y: 3)
     }
 }
 
@@ -91,38 +90,36 @@ struct RecipeDetailView: View {
     let recipe: Recipe
     @Environment(\.dismiss) private var dismiss
     @EnvironmentObject var lang: LanguageManager
-    
+
     var body: some View {
         ScrollView {
             VStack(alignment: .leading, spacing: 24) {
-                // Header Image
+
                 ZStack {
-                    RoundedRectangle(cornerRadius: 20) // 24 -> 20
+                    RoundedRectangle(cornerRadius: 20)
                         .fill(LinearGradient(colors: [recipe.color, recipe.color.opacity(0.6)], startPoint: .topLeading, endPoint: .bottomTrailing))
-                        .frame(height: 180) // 250 -> 180
-                    
+                        .frame(height: 180)
+
                     Image(systemName: recipe.iconName)
-                        .font(.system(size: 60)) // 80 -> 60
+                        .font(.system(size: 60))
                         .foregroundStyle(.white.opacity(0.9))
                         .shadow(color: .black.opacity(0.1), radius: 8, y: 4)
                 }
                 .padding(.horizontal)
                 .padding(.top, 10)
-                
-                // Title and Timing
+
                 VStack(alignment: .leading, spacing: 12) {
                     Text(recipe.title)
                         .font(.granlyTitle)
                         .foregroundStyle(Color.themeText)
-                    
+
                     HStack(spacing: 16) {
                         TimingBadge(icon: "scissors", text: "Prep: \(recipe.prepTime)")
                         TimingBadge(icon: "flame.fill", text: "Cook: \(recipe.cookTime)")
                     }
                 }
                 .padding(.horizontal)
-                
-                // Backstory
+
                 VStack(alignment: .leading, spacing: 12) {
                     HStack {
                         Image(systemName: "quote.opening")
@@ -132,7 +129,7 @@ struct RecipeDetailView: View {
                             .font(.granlyHeadline)
                             .foregroundStyle(Color.themeText)
                     }
-                    
+
                     Text(recipe.backstory)
                         .font(.body.italic())
                         .lineSpacing(6)
@@ -142,13 +139,12 @@ struct RecipeDetailView: View {
                         .clipShape(RoundedRectangle(cornerRadius: 16))
                 }
                 .padding(.horizontal)
-                
-                // Ingredients
+
                 VStack(alignment: .leading, spacing: 12) {
                     Text(L10n.t(.ingredients))
                         .font(.granlyTitle2)
                         .foregroundStyle(Color.themeText)
-                    
+
                     VStack(alignment: .leading, spacing: 8) {
                         ForEach(recipe.ingredients, id: \.self) { ingredient in
                             HStack(alignment: .top, spacing: 12) {
@@ -168,13 +164,12 @@ struct RecipeDetailView: View {
                     .clipShape(RoundedRectangle(cornerRadius: 16))
                 }
                 .padding(.horizontal)
-                
-                // Instructions
+
                 VStack(alignment: .leading, spacing: 16) {
                     Text(L10n.t(.instructions))
                         .font(.granlyTitle2)
                         .foregroundStyle(Color.themeText)
-                    
+
                     VStack(alignment: .leading, spacing: 20) {
                         ForEach(Array(recipe.instructions.enumerated()), id: \.offset) { index, step in
                             HStack(alignment: .top, spacing: 16) {
@@ -184,7 +179,7 @@ struct RecipeDetailView: View {
                                     .frame(width: 28, height: 28)
                                     .background(recipe.color)
                                     .clipShape(Circle())
-                                
+
                                 Text(step)
                                     .font(.granlyBody)
                                     .lineSpacing(4)
@@ -218,7 +213,7 @@ struct RecipeDetailView: View {
 struct TimingBadge: View {
     let icon: String
     let text: String
-    
+
     var body: some View {
         HStack(spacing: 6) {
             Image(systemName: icon)

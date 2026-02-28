@@ -47,7 +47,7 @@ final class AudioService: NSObject, ObservableObject, AVSpeechSynthesizerDelegat
             let code = UserDefaults.standard.string(forKey: "selectedLanguage") ?? AppLanguage.english.rawValue
             return AppLanguage(rawValue: code) ?? .english
         }()
-        
+
         if isPlaying && currentlyPlayingContent == text {
             pauseAudio()
         } else {
@@ -60,18 +60,16 @@ final class AudioService: NSObject, ObservableObject, AVSpeechSynthesizerDelegat
         speakingRange = nil
         currentText = text
         totalCharCount = text.count
-        
-        // Accurate duration estimation: ~130 WPM, adjust words/char ratio based on language
+
         let wordsPerSec = (130.0 * 0.78) / 60.0
         let charsPerWord: Double
         switch language {
         case .hindi:
-            charsPerWord = 3.0 // Hindi often has fewer characters per word
+            charsPerWord = 3.0
         default:
-            // Since .chinese might not exist in the AppLanguage enum, 
-            // if we need to support it later, its bcp47 code could be checked.
+
             if language.rawValue == "zh" || language.bcp47.starts(with: "zh") {
-                charsPerWord = 1.0 // Chinese characters encode more meaning per character
+                charsPerWord = 1.0
             } else {
                 charsPerWord = 7.0
             }
@@ -122,22 +120,20 @@ final class AudioService: NSObject, ObservableObject, AVSpeechSynthesizerDelegat
         stopProgressTimer()
     }
 
-    // MARK: - Scrubbing Logic
-
     func scrub(to time: TimeInterval) {
         guard duration > 0 else { return }
         let ratio = max(0, min(1, time / duration))
         currentTime = time
-        
+
         let charOffset = Int(Double(totalCharCount) * ratio)
         guard charOffset < currentText.count else { return }
-        
+
         let idx = currentText.index(currentText.startIndex, offsetBy: charOffset)
         let remaining = String(currentText[idx...])
         let wasPlaying = isPlaying
-        
+
         synthesizer.stopSpeaking(at: .immediate)
-        
+
         if wasPlaying {
             let utterance = AVSpeechUtterance(string: remaining)
             utterance.voice = bestGrandmaVoice(for: currentLanguage())
@@ -164,12 +160,9 @@ final class AudioService: NSObject, ObservableObject, AVSpeechSynthesizerDelegat
         return AppLanguage(rawValue: code) ?? .english
     }
 
-    // MARK: - New Controls
-
     func toggleMute() {
         isMuted.toggle()
-        // If we are currently playing, we must re-scrub to the exact point 
-        // to re-emit the utterance with the new volume parameter
+
         if isPlaying {
             let time = currentTime
             scrub(to: time)
@@ -184,13 +177,11 @@ final class AudioService: NSObject, ObservableObject, AVSpeechSynthesizerDelegat
             }
         }
     }
-    
+
     func cancelSleepTimer() {
         sleepTimer?.invalidate()
         sleepTimer = nil
     }
-
-    // MARK: - Voice Selection
 
     private func bestGrandmaVoice(for language: AppLanguage) -> AVSpeechSynthesisVoice? {
         let allVoices = AVSpeechSynthesisVoice.speechVoices()
@@ -207,8 +198,6 @@ final class AudioService: NSObject, ObservableObject, AVSpeechSynthesizerDelegat
             ?? AVSpeechSynthesisVoice(language: bcp47)
             ?? AVSpeechSynthesisVoice(language: "en-US")
     }
-
-    // MARK: - Progress Tracking
 
     private func startProgressTimer() {
         stopProgressTimer()
@@ -228,8 +217,6 @@ final class AudioService: NSObject, ObservableObject, AVSpeechSynthesizerDelegat
         progressTimer = nil
     }
 
-    // MARK: - AVSpeechSynthesizerDelegate
-
     nonisolated func speechSynthesizer(_ synthesizer: AVSpeechSynthesizer, didStart utterance: AVSpeechUtterance) {
         Task { @MainActor in
             self.isPlaying = true
@@ -241,7 +228,7 @@ final class AudioService: NSObject, ObservableObject, AVSpeechSynthesizerDelegat
     nonisolated func speechSynthesizer(_ synthesizer: AVSpeechSynthesizer, willSpeakRangeOfSpeechString characterRange: NSRange, utterance: AVSpeechUtterance) {
         Task { @MainActor in
             guard !self.isScrubbing, self.totalCharCount > 0 else { return }
-            // Sync currentTime with actual spoken range for better precision
+
             let ratio = Double(characterRange.location) / Double(self.totalCharCount)
             self.currentTime = self.duration * ratio
             self.speakingRange = characterRange

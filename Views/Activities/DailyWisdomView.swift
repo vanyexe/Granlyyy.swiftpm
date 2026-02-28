@@ -8,9 +8,8 @@ struct DailyWisdomView: View {
     @State private var savedQuotes: Set<String> = []
     @EnvironmentObject var lang: LanguageManager
 
-    // MARK: - Reactive category names (re-computed when lang changes)
     private var categories: [String] {
-        _ = lang.selectedLanguage // dependency trigger
+        _ = lang.selectedLanguage
         return [
             L10n.t(.wisdomCatLife),
             L10n.t(.wisdomCatLove),
@@ -31,25 +30,24 @@ struct DailyWisdomView: View {
         Color(red: 0.60, green: 0.40, blue: 0.70)
     ]
 
-    // MARK: - Localized quotes per language
     private static let allQuotes: [AppLanguage: [[WisdomQuote]]] = [
         .english: [
-            // Life Lessons
+
             [WisdomQuote(text: "The best things in life aren't things at all, my dear. They're moments, memories, and the love we share.", author: "Grandma"),
              WisdomQuote(text: "Don't rush through life trying to get somewhere. The beauty is in the journey, not just the destination.", author: "Grandma")],
-            // Love & Family
+
             [WisdomQuote(text: "Family isn't just about blood. It's about who holds your hand when you're scared and laughs with you until you cry.", author: "Grandma"),
              WisdomQuote(text: "Love isn't perfect, sweetheart. It's messy and complicated, but it's always, always worth it.", author: "Grandma")],
-            // Resilience
+
             [WisdomQuote(text: "I've weathered many storms in my years, and I can tell you this: the sun always returns. Always.", author: "Grandma"),
              WisdomQuote(text: "Being brave doesn't mean you're not afraid. It means you keep going even when you are.", author: "Grandma")],
-            // Simple Joys
+
             [WisdomQuote(text: "A cup of tea, a good book, and a cozy blanket — sometimes that's all the magic you need.", author: "Grandma"),
              WisdomQuote(text: "Watch the sunrise once in a while. It's God's way of reminding us that every day is a fresh start.", author: "Grandma")],
-            // Happiness
+
             [WisdomQuote(text: "Happiness is like a butterfly; the more you chase it, the more it eludes you. But if you turn your attention to other things, it comes and sits softly on your shoulder.", author: "Grandma"),
              WisdomQuote(text: "You don't need a reason to be happy. Being alive is reason enough to smile.", author: "Grandma")],
-            // Patience
+
             [WisdomQuote(text: "Patience is not simply the ability to wait — it's how we behave while we're waiting.", author: "Grandma"),
              WisdomQuote(text: "Nature does not hurry, yet everything is accomplished. Trust your timing.", author: "Grandma")]
         ],
@@ -111,7 +109,6 @@ struct DailyWisdomView: View {
         ]
     ]
 
-    // Returns the right quotes for the currently selected language
     private var quotes: [[WisdomQuote]] {
         DailyWisdomView.allQuotes[lang.selectedLanguage] ?? DailyWisdomView.allQuotes[.english]!
     }
@@ -127,7 +124,7 @@ struct DailyWisdomView: View {
                 .ignoresSafeArea()
 
             VStack(spacing: 0) {
-                // Header
+
                 VStack(alignment: .leading, spacing: 4) {
                     Text(L10n.t(.wisdomPageTitle))
                         .font(.granlyTitle)
@@ -144,7 +141,6 @@ struct DailyWisdomView: View {
                 .padding(.horizontal, 24)
                 .padding(.top, 16)
 
-                // Category Tabs
                 ScrollView(.horizontal, showsIndicators: false) {
                     HStack(spacing: 12) {
                         ForEach(0..<categories.count, id: \.self) { index in
@@ -180,7 +176,6 @@ struct DailyWisdomView: View {
 
                 Spacer()
 
-                // Quote Card
                 VStack(spacing: 24) {
                     HStack {
                         Spacer()
@@ -227,7 +222,6 @@ struct DailyWisdomView: View {
 
                 Spacer()
 
-                // Controls
                 HStack(spacing: 20) {
                     Button(action: {
                         withAnimation(.spring(response: 0.4, dampingFraction: 0.7)) { animateCard = false }
