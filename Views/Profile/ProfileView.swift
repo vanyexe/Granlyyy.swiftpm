@@ -137,7 +137,7 @@ struct ProfileView: View {
                             
                             SettingsActionRow(icon: "sparkles", color: .purple, title: L10n.t(.viewOnboarding)) { showOnboarding = true }
                             
-                            ShareLink(item: "Check out Granly! It's the sweetest storytelling app ever.") {
+                            ShareLink(item: L10n.t(.shareMessage)) {
                                 HStack {
                                     Image(systemName: "square.and.arrow.up").foregroundStyle(.pink).font(.system(size: 20)).frame(width: 32)
                                     Text(L10n.t(.shareWithFriends)).font(.granlyBodyBold).foregroundStyle(Color.themeText)

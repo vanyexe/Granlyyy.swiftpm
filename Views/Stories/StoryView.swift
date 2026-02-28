@@ -93,9 +93,19 @@ struct StoryView: View {
     private var primaryColor: Color  { mood.baseColor }
     private var bgColors:    [Color] { mood.gradientColors(for: colorScheme) }
 
-    // Card background colour — warm amber like Spotify's lyrics card
+    // Card background — soft warm walnut, elevated but not harsh
     private var cardAccent: Color {
-        Color(red: 0.76, green: 0.40, blue: 0.12)
+        Color(red: 0.45, green: 0.28, blue: 0.14)
+    }
+
+    // Soft ivory — primary text, easier on the eye than pure white
+    private var softWhite: Color {
+        Color(red: 0.98, green: 0.95, blue: 0.90)
+    }
+
+    // Warm cream — secondary / muted text
+    private var creamMuted: Color {
+        Color(red: 0.94, green: 0.88, blue: 0.78)
     }
 
     // Derived current char ratio from AudioService
@@ -111,9 +121,12 @@ struct StoryView: View {
                 // ── Cinematic Mood Canvas ──────────────────────────────
                 MoodBackgroundView(colors: bgColors, accentColor: primaryColor)
                     .ignoresSafeArea()
-                // Velvet veil
+                // Warm veil — caramel dark, not flat black
                 LinearGradient(
-                    colors: [Color.black.opacity(0.55), Color.black.opacity(0.80)],
+                    colors: [
+                        Color(red: 0.10, green: 0.06, blue: 0.03).opacity(0.40),
+                        Color(red: 0.08, green: 0.05, blue: 0.02).opacity(0.68)
+                    ],
                     startPoint: .top, endPoint: .bottom
                 )
                 .ignoresSafeArea()
@@ -212,20 +225,20 @@ struct StoryView: View {
             Button { dismiss() } label: {
                 Image(systemName: "chevron.down")
                     .font(.system(size: 16, weight: .semibold))
-                    .foregroundStyle(.white)
+                    .foregroundStyle(softWhite)
                     .frame(width: 40, height: 40)
-                    .background(.white.opacity(0.12), in: Circle())
+                    .background(.white.opacity(0.16), in: Circle())
             }
 
             // Centre title block
             VStack(spacing: 2) {
                 Text(L10n.t(.playingFromLibrary))
                     .font(.system(size: 11, weight: .bold, design: .rounded))
-                    .foregroundStyle(.white.opacity(0.55))
+                    .foregroundStyle(creamMuted.opacity(0.80))
                     .tracking(0.8)
                 Text(L10n.t(.grandmasStories))
                     .font(.system(size: 15, weight: .bold, design: .rounded))
-                    .foregroundStyle(.white)
+                    .foregroundStyle(softWhite)
             }
             .frame(maxWidth: .infinity)
 
@@ -240,9 +253,9 @@ struct StoryView: View {
             } label: {
                 Image(systemName: "ellipsis")
                     .font(.system(size: 16, weight: .semibold))
-                    .foregroundStyle(.white)
+                    .foregroundStyle(softWhite)
                     .frame(width: 40, height: 40)
-                    .background(.white.opacity(0.12), in: Circle())
+                    .background(.white.opacity(0.16), in: Circle())
             }
         }
     }
@@ -268,7 +281,7 @@ struct StoryView: View {
             .clipShape(RoundedRectangle(cornerRadius: 20, style: .continuous))
             .overlay(
                 RoundedRectangle(cornerRadius: 20, style: .continuous)
-                    .stroke(.white.opacity(0.12), lineWidth: 1.5)
+                    .stroke(softWhite.opacity(0.18), lineWidth: 1.5)
             )
             .shadow(color: primaryColor.opacity(0.30), radius: 28, x: 0, y: 14)
             .shadow(color: .black.opacity(0.50), radius: 18, x: 0, y: 10)
@@ -293,11 +306,11 @@ struct StoryView: View {
             VStack(alignment: .leading, spacing: 5) {
                 Text(story.title)
                     .font(.system(size: 24, weight: .bold, design: .rounded))
-                    .foregroundStyle(.white)
+                    .foregroundStyle(softWhite)
                     .lineLimit(2)
                 Text(L10n.t(.narratedByGrandma))
                     .font(.system(size: 15, weight: .medium))
-                    .foregroundStyle(.white.opacity(0.60))
+                    .foregroundStyle(creamMuted.opacity(0.80))
             }
             Spacer()
             Button {
@@ -309,7 +322,7 @@ struct StoryView: View {
                 let liked = storyManager.isLiked(story: story)
                 Image(systemName: liked ? "heart.fill" : "heart")
                     .font(.system(size: 26, weight: .semibold))
-                    .foregroundStyle(liked ? Color.themeRose : .white.opacity(0.60))
+                    .foregroundStyle(liked ? Color.themeRose : creamMuted.opacity(0.72))
                     .scaleEffect(liked ? 1.12 : 1.0)
                     .animation(.spring(response: 0.3, dampingFraction: 0.5), value: liked)
             }
@@ -367,7 +380,7 @@ struct StoryView: View {
                 Text(fmtTime(audioService.duration))
             }
             .font(.system(size: 13, weight: .medium).monospacedDigit())
-            .foregroundStyle(.white.opacity(0.60))
+            .foregroundStyle(creamMuted.opacity(0.78))
         }
     }
 
@@ -383,7 +396,7 @@ struct StoryView: View {
             } label: {
                 Image(systemName: "shuffle")
                     .font(.system(size: 20, weight: .medium))
-                    .foregroundStyle(.white.opacity(0.70))
+                    .foregroundStyle(creamMuted.opacity(0.78))
                     .frame(width: 44, height: 44)
             }
             .frame(maxWidth: .infinity)
@@ -400,7 +413,7 @@ struct StoryView: View {
             } label: {
                 Image(systemName: "backward.end.fill")
                     .font(.system(size: 24, weight: .semibold))
-                    .foregroundStyle(.white)
+                    .foregroundStyle(softWhite)
                     .frame(width: 44, height: 44)
             }
             .frame(maxWidth: .infinity)
@@ -419,15 +432,17 @@ struct StoryView: View {
             } label: {
                 ZStack {
                     Circle()
-                        .fill(.white)
+                        .fill(softWhite)
                         .frame(width: 72, height: 72)
-                        .shadow(color: .black.opacity(0.25), radius: 12, y: 5)
+                        .shadow(color: Color(red:0.12,green:0.07,blue:0.03).opacity(0.38), radius: 14, y: 6)
                     if audioService.isPreparingAudio {
-                        ProgressView().tint(.black).scaleEffect(1.0)
+                        ProgressView()
+                            .tint(Color(red: 0.25, green: 0.15, blue: 0.08))
+                            .scaleEffect(1.0)
                     } else {
                         Image(systemName: audioService.isPlaying ? "pause.fill" : "play.fill")
                             .font(.system(size: 30, weight: .black))
-                            .foregroundStyle(.black)
+                            .foregroundStyle(Color(red: 0.20, green: 0.12, blue: 0.06))
                             .offset(x: audioService.isPlaying ? 0 : 3)
                     }
                 }
@@ -441,7 +456,7 @@ struct StoryView: View {
             } label: {
                 Image(systemName: "goforward.15")
                     .font(.system(size: 24, weight: .semibold))
-                    .foregroundStyle(.white)
+                    .foregroundStyle(softWhite)
                     .frame(width: 44, height: 44)
             }
             .frame(maxWidth: .infinity)
@@ -453,7 +468,7 @@ struct StoryView: View {
             } label: {
                 Image(systemName: "timer")
                     .font(.system(size: 20, weight: .medium))
-                    .foregroundStyle(.white.opacity(0.60))
+                    .foregroundStyle(creamMuted.opacity(0.72))
                     .frame(width: 44, height: 44)
             }
             .frame(maxWidth: .infinity)
@@ -479,7 +494,7 @@ struct StoryView: View {
             } label: {
                 Image(systemName: audioService.isMuted ? "speaker.slash.fill" : "hifispeaker.2")
                     .font(.system(size: 18, weight: .medium))
-                    .foregroundStyle(.white.opacity(0.50))
+                    .foregroundStyle(creamMuted.opacity(0.68))
                     .frame(maxWidth: .infinity)
             }
 
@@ -487,7 +502,7 @@ struct StoryView: View {
                 ShareLink(item: "\(s.title)\n\n\(s.content)\n\n— From Granly") {
                     Image(systemName: "square.and.arrow.up")
                         .font(.system(size: 18, weight: .medium))
-                        .foregroundStyle(.white.opacity(0.50))
+                        .foregroundStyle(creamMuted.opacity(0.68))
                 }
                 .frame(maxWidth: .infinity)
             } else {
@@ -497,7 +512,7 @@ struct StoryView: View {
             Button { showFullLyrics = true } label: {
                 Image(systemName: "list.bullet")
                     .font(.system(size: 18, weight: .medium))
-                    .foregroundStyle(.white.opacity(0.50))
+                    .foregroundStyle(creamMuted.opacity(0.68))
             }
             .frame(maxWidth: .infinity)
         }
@@ -510,7 +525,7 @@ struct StoryView: View {
             HStack {
                 Text(L10n.t(.storyPreview))
                     .font(.system(size: 11, weight: .bold, design: .rounded))
-                    .foregroundStyle(.white.opacity(0.75))
+                    .foregroundStyle(creamMuted.opacity(0.85))
                     .tracking(0.8)
                 Spacer()
             }
@@ -525,10 +540,11 @@ struct StoryView: View {
                     let state = lineState(for: line.id)
                     Text(line.text)
                         .font(.system(size: 15, weight: state == .active ? .semibold : .regular))
-                        .foregroundStyle(.white.opacity(
-                            state == .active ? 1.0 :
-                            state == .passed ? 0.38 : 0.62
-                        ))
+                        .foregroundStyle(
+                            state == .active ? AnyShapeStyle(softWhite) :
+                            state == .passed ? AnyShapeStyle(creamMuted.opacity(0.40)) :
+                                              AnyShapeStyle(creamMuted.opacity(0.68))
+                        )
                         .multilineTextAlignment(.leading)
                         .lineLimit(2)
                         .animation(.easeInOut(duration: 0.25), value: currentLineIdx)
@@ -555,6 +571,7 @@ struct StoryView: View {
         .background(
             RoundedRectangle(cornerRadius: 16, style: .continuous)
                 .fill(cardAccent)
+                .shadow(color: Color(red:0.06,green:0.04,blue:0.02).opacity(0.55), radius: 18, x: 0, y: 8)
         )
     }
 
@@ -621,7 +638,8 @@ struct StoryLyricsFullView: View {
     var body: some View {
         NavigationStack {
             ZStack {
-                Color.black.ignoresSafeArea()
+                // Warm espresso dark — cosy, not harsh pure black
+                Color(red: 0.08, green: 0.05, blue: 0.03).ignoresSafeArea()
 
                 ScrollViewReader { proxy in
                     ScrollView(showsIndicators: false) {
@@ -630,10 +648,13 @@ struct StoryLyricsFullView: View {
                                 let state = lineState(for: line.id)
                                 Text(line.text)
                                     .font(.system(size: 28, weight: state == .active ? .heavy : .bold, design: .rounded))
-                                    .foregroundStyle(.white.opacity(
-                                        state == .active ? 1.0 :
-                                        state == .passed ? 0.35 : 0.55
-                                    ))
+                                    .foregroundStyle(
+                                        state == .active
+                                            ? Color(red:0.98,green:0.95,blue:0.90)          // soft ivory
+                                            : state == .passed
+                                                ? Color(red:0.90,green:0.82,blue:0.70).opacity(0.38) // muted cream
+                                                : Color(red:0.94,green:0.88,blue:0.78).opacity(0.60) // cream
+                                    )
                                     .multilineTextAlignment(.leading)
                                     .animation(.easeInOut(duration: 0.25), value: currentLineIdx)
                                     .id(line.id)
@@ -664,7 +685,7 @@ struct StoryLyricsFullView: View {
             }
             .navigationTitle(story.title)
             .navigationBarTitleDisplayMode(.inline)
-            .toolbarBackground(Color.black, for: .navigationBar)
+            .toolbarBackground(Color(red: 0.08, green: 0.05, blue: 0.03), for: .navigationBar)
             .toolbarColorScheme(.dark, for: .navigationBar)
             .toolbar {
                 ToolbarItem(placement: .topBarLeading) {

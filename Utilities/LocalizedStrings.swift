@@ -41,7 +41,7 @@ enum L10nKey: String {
     case profile, personal, preferences, support
     case grandmasName, grandmaMakeover
     case language, darkMode, dailyReminders
-    case aboutGrantly, viewOnboarding, rateGrantly, shareWithFriends
+    case aboutGrantly, viewOnboarding, rateGrantly, shareWithFriends, shareMessage
     case resetAllData, storiesRead
     case renameGrandma
 
@@ -235,7 +235,7 @@ struct L10n {
             .aboutGrantly: "About Granly", .viewOnboarding: "View Onboarding",
             .rateGrantly: "Rate Granly", .shareWithFriends: "Share with Friends",
             .resetAllData: "Reset All Data", .storiesRead: "Stories Read",
-            .renameGrandma: "Rename Grandma",
+            .renameGrandma: "Rename Grandma", .shareMessage: "Check out Granly! It's the sweetest storytelling app ever.",
 
             .resetDataQuestion: "Reset Data?",
             .resetDataMessage: "This will clear your read history, favorite stories, and customization settings. This cannot be undone.",
@@ -318,7 +318,7 @@ struct L10n {
             .privacyStorage: "Data Storage & Deletion",
             .privacyStorageBody: "Your data is stored locally on your device using Apple's secure UserDefaults and on-device storage. You can delete all data at any time by using the 'Reset All Data' option in your Profile, or by uninstalling the app entirely.",
             .privacyContact: "Contact Us",
-            .privacyContactBody: "If you have any questions, concerns, or requests regarding this Privacy Policy, we would love to hear from you. You can reach us at: granlyapp@gmail.com",
+            .privacyContactBody: "If you have any questions, concerns, or requests regarding this Privacy Policy, we would love to hear from you. You can reach us at:",
 
             .termsAcceptance: "Acceptance of Terms",
             .termsAcceptanceBody: "By downloading and using Granly, you agree to these Terms of Service. If you do not agree with any part of these terms, please do not use the app. These terms may be updated from time to time and the latest version will always be available within the app.",
@@ -331,7 +331,7 @@ struct L10n {
             .termsChanges: "Changes to These Terms",
             .termsChangesBody: "We may update these Terms of Service occasionally to reflect changes in the app or applicable law. We will notify you of significant changes through an in-app notice. Your continued use of Granly after any change constitutes your acceptance of the new terms.",
             .termsContact: "Contact Us",
-            .termsContactBody: "For any questions about these Terms of Service, please contact us at: granlyapp@gmail.com",
+            .termsContactBody: "For any questions about these Terms of Service, please contact us at:",
 
             .legalLastUpdated: "Last updated: February 2026",
 
@@ -380,7 +380,7 @@ struct L10n {
             .storyReminder: "Story Reminder", .notifStorySubtitle: "Evening nudge for bedtime stories",
             .activityReminder: "Activity Reminder", .notifActivitySubtitle: "Morning prompt for cozy activities",
             .progressUpdates: "Progress Updates", .notifProgressSubtitle: "Streaks and milestone celebrations",
-            .notifEmptyTitle: "Your cozy moments will appear here 💛",
+            .notifEmptyTitle: "Your cozy moments will appear here",
             .notifEmptyBody: "Start a story or activity to receive updates.",
             .notifPermissionTitle: "Allow Notifications",
             .notifPermissionBody: "Let Granly remind you of story time and cozy activities.",
@@ -448,7 +448,7 @@ struct L10n {
             .aboutGrantly: "ग्रैनली के बारे में", .viewOnboarding: "परिचय देखें",
             .rateGrantly: "ग्रैनली को रेट करें", .shareWithFriends: "दोस्तों के साथ साझा करें",
             .resetAllData: "सारा डेटा मिटाएँ", .storiesRead: "पढ़ी गई कहानियाँ",
-            .renameGrandma: "दादी का नाम बदलें",
+            .renameGrandma: "दादी का नाम बदलें", .shareMessage: "ग्रॉन्ली आज़माएं! यह अब तक का सबसे प्यारा कहानी सुनाने वाला ऐप है।",
 
             .resetDataQuestion: "डेटा मिटाएँ?",
             .resetDataMessage: "इससे आपका पढ़ने का इतिहास, पसंदीदा कहानियाँ और कस्टमाइज़ेशन सेटिंग्स मिट जाएंगी। यह वापस नहीं होगा।",
@@ -511,9 +511,38 @@ struct L10n {
 
             .aboutGranly: "ग्रॉन्ली के बारे में", .ourMission: "हमारा उद्देश्य",
             .missionBody: "ग्रॉन्ली एक सरल इच्छा के साथ बनाया गया था: आपके दैनिक जीवन में उष्मा, आराम और कालातीत कहानी का जादू लाना।",
+            .missionBody2: "हम ऐसी कहानियाँ, ज्ञान और सौम्य बातचीत बनाते हैं जो किसी ऐसे व्यक्ति के गले मिलने जैसी लगती हैं जिसने जीवन जिया, प्यार किया और सीखा। ग्रॉन्ली की हर सुविधा उसी देखभाल से बनाई गई है जैसे दादी अपना पसंदीदा नुस्खा बनाती हैं — धीरे-धीरे, प्यार से और हमेशा आपके लिए।",
+            .missionBody3: "हमारी उम्मीद सरल है: कि ग्रॉन्ली आपको थोड़ा कम अकेला, थोड़ा अधिक स्थिर और उस ज्ञान के थोड़ा करीब महसूस कराए जो पीढ़ियों को आगे ले जाता रहा है।",
             .rateAppStore: "ऐप स्टोर पर रेट करें", .privacyPolicy: "गोपनीयता नीति",
             .termsOfService: "सेवा शर्तें", .designedWithCare: "प्यार से डिज़ाइन और विकसित",
             .copyright: "© 2026 ग्रॉन्ली एप्प", .websiteLabel: "वेबसाइट",
+
+            // Legal pages – Hindi
+            .privacyDataWeCollect: "हम कोई डेटा एकत्र नहीं करते",
+            .privacyDataWeCollectBody: "ग्रॉन्ली पूरी तरह ऑफलाइन बना है। हम किसी बाहरी सर्वर पर कोई व्यक्तिगत जानकारी एकत्र, प्रसारित या संग्रहीत नहीं करते। आपका सारा डेटा — यादें, कस्टमाइज़ेशन, प्राथमिकताएँ — केवल आपके डिवाइस पर रहती हैं और कभी साझा नहीं की जाती।",
+            .privacyHowWeUse: "आपका डेटा कैसे उपयोग होता है",
+            .privacyHowWeUseBody: "ग्रॉन्ली द्वारा संग्रहीत कोई भी जानकारी (जैसे दादी का नाम, चुना गया अवतार, डार्क मोड प्राथमिकता, या पसंदीदा कहानियाँ) केवल ऐप के भीतर आपके अनुभव को व्यक्तिगत बनाने के लिए उपयोग की जाती है। इसे कभी किसी तीसरे पक्ष को बेचा, किराए पर दिया या साझा नहीं किया जाता।",
+            .privacyChildren: "बच्चों की गोपनीयता",
+            .privacyChildrenBody: "ग्रॉन्ली सभी उम्र के लिए सुरक्षित है। चूँकि हम कोई व्यक्तिगत डेटा एकत्र नहीं करते, इसलिए कोई दुरुपयोग की संभावना नहीं है। यदि आपको किसी बच्चे के ऐप उपयोग के बारे में कोई चिंता है, तो कृपया हमसे किसी भी समय संपर्क करें।",
+            .privacyStorage: "डेटा संग्रहण और हटाना",
+            .privacyStorageBody: "आपका डेटा एप्प्ल के सुरक्षित उपयोगकर्ता डिफ़ॉल्ट और डिवाइस पर संग्रहण का उपयोग करके स्थानीय रूप से संग्रहीत है। आप अपनी प्रोफ़ाइल में 'सारा डेटा मिटाएँ' विकल्प का उपयोग करके या ऐप को पूरी तरह अनइंस्टॉल करके किसी भी समय सारा डेटा हटा सकते हैं।",
+            .privacyContact: "संपर्क करें",
+            .privacyContactBody: "यदि इस गोपनीयता नीति के बारे में आपके कोई प्रश्न, चिंताएँ या अनुरोध हैं, तो हम आपसे सुनना चाहेंगे। आप हमसे यहाँ संपर्क कर सकते हैं:",
+
+            .termsAcceptance: "नियमों की स्वीकृति",
+            .termsAcceptanceBody: "ग्रॉन्ली डाउनलोड करने और उपयोग करने से आप इन सेवा की शर्तों से सहमत होते हैं। यदि आप इन शर्तों के किसी भी भाग से असहमत हैं, तो कृपया ऐप का उपयोग न करें। ये शर्तें समय-समय पर अपडेट की जा सकती हैं और नवीनतम संस्करण हमेशा ऐप के भीतर उपलब्ध होगा।",
+            .termsUse: "ऐप का उपयोग",
+            .termsUseBody: "ग्रॉन्ली व्यक्तिगत, गैर-व्यावसायिक उपयोग के लिए है। आप सहमत हैं कि आप ऐप का उपयोग सम्मानजनक और कानूनी तरीके से करेंगे। आप लिखित अनुमति के बिना ऐप के किसी भी हिस्से को रिवर्स-इंजीनियर, कॉपी या पुनः उत्पन्न करने का प्रयास नहीं करेंगे।",
+            .termsIP: "बौद्धिक संपदा",
+            .termsIPBody: "ऐप के भीतर सभी कहानियाँ, कलाकृति, पात्र (ग्रॉन्ली दादी सहित), एनिमेशन और लिखित सामग्री ग्रॉन्ली एप्प © 2026 की बौद्धिक संपदा हैं। सभी अधिकार सुरक्षित हैं।",
+            .termsDisclaimer: "अस्वीकरण",
+            .termsDisclaimerBody: "ग्रॉन्ली 'जैसा है' बिना किसी वारंटी के प्रदान किया जाता है। हम एक आरामदायक और विश्वसनीय अनुभव प्रदान करने का प्रयास करते हैं, लेकिन हम गारंटी नहीं देते कि ऐप त्रुटियों या रुकावटों से मुक्त होगा। ग्रॉन्ली पेशेवर मानसिक स्वास्थ्य सहायता का विकल्प नहीं है।",
+            .termsChanges: "शर्तों में बदलाव",
+            .termsChangesBody: "हम ऐप या लागू कानून में बदलावों को दर्शाने के लिए इन सेवा की शर्तों को कभी-कभी अपडेट कर सकते हैं। हम ऐप में सूचना के माध्यम से महत्वपूर्ण बदलावों की जानकारी देंगे। किसी भी बदलाव के बाद ग्रॉन्ली का उपयोग जारी रखना नई शर्तों की स्वीकृति है।",
+            .termsContact: "संपर्क करें",
+            .termsContactBody: "इन सेवा की शर्तों के बारे में किसी भी प्रश्न के लिए, कृपया हमसे संपर्क करें:",
+
+            .legalLastUpdated: "अंतिम अपडेट: फरवरी 2026",
 
             .saveLabel: "सहेजें",
             .optionStyle: "शैली", .optionColor: "रंग", .optionFrames: "फ्रेम",
@@ -553,8 +582,8 @@ struct L10n {
             .home: "मुख्य पृष्ठ",
 
             .savedMemoriesTitle: "सहेजी गई यादें", .storiesSavedCount: "%d कहानियाँ सहेजी गईं", .noMemoriesBody: "जब दादी आपको कोई ऐसी कहानी सुनाएं जो आपको पसंद हो,\nतो उसे हमेशा के लिए यहाँ सहेजने के लिए दिल पर टैप करें।",
-            .termsIntroBody: "ये शर्तें आपके Granly के उपयोग को नियंत्रित करती हैं। कृपया इन्हें पढ़ने के लिए कुछ समय लें—इन्हें उसी गर्मजोशी और प्यार से लिखा गया है जैसे कि इस ऐप की अन्य चीज़ें।",
-            .privacyIntroBody: "Granly में आपकी गोपनीयता दादी की गुप्त रेसिपी की तरह ही पवित्र है। यहाँ बताया गया है कि हम आपकी जानकारी के साथ क्या करते हैं—और क्या नहीं करते।",
+            .termsIntroBody: "ये शर्तें आपके ग्रैनली के उपयोग को नियंत्रित करती हैं। कृपया इन्हें पढ़ने के लिए कुछ समय लें—इन्हें उसी गर्मजोशी और प्यार से लिखा गया है जैसे कि इस ऐप की अन्य चीज़ें।",
+            .privacyIntroBody: "ग्रैनली में आपकी गोपनीयता दादी की गुप्त रेसिपी की तरह ही पवित्र है। यहाँ बताया गया है कि हम आपकी जानकारी के साथ क्या करते हैं—और क्या नहीं करते।",
             .stopPlaybackAfter: "इसके बाद ऑडियो प्लेबैक बंद करें...", .timer5Min: "5 मिनट", .timer15Min: "15 मिनट", .timer30Min: "30 मिनट", .turnOffTimer: "टाइमर बंद करें", .shareStory: "कहानी साझा करें", .stopPlayback: "प्लेबैक रोकें",
             .stepNoOfTotal: "चरण %d / %d", .step: "%d चरण", .currentStep: "वर्तमान चरण", .back: "पीछे", .nextStep: "अगला चरण", .completeLabel: "पूरा", .activityCompleteTitle: "गतिविधि पूरी हुई!", .activityCompleteBody: "आपने %@ के सभी %d चरण पूरे कर लिए हैं। बहुत बढ़िया।", .tryAgain: "फिर से प्रयास करें", .activityComplete: "गतिविधि पूरी", .activityFinishedBody: "%@ समाप्त हुई।\nबहुत बढ़िया — दादी को आप पर गर्व है।", .wonderful: "अद्भुत",
 
@@ -563,10 +592,10 @@ struct L10n {
             .storyReminder: "कहानी अनुस्मारक", .notifStorySubtitle: "सोने की कहानियों के लिए शाम की याद",
             .activityReminder: "गतिविधि अनुस्मारक", .notifActivitySubtitle: "आरामदायक गतिविधियों के लिए सुबह की याद",
             .progressUpdates: "प्रगति अपडेट", .notifProgressSubtitle: "स्ट्रीक और मील के पत्थर",
-            .notifEmptyTitle: "आपके आरामदायक पल यहाँ दिखाई देंगे 💛",
+            .notifEmptyTitle: "आपके आरामदायक पल यहाँ दिखाई देंगे",
             .notifEmptyBody: "अपडेट पाने के लिए एक कहानी या गतिविधि शुरू करें।",
             .notifPermissionTitle: "सूचनाएँ चालू करें",
-            .notifPermissionBody: "Granly को कहानी के समय और गतिविधियों की याद दिलाने दें।",
+            .notifPermissionBody: "ग्रैनली को कहानी के समय और गतिविधियों की याद दिलाने दें।",
             .notifPermissionButton: "सूचनाएँ सक्षम करें",
             .notifStoryTitle: "कहानी का समय",
             .notifStoryBody: "आज की कहानी तैयार है",
@@ -631,7 +660,8 @@ struct L10n {
             .aboutGrantly: "Acerca de Granly", .viewOnboarding: "Ver introducción",
             .rateGrantly: "Calificar Granly", .shareWithFriends: "Compartir con amigos",
             .resetAllData: "Borrar todos los datos", .storiesRead: "Historias leídas",
-            .renameGrandma: "Renombrar a la abuela",
+            .renameGrandma: "Renombrar a la abuela", .shareMessage: "¡Echa un vistazo a Granly! Es la aplicación de cuentos más dulce del mundo.",
+
             .resetDataQuestion: "¿Restablecer datos?",
             .resetDataMessage: "Esto borrará tu historial de lectura, historias favoritas y personalización. No se puede deshacer.",
             .resetDataConfirm: "Restablecer", .rateMessage: "Calificar Granly",
@@ -693,9 +723,38 @@ struct L10n {
 
             .aboutGranly: "Acerca de Granly", .ourMission: "Nuestra Misión",
             .missionBody: "Granly fue creado con un simple deseo: traer calidez, confort y la magia de la narración atemporal a tu vida diaria.",
+            .missionBody2: "Creamos historias, sabiduría y conversaciones gentiles que se sienten como un abrazo de alguien que ha vivido, amado y aprendido. Cada función de Granly está hecha con cuidado, igual que una abuela hornea su receta favorita — lentamente, con amor y siempre para ti.",
+            .missionBody3: "Nuestra esperanza es simple: que Granly te ayude a sentirte un poco menos solo, un poco más centrado y un poco más cerca de la sabiduría que ha llevado a las generaciones hacia adelante.",
             .rateAppStore: "Valorar en App Store", .privacyPolicy: "Política de Privacidad",
             .termsOfService: "Términos de Servicio", .designedWithCare: "Diseñado y Desarrollado con Cuidado",
             .copyright: "© 2026 Granly App", .websiteLabel: "Sitio Web",
+
+            // Legal pages – Spanish
+            .privacyDataWeCollect: "Datos que No Recopilamos",
+            .privacyDataWeCollectBody: "Granly está creado completamente sin conexión. No recopilamos, transmitimos ni almacenamos ninguna información personal en servidores externos. Todos los datos que creas — recuerdos, personalizaciones, preferencias — viven solo en tu dispositivo y nunca se comparten.",
+            .privacyHowWeUse: "Cómo se Usan tus Datos",
+            .privacyHowWeUseBody: "Cualquier información almacenada por Granly (como el nombre de la abuela, el avatar elegido, la preferencia del modo oscuro o las historias favoritas) se utiliza únicamente para personalizar tu experiencia dentro de la aplicación. Nunca se vende, alquila ni comparte con terceros.",
+            .privacyChildren: "Privacidad de los Niños",
+            .privacyChildrenBody: "Granly está diseñado para ser seguro para todas las edades. Como no recopilamos ningún dato personal, no hay nada que pueda ser mal utilizado. Si tienes inquietudes sobre el uso de la aplicación por un niño, no dudes en contactarnos.",
+            .privacyStorage: "Almacenamiento y Eliminación de Datos",
+            .privacyStorageBody: "Tus datos se almacenan localmente en tu dispositivo mediante el almacenamiento seguro de Apple. Puedes eliminar todos los datos en cualquier momento usando 'Borrar todos los datos' en tu Perfil, o desinstalando la aplicación por completo.",
+            .privacyContact: "Contáctanos",
+            .privacyContactBody: "Si tienes alguna pregunta, inquietud o solicitud sobre esta Política de Privacidad, nos encantaría escucharte. Puedes contactarnos en:",
+
+            .termsAcceptance: "Aceptación de los Términos",
+            .termsAcceptanceBody: "Al descargar y usar Granly, aceptas estos Términos de Servicio. Si no estás de acuerdo con alguna parte de estos términos, por favor no uses la aplicación. Estos términos pueden actualizarse ocasionalmente y la versión más reciente siempre estará disponible dentro de la aplicación.",
+            .termsUse: "Uso de la Aplicación",
+            .termsUseBody: "Granly está destinado para uso personal y no comercial. Aceptas usar la aplicación de manera respetuosa y legal. No debes intentar aplicar ingeniería inversa, copiar o reproducir ninguna parte de la aplicación sin permiso escrito.",
+            .termsIP: "Propiedad Intelectual",
+            .termsIPBody: "Todas las historias, ilustraciones, personajes (incluida la abuela Granly), animaciones y contenido escrito dentro de la aplicación son propiedad intelectual de Granly App © 2026. Todos los derechos están reservados.",
+            .termsDisclaimer: "Descargo de Responsabilidad",
+            .termsDisclaimerBody: "Granly se proporciona 'tal como está', sin garantía de ningún tipo. Nos esforzamos por ofrecer una experiencia reconfortante y confiable, pero no garantizamos que la aplicación esté libre de errores. Granly no es un sustituto del apoyo profesional de salud mental.",
+            .termsChanges: "Cambios en estos Términos",
+            .termsChangesBody: "Podemos actualizar estos Términos de Servicio ocasionalmente para reflejar cambios en la aplicación o la ley aplicable. Te notificaremos de cambios significativos a través de un aviso en la aplicación. El uso continuado de Granly tras cualquier cambio constituye tu aceptación.",
+            .termsContact: "Contáctanos",
+            .termsContactBody: "Para cualquier pregunta sobre estos Términos de Servicio, contáctanos en:",
+
+            .legalLastUpdated: "Última actualización: Febrero 2026",
 
             .saveLabel: "Guardar",
             .optionStyle: "Estilo", .optionColor: "Color", .optionFrames: "Armazón",
@@ -745,7 +804,7 @@ struct L10n {
             .storyReminder: "Recordatorio de historia", .notifStorySubtitle: "Recordatorio vespertino para cuentos",
             .activityReminder: "Recordatorio de actividad", .notifActivitySubtitle: "Recordatorio matutino para actividades",
             .progressUpdates: "Actualizaciones de progreso", .notifProgressSubtitle: "Rachas y logros",
-            .notifEmptyTitle: "Tus momentos acogedores aparecerán aquí 💛",
+            .notifEmptyTitle: "Tus momentos acogedores aparecerán aquí",
             .notifEmptyBody: "Comienza una historia o actividad para recibir actualizaciones.",
             .notifPermissionTitle: "Activar notificaciones",
             .notifPermissionBody: "Deja que Granly te recuerde la hora del cuento y las actividades.",
@@ -812,8 +871,9 @@ struct L10n {
             .language: "Langue", .darkMode: "Mode Sombre", .dailyReminders: "Rappels Quotidiens",
             .aboutGrantly: "À Propos de Granly", .viewOnboarding: "Voir l'Introduction",
             .rateGrantly: "Évaluer Granly", .shareWithFriends: "Partager avec des Amis",
-            .resetAllData: "Réinitialiser Tout", .storiesRead: "Histoires Lues",
-            .renameGrandma: "Renommer Grand-mère",
+            .resetAllData: "Réinitialiser toutes les données", .storiesRead: "Histoires lues",
+            .renameGrandma: "Renommer Grand-mère", .shareMessage: "Découvrez Granly ! C'est l'application de contes la plus adorable au monde.",
+
             .resetDataQuestion: "Réinitialiser les Données?",
             .resetDataMessage: "L'historique, les favoris et les paramètres seront effacés. Ceci est irréversible.",
             .resetDataConfirm: "Réinitialiser", .rateMessage: "Évaluer Granly",
@@ -875,9 +935,38 @@ struct L10n {
 
             .aboutGranly: "À propos de Granly", .ourMission: "Notre Mission",
             .missionBody: "Granly a été créé avec un simple souhait : apporter chaleur, réconfort et la magie de la narration intemporelle dans votre vie quotidienne.",
+            .missionBody2: "Nous créons des histoires, de la sagesse et des conversations douces qui ressemblent à un câlin de quelqu'un qui a vécu, aimé et appris. Chaque fonctionnalité de Granly est conçue avec soin, comme Grand-mère prépare sa recette préférée — lentement, avec amour et toujours pour vous.",
+            .missionBody3: "Notre espoir est simple : que Granly vous aide à vous sentir un peu moins seul, un peu plus ancré et un peu plus proche de la sagesse qui a porté les générations en avant.",
             .rateAppStore: "Noter sur l'App Store", .privacyPolicy: "Politique de Confidentialité",
             .termsOfService: "Conditions d'Utilisation", .designedWithCare: "Conçu et Développé avec Soin",
             .copyright: "© 2026 Granly App", .websiteLabel: "Site Web",
+
+            // Legal pages – French
+            .privacyDataWeCollect: "Données que Nous Ne Collectons Pas",
+            .privacyDataWeCollectBody: "Granly est entièrement hors ligne. Nous ne collectons, ne transmettons ni ne stockons aucune information personnelle sur des serveurs externes. Toutes les données que vous créez — souvenirs, personnalisations, préférences — ne vivent que sur votre appareil et ne sont jamais partagées.",
+            .privacyHowWeUse: "Comment Vos Données Sont Utilisées",
+            .privacyHowWeUseBody: "Toute information stockée par Granly (comme le nom de grand-mère, l'avatar choisi, la préférence de mode sombre, ou les histoires préférées) est utilisée uniquement pour personnaliser votre expérience dans l'application. Elle n'est jamais vendue, louée ou partagée avec des tiers.",
+            .privacyChildren: "Protection de la Vie Privée des Enfants",
+            .privacyChildrenBody: "Granly est conçu pour être sûr pour tous les âges. Comme nous ne collectons aucune donnée personnelle, il n'y a rien à mal utiliser. Si vous avez des préoccupations concernant l'utilisation de l'application par un enfant, n'hésitez pas à nous contacter.",
+            .privacyStorage: "Stockage et Suppression des Données",
+            .privacyStorageBody: "Vos données sont stockées localement sur votre appareil via le stockage sécurisé d'Apple. Vous pouvez supprimer toutes les données à tout moment en utilisant 'Réinitialiser Tout' dans votre Profil, ou en désinstallant l'application.",
+            .privacyContact: "Nous Contacter",
+            .privacyContactBody: "Si vous avez des questions, préoccupations ou demandes concernant cette Politique de Confidentialité, nous serions ravis de vous entendre. Vous pouvez nous contacter à :",
+
+            .termsAcceptance: "Acceptation des Conditions",
+            .termsAcceptanceBody: "En téléchargeant et en utilisant Granly, vous acceptez ces Conditions d'Utilisation. Si vous n'êtes pas d'accord, veuillez ne pas utiliser l'application. Ces conditions peuvent être mises à jour de temps à autre et la dernière version sera toujours disponible dans l'application.",
+            .termsUse: "Utilisation de l'Application",
+            .termsUseBody: "Granly est destiné à un usage personnel et non commercial. Vous acceptez d'utiliser l'application de manière respectueuse et légale. Vous ne devez pas tenter de procéder à une rétro-ingénierie, de copier ou de reproduire une partie de l'application sans autorisation écrite.",
+            .termsIP: "Propriété Intellectuelle",
+            .termsIPBody: "Toutes les histoires, illustrations, personnages (y compris Granly la grand-mère), animations et contenus écrits dans l'application sont la propriété intellectuelle de Granly App © 2026. Tous droits réservés.",
+            .termsDisclaimer: "Avertissement",
+            .termsDisclaimerBody: "Granly est fourni 'tel quel', sans garantie d'aucune sorte. Bien que nous nous efforcions d'offrir une expérience réconfortante et fiable, nous ne garantissons pas que l'application sera exempte d'erreurs. Granly n'est pas un substitut à un soutien professionnel en santé mentale.",
+            .termsChanges: "Modifications des Conditions",
+            .termsChangesBody: "Nous pouvons mettre à jour ces Conditions d'Utilisation pour refléter les changements de l'application ou de la loi. Nous vous informerons des changements importants via une notification dans l'application. Votre utilisation continue de Granly après tout changement constitue votre acceptation.",
+            .termsContact: "Nous Contacter",
+            .termsContactBody: "Pour toute question sur ces Conditions d'Utilisation, contactez-nous à :",
+
+            .legalLastUpdated: "Dernière mise à jour : Février 2026",
 
             .saveLabel: "Enregistrer",
             .optionStyle: "Style", .optionColor: "Couleur", .optionFrames: "Montures",
@@ -927,7 +1016,7 @@ struct L10n {
             .storyReminder: "Rappel d'histoire", .notifStorySubtitle: "Rappel du soir pour les histoires du coucher",
             .activityReminder: "Rappel d'activité", .notifActivitySubtitle: "Rappel du matin pour les activités réconfortantes",
             .progressUpdates: "Mises à jour de progression", .notifProgressSubtitle: "Séries et jalons",
-            .notifEmptyTitle: "Vos moments douillets apparaîtront ici 💛",
+            .notifEmptyTitle: "Vos moments douillets apparaîtront ici",
             .notifEmptyBody: "Commencez une histoire ou une activité pour recevoir des mises à jour.",
             .notifPermissionTitle: "Activer les notifications",
             .notifPermissionBody: "Laissez Granly vous rappeler l'heure des histoires et des activités.",
@@ -945,14 +1034,14 @@ struct L10n {
 
         // ─────────────────────────── MANDARIN (zh-CN) ───────────────────────────
         .mandarin: [
-            .appName: "Granly",
+            .appName: "格兰利",
             .cancel: "取消", .save: "保存", .ok: "确定", .done: "完成",
             .skip: "跳过", .reset: "重置", .close: "关闭",
             .continueAction: "继续", .getStarted: "开始",
             .seeAll: "查看全部", .of: "/", .comingSoon: "敬请期待",
             .version: "版本",
 
-            .onboarding1Title: "欢迎来到 Granly",
+            .onboarding1Title: "欢迎来到 格兰利",
             .onboarding1Description: "一个充满温馨故事和奶奶智慧的舒适角落。",
             .onboarding2Title: "适合各种心情的故事",
             .onboarding2Description: "开心、难过、还是只需要一个拥抱？Granly 都有适合你的故事。",
@@ -962,7 +1051,7 @@ struct L10n {
             .onboarding4Description: "一个让你感到被爱、支持和理解的安全空间。",
 
             .chooseLanguage: "选择您的语言",
-            .chooseLanguageSubtitle: "选择一种语言，开始您的 Granly 之旅",
+            .chooseLanguageSubtitle: "选择一种语言，开始您的 格兰利 之旅",
 
             .greetingMorning: "早上好，",
             .greetingAfternoon: "下午好，",
@@ -993,13 +1082,14 @@ struct L10n {
             .profile: "个人资料", .personal: "个人", .preferences: "偏好设置", .support: "支持",
             .grandmasName: "奶奶的名字", .grandmaMakeover: "给奶奶打扮",
             .language: "语言", .darkMode: "深色模式", .dailyReminders: "每日提醒",
-            .aboutGrantly: "关于 Granly", .viewOnboarding: "查看引导",
-            .rateGrantly: "评价 Granly", .shareWithFriends: "分享给朋友",
+            .aboutGrantly: "关于 格兰利", .viewOnboarding: "查看引导",
+            .rateGrantly: "评价 格兰利", .shareWithFriends: "分享给朋友",
             .resetAllData: "重置所有数据", .storiesRead: "阅读的故事",
-            .renameGrandma: "重命名奶奶",
+            .renameGrandma: "重命名奶奶", .shareMessage: "来看看Granly吧！这是有史以来最温馨的故事应用。",
+
             .resetDataQuestion: "重置数据?",
             .resetDataMessage: "这将清除您的阅读历史、收藏库和个性化设置。此操作无法撤销。",
-            .resetDataConfirm: "重置", .rateMessage: "评价 Granly",
+            .resetDataConfirm: "重置", .rateMessage: "评价格兰利",
             .thankYouForLove: "感谢您的喜爱！",
 
             .makeover: "装扮", .hair: "发型", .glasses: "眼镜", .outfit: "服装",
@@ -1060,11 +1150,40 @@ struct L10n {
             .yourReflection: "您的反思", .continueYourJourney: "继续您的旅程",
             .talkGrandmaAboutThis: "就此与奶奶交流",
 
-            .aboutGranly: "关于Granly", .ourMission: "我们的使命",
+            .aboutGranly: "关于格兰利", .ourMission: "我们的使命",
             .missionBody: "Granly的诞生源于一个简单的愿望：将温暖、安慰和永恒的故事魔力带入您的日常生活。",
-            .rateAppStore: "在App Store评分", .privacyPolicy: "隐私政策",
+            .missionBody2: "我们创作故事、智慧和温柔的对话，感觉就像一个曾经生活、爱过和学习过的人给你的拥抱。格兰利中的每个功能都是精心打造的，就像奶奶烤她最爱的食谱一样——慢慢地、充满爱意地，永远为了你。",
+            .missionBody3: "我们的希望很简单：让格兰利帮助您感到少一点孤独，多一点踏实，更接近那些让一代又一代人前进的智慧。",
+            .rateAppStore: "在应用商店评分", .privacyPolicy: "隐私政策",
             .termsOfService: "服务条款", .designedWithCare: "用心设计与开发",
-            .copyright: "© 2026 Granly应用", .websiteLabel: "网站",
+            .copyright: "© 2026 格兰利应用", .websiteLabel: "网站",
+
+            // Legal pages – Mandarin
+            .privacyDataWeCollect: "我们不收集的数据",
+            .privacyDataWeCollectBody: "Granly完全在离线状态下运行。我们不会在外部服务器上收集、传输或存储任何个人信息。您创建的所有数据——回忆、个性化设置、偏好——只保存在您的设备上，从不共享。",
+            .privacyHowWeUse: "您的数据如何使用",
+            .privacyHowWeUseBody: "Granly存储的任何信息（如奶奶的名字、选择的头像、深色模式偏好或最喜欢的故事）仅用于在应用内个性化您的体验。这些信息永远不会被出售、出租或与任何第三方共享。",
+            .privacyChildren: "儿童隐私",
+            .privacyChildrenBody: "Granly专为所有年龄段的用户设计。因为我们不收集任何个人数据，所以没有任何可被滥用的信息。如果您对孩子使用此应用程序有任何疑虑，请随时联系我们。",
+            .privacyStorage: "数据存储与删除",
+            .privacyStorageBody: "您的数据通过Apple安全的本地存储机制存储在您的设备上。您可以随时通过个人资料中的'重置所有数据'选项，或卸载应用程序来删除所有数据。",
+            .privacyContact: "联系我们",
+            .privacyContactBody: "如果您对本隐私政策有任何问题、疑虑或请求，我们很乐意听取您的意见。您可以通过以下方式联系我们",
+
+            .termsAcceptance: "条款接受",
+            .termsAcceptanceBody: "通过下载和使用Granly，您同意这些服务条款。如果您不同意这些条款的任何部分，请不要使用该应用程序。这些条款可能会不时更新，最新版本将始终在应用程序内提供。",
+            .termsUse: "应用程序的使用",
+            .termsUseBody: "Granly仅供个人和非商业用途。您同意以尊重和合法的方式使用该应用程序。未经书面许可，您不得尝试对应用程序的任何部分进行逆向工程、复制或再现。",
+            .termsIP: "知识产权",
+            .termsIPBody: "应用程序中的所有故事、艺术作品、角色（包括Granly奶奶）、动画和书面内容均为Granly App © 2026的知识产权。保留所有权利。",
+            .termsDisclaimer: "免责声明",
+            .termsDisclaimerBody: "Granly按原样提供，不提供任何形式的保证。虽然我们努力提供舒适可靠的体验，但我们不保证应用程序不会出现错误或中断。Granly不能替代专业的心理健康支持。",
+            .termsChanges: "条款变更",
+            .termsChangesBody: "我们可能会偶尔更新这些服务条款，以反映应用程序或适用法律的变化。我们将通过应用内通知告知您重大变更。您在任何变更后继续使用Granly，即表示您接受新条款。",
+            .termsContact: "联系我们",
+            .termsContactBody: "如有关于这些服务条款的任何问题，请联系我们",
+
+            .legalLastUpdated: "最后更新：2026年2月",
 
             .saveLabel: "保存",
             .optionStyle: "风格", .optionColor: "颜色", .optionFrames: "镜框",
@@ -1101,7 +1220,7 @@ struct L10n {
 
             .savedMemoriesTitle: "已保存的记忆", .storiesSavedCount: "%d 个故事已保存", .noMemoriesBody: "当奶奶给你讲了一个你喜欢的故事时，\n点击心形图标永远保存在这里。",
             .termsIntroBody: "这些条款规定了您对Granly的使用。花点时间阅读它们吧——它们在编写时融入了应用各处相同的温暖与关怀。",
-            .privacyIntroBody: "在Granly，您的隐私像奶奶的秘方一样神圣。这是关于我们对您信息的做法——以及绝不做的。",
+            .privacyIntroBody: "在格兰利，您的隐私像奶奶的秘方一样神圣。这是关于我们对您信息的做法——以及绝不做的。",
             .stopPlaybackAfter: "此后停止音频播放...", .timer5Min: "5 分钟", .timer15Min: "15 分钟", .timer30Min: "30 分钟", .turnOffTimer: "关闭定时器", .shareStory: "分享故事", .stopPlayback: "停止播放",
             .stepNoOfTotal: "步骤 %d / %d", .step: "%d 步", .currentStep: "当前步骤", .back: "返回", .nextStep: "下一步", .completeLabel: "完成", .activityCompleteTitle: "活动完成！", .activityCompleteBody: "您已完成 %@ 的所有 %d 个步骤。做得好。", .tryAgain: "再试一次", .activityComplete: "活动完成", .activityFinishedBody: "活动 %@ 结束。\n做得好——奶奶为你感到骄傲。", .wonderful: "太棒了",
 
@@ -1110,7 +1229,7 @@ struct L10n {
             .storyReminder: "故事提醒", .notifStorySubtitle: "睡前故事的晚间提示",
             .activityReminder: "活动提醒", .notifActivitySubtitle: "温馨活动的早晨提示",
             .progressUpdates: "进度更新", .notifProgressSubtitle: "连续记录和里程碑",
-            .notifEmptyTitle: "您的温馨时刻将会出现在这里 💛",
+            .notifEmptyTitle: "您的温馨时刻将会出现在这里",
             .notifEmptyBody: "开始一个故事或活动以接收更新。",
             .notifPermissionTitle: "允许通知",
             .notifPermissionBody: "让 Granly 提醒您讲故事时间和温馨活动。",
